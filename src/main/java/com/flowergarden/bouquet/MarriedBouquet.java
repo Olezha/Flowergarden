@@ -10,8 +10,10 @@ import com.flowergarden.flowers.GeneralFlower;
 public class MarriedBouquet implements Bouquet<GeneralFlower> {
 
 	private float assemblePrice = 120;
+
 	private List<GeneralFlower> flowerList = new ArrayList<>();
 
+	// TODO: test
 	@Override
 	public float getPrice() {
 		float price = assemblePrice;
@@ -26,6 +28,7 @@ public class MarriedBouquet implements Bouquet<GeneralFlower> {
 			flowerList.add(flower);
 	}
 
+	// TODO: test
 	@Override
 	public Collection<GeneralFlower> searchFlowersByLenght(int start, int end) {
 		List<GeneralFlower> searchResult = new ArrayList<GeneralFlower>();
