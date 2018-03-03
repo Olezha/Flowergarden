@@ -4,6 +4,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 import com.flowergarden.properties.FreshnessInteger;
 
+// TODO (Question): add setters
 public class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower> {
 	
 	FreshnessInteger freshness;

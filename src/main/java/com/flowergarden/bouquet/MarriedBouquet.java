@@ -7,13 +7,13 @@ import java.util.List;
 
 import com.flowergarden.flowers.GeneralFlower;
 
+// TODO (Question): change GeneralFlower to Flower
 public class MarriedBouquet implements Bouquet<GeneralFlower> {
 
 	private float assemblePrice = 120;
 
 	private List<GeneralFlower> flowerList = new ArrayList<>();
 
-	// TODO: test
 	@Override
 	public float getPrice() {
 		float price = assemblePrice;
@@ -28,10 +28,9 @@ public class MarriedBouquet implements Bouquet<GeneralFlower> {
 			flowerList.add(flower);
 	}
 
-	// TODO: test
 	@Override
 	public Collection<GeneralFlower> searchFlowersByLenght(int start, int end) {
-		List<GeneralFlower> searchResult = new ArrayList<GeneralFlower>();
+		List<GeneralFlower> searchResult = new ArrayList<>();
 		for (GeneralFlower flower : flowerList) {
 			if (flower.getLenght() >= start && flower.getLenght() <= end) {
 				searchResult.add(flower);
