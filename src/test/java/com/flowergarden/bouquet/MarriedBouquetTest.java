@@ -28,6 +28,12 @@ public class MarriedBouquetTest {
         Assert.assertEquals(120, marriedBouquet.getPrice(), 0);
     }
 
+    // TODO: assertThat greaterThan
+    @Test
+    public void GivenBouquetWhenAllOkThenBouquetIsWorthSomething() {
+        Assert.assertTrue(marriedBouquet.getPrice() >= 0);
+    }
+
     @Test
     public void searchFlowersByLenghtTest() {
         Assert.assertTrue(marriedBouquet.searchFlowersByLenght(1, 2).isEmpty());
