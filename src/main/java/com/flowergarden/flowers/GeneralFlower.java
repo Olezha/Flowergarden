@@ -4,13 +4,15 @@ import javax.xml.bind.annotation.XmlElement;
 
 import com.flowergarden.properties.FreshnessInteger;
 
+import java.math.BigDecimal;
+
 // TODO (Question): add setters
 public class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower> {
 	
 	FreshnessInteger freshness;
 	
 	@XmlElement
-	float price;
+	BigDecimal price;
 	
 	@XmlElement
 	int lenght;
@@ -25,7 +27,7 @@ public class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower>
 	}
 
 	@Override
-	public float getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 

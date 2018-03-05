@@ -1,11 +1,19 @@
 package com.flowergarden.bouquet;
+
+import com.flowergarden.flowers.Flower;
+
+import java.math.BigDecimal;
 import java.util.Collection;
 
 public interface Bouquet<T> {
 
-	float getPrice();
-	void addFlower(T flower);
-	Collection<T> searchFlowersByLenght(int start, int end);
-	void sortByFreshness();
-	Collection<T> getFlowers();
+    BigDecimal getPrice();
+
+    void addFlower(T flower);
+
+    Collection<Flower> searchFlowersByLenght(int start, int end);
+
+    void sortByFreshness();
+
+    Collection<Flower> getFlowers();
 }

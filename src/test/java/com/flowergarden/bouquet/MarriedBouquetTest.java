@@ -1,17 +1,12 @@
 package com.flowergarden.bouquet;
 
-import com.flowergarden.flowers.Flower;
 import com.flowergarden.flowers.GeneralFlower;
-import com.flowergarden.flowers.Tulip;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
 
 public class MarriedBouquetTest {
 
@@ -32,13 +27,12 @@ public class MarriedBouquetTest {
 
     @Test
     public void getPriceTest() {
-        Assert.assertEquals(120, marriedBouquet.getPrice(), 0);
+        Assert.assertEquals(new BigDecimal(120), marriedBouquet.getPrice());
     }
 
-    // TODO: assertThat greaterThan
     @Test
     public void GivenBouquet_WhenAllOk_ThenBouquetIsWorthSomething() {
-        Assert.assertTrue(marriedBouquet.getPrice() >= 0);
+        Assert.assertTrue(marriedBouquet.getPrice().compareTo(BigDecimal.ZERO) > 0);
     }
 
     @Test(expected = ArithmeticException.class)
@@ -51,20 +45,5 @@ public class MarriedBouquetTest {
     public void searchFlowersByLenghtTest() {
         Assert.assertTrue(marriedBouquet.searchFlowersByLenght(1, 2).isEmpty());
         Assert.assertEquals(4, marriedBouquet.searchFlowersByLenght(0, 0).size());
-    }
-
-    @Test
-    public void testFlowerList() {
-        // Given
-        List list = mock(List.class);
-        Tulip tulip = new Tulip();
-        MarriedBouquet marriedBouquet = new MarriedBouquet();
-        marriedBouquet.setMockedFlowerList(list);
-
-        // When
-        marriedBouquet.addFlower(tulip);
-
-        // Then
-        verify(list).add(tulip);
     }
 }

@@ -1,59 +1,75 @@
 package com.flowergarden.bouquet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
+import com.flowergarden.flowers.Flower;
 import com.flowergarden.flowers.GeneralFlower;
 
-// TODO (Question): change GeneralFlower to Flower
-public class MarriedBouquet implements Bouquet<GeneralFlower> {
+import java.math.BigDecimal;
+import java.util.*;
 
-	private float assemblePrice = 120;
+public class MarriedBouquet implements Bouquet<Flower> {
 
-	private List<GeneralFlower> flowerList = new ArrayList<>();
+    private BigDecimal assemblePrice = new BigDecimal(120);
 
-	@Override
-	public float getPrice() {
-		float price = assemblePrice;
-		for (GeneralFlower flower : flowerList) {
-			price += flower.getPrice();
-		}
-		return price;
-	}
+    private List<Flower> flowerList = new ArrayList<>();
 
-	@Override
-	public void addFlower(GeneralFlower flower) {
-			flowerList.add(flower);
-	}
+    private BigDecimal price;
 
-	@Override
-	public Collection<GeneralFlower> searchFlowersByLenght(int start, int end) {
-		List<GeneralFlower> searchResult = new ArrayList<>();
-		for (GeneralFlower flower : flowerList) {
-			if (flower.getLenght() >= start && flower.getLenght() <= end) {
-				searchResult.add(flower);
-			}
-		}
-		return searchResult;
-	}
+    public MarriedBouquet() {
+    }
 
-	@Override
-	public void sortByFreshness() {
-		Collections.sort(flowerList);
-	}
+    public MarriedBouquet(ArrayList<Flower> flowers, BigDecimal price) {
+        flowerList = flowers;
+        this.price = price;
+    }
 
-	@Override
-	public Collection<GeneralFlower> getFlowers() {
-		return flowerList;
-	}
+    @Override
+    public BigDecimal getPrice() {
+        if (price == null) {
+            BigDecimal price = assemblePrice;
+            for (Flower flower : flowerList) {
+                price = price.add(flower.getPrice());
+            }
+            this.price = price;
+        }
+        return price;
+    }
 
-	public void setAssembledPrice(float price) {
-		assemblePrice = price;
-	}
+    @Override
+    public void addFlower(Flower flower) {
+        flowerList.add(flower);
+    }
 
-	void setMockedFlowerList(List<GeneralFlower> flowerList) {
-		this.flowerList = flowerList;
-	}
+    @Override
+    public Collection<Flower> searchFlowersByLenght(int start, int end) {
+        List<Flower> searchResult = new ArrayList<>();
+        for (Flower flower : flowerList) {
+            if (flower.getLenght() >= start && flower.getLenght() <= end) {
+                searchResult.add(flower);
+            }
+        }
+        return searchResult;
+    }
+
+    @Override
+    public void sortByFreshness() {
+        Collections.sort(flowerList, new Comparator<Flower>() {
+            @Override
+            public int compare(Flower flower, Flower compareFlower) {
+                GeneralFlower generalFlower = (GeneralFlower) flower;
+                GeneralFlower compareGeneralFlower = (GeneralFlower) compareFlower;
+
+                int compareFresh = compareGeneralFlower.getFreshness().getFreshness();
+                return generalFlower.getFreshness().getFreshness() - compareFresh;
+            }
+        });
+    }
+
+    @Override
+    public Collection<Flower> getFlowers() {
+        return flowerList;
+    }
+
+    public void setAssembledPrice(BigDecimal price) {
+        assemblePrice = price;
+    }
 }

@@ -2,11 +2,13 @@ package com.flowergarden.flowers;
 
 import com.flowergarden.properties.FreshnessInteger;
 
+import java.math.BigDecimal;
+
 public class Chamomile extends GeneralFlower {
 	
 	private int petals;
 	
-	public Chamomile(int petals, int lenght, float price, FreshnessInteger fresh){
+	public Chamomile(int petals, int lenght, BigDecimal price, FreshnessInteger fresh){
 		this.petals = petals;
 		this.lenght = lenght;
 		this.price = price;
