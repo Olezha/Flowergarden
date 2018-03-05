@@ -1,11 +1,14 @@
 package com.flowergarden.bouquet;
 
+import com.flowergarden.flowers.Flower;
 import com.flowergarden.flowers.GeneralFlower;
 import com.flowergarden.flowers.Tulip;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -34,8 +37,14 @@ public class MarriedBouquetTest {
 
     // TODO: assertThat greaterThan
     @Test
-    public void GivenBouquetWhenAllOkThenBouquetIsWorthSomething() {
+    public void GivenBouquet_WhenAllOk_ThenBouquetIsWorthSomething() {
         Assert.assertTrue(marriedBouquet.getPrice() >= 0);
+    }
+
+    @Test(expected = ArithmeticException.class)
+    public void GivenBouquet_WhenPriceIsLessThanZero_ThenArithmeticException() {
+        MarriedBouquet marriedBouquet = new MarriedBouquet(new ArrayList(), new BigDecimal(-1));
+        marriedBouquet.getPrice();
     }
 
     @Test
@@ -45,7 +54,7 @@ public class MarriedBouquetTest {
     }
 
     @Test
-    public void testFloerList() {
+    public void testFlowerList() {
         // Given
         List list = mock(List.class);
         Tulip tulip = new Tulip();
