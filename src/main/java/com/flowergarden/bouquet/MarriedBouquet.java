@@ -52,4 +52,8 @@ public class MarriedBouquet implements Bouquet<GeneralFlower> {
 	public void setAssembledPrice(float price) {
 		assemblePrice = price;
 	}
+
+	void setMockedFlowerList(List<GeneralFlower> flowerList) {
+		this.flowerList = flowerList;
+	}
 }
