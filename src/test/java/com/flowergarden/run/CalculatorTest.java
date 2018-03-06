@@ -23,5 +23,4 @@ public class CalculatorTest {
     public void exceptionTest() {
         calculator.maxValue(Integer.valueOf(10), null);
     }
-
 }

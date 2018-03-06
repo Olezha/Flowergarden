@@ -30,7 +30,7 @@ public class BouquetTest {
     }
 
     @Test
-    public void searchFlowersByLenghtTest() {
+    public void searchFlowersByLengthTest() {
         Collection<Flower> flowers = bouquet.searchFlowersByLength(0, 0);
         Assert.assertEquals(flowers.isEmpty(), false);
     }
