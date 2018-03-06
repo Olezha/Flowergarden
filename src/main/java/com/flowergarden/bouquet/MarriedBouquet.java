@@ -1,7 +1,6 @@
 package com.flowergarden.bouquet;
 
 import com.flowergarden.flowers.Flower;
-import com.flowergarden.flowers.GeneralFlower;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -24,13 +23,9 @@ public class MarriedBouquet implements Bouquet<Flower> {
 
     @Override
     public BigDecimal getPrice() {
-        if (price == null) {
-            BigDecimal price = assemblePrice;
-            for (Flower flower : flowerList) {
-                price = price.add(flower.getPrice());
-            }
-            this.price = price;
-        }
+        if (price == null)
+            this.price = calcPrice();
+
         return price;
     }
 
@@ -40,10 +35,10 @@ public class MarriedBouquet implements Bouquet<Flower> {
     }
 
     @Override
-    public Collection<Flower> searchFlowersByLenght(int start, int end) {
+    public Collection<Flower> searchFlowersByLength(int start, int end) {
         List<Flower> searchResult = new ArrayList<>();
         for (Flower flower : flowerList) {
-            if (flower.getLenght() >= start && flower.getLenght() <= end) {
+            if (flower.getLength() >= start && flower.getLength() <= end) {
                 searchResult.add(flower);
             }
         }
@@ -52,16 +47,7 @@ public class MarriedBouquet implements Bouquet<Flower> {
 
     @Override
     public void sortByFreshness() {
-        Collections.sort(flowerList, new Comparator<Flower>() {
-            @Override
-            public int compare(Flower flower, Flower compareFlower) {
-                GeneralFlower generalFlower = (GeneralFlower) flower;
-                GeneralFlower compareGeneralFlower = (GeneralFlower) compareFlower;
-
-                int compareFresh = compareGeneralFlower.getFreshness().getFreshness();
-                return generalFlower.getFreshness().getFreshness() - compareFresh;
-            }
-        });
+        flowerList.sort(Comparator.comparing(Flower::getFreshness));
     }
 
     @Override
@@ -71,5 +57,13 @@ public class MarriedBouquet implements Bouquet<Flower> {
 
     public void setAssembledPrice(BigDecimal price) {
         assemblePrice = price;
+    }
+
+    private BigDecimal calcPrice() {
+        BigDecimal price = assemblePrice;
+        for (Flower flower : flowerList)
+            if (flower.getPrice() != null)
+                price = price.add(flower.getPrice());
+        return price;
     }
 }

@@ -11,7 +11,7 @@ public interface Bouquet<T> {
 
     void addFlower(T flower);
 
-    Collection<Flower> searchFlowersByLenght(int start, int end);
+    Collection<Flower> searchFlowersByLength(int start, int end);
 
     void sortByFreshness();
 

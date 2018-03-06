@@ -4,27 +4,28 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class FreshnessInteger implements Freshness<Integer>, Comparable<FreshnessInteger> {
+public class FreshnessInteger implements Freshness<Integer> {
 
-	@XmlElement
-	private Integer freshness;
-	
-	@Override
-	public Integer getFreshness() {
-		return freshness;
-	}
-	
-	public FreshnessInteger(Integer freshness){
-		this.freshness = freshness;
-	}
-	
-	public FreshnessInteger(){
-	}
+    @XmlElement
+    private Integer freshness;
 
-	@Override
-	public int compareTo(FreshnessInteger o) {
-		if (freshness > o.getFreshness()) return 1;
-		if (freshness < o.getFreshness()) return -1;
-		return 0;
-	}
+    public FreshnessInteger() {
+    }
+
+    public FreshnessInteger(Integer freshness) {
+        this.freshness = freshness;
+    }
+
+    @Override
+    public Integer getFreshness() {
+        return freshness;
+    }
+
+    @Override
+    public int compareTo(Freshness o) {
+        FreshnessInteger fio = (FreshnessInteger) o;
+        if (freshness > fio.getFreshness()) return 1;
+        if (freshness < fio.getFreshness()) return -1;
+        return 0;
+    }
 }
