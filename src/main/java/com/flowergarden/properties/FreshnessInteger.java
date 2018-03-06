@@ -23,6 +23,9 @@ public class FreshnessInteger implements Freshness<Integer> {
 
     @Override
     public int compareTo(Freshness o) {
+        if (!(o instanceof FreshnessInteger))
+            throw new UnsupportedOperationException();
+
         FreshnessInteger fio = (FreshnessInteger) o;
         if (freshness > fio.getFreshness()) return 1;
         if (freshness < fio.getFreshness()) return -1;
