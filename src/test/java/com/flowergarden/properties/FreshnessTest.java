@@ -9,7 +9,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class FreshnessTest {
 
     @Mock
-    Freshness freshness;
+    private Freshness freshness;
 
     @Test(expected = UnsupportedOperationException.class)
     public void freshnessIntegerCompareToFreshnessTest() {

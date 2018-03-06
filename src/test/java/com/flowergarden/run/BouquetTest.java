@@ -1,15 +1,19 @@
 package com.flowergarden.run;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-
+import com.flowergarden.bouquet.Bouquet;
+import com.flowergarden.bouquet.MarriedBouquet;
+import com.flowergarden.flowers.Chamomile;
 import com.flowergarden.flowers.Flower;
+import com.flowergarden.flowers.Rose;
+import com.flowergarden.properties.FreshnessInteger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.flowergarden.bouquet.*;
-import com.flowergarden.flowers.Rose;
+import java.math.BigDecimal;
+import java.util.Collection;
+
+import static org.mockito.Mockito.mock;
 
 public class BouquetTest {
 
@@ -19,6 +23,7 @@ public class BouquetTest {
     public void initBouquet() {
         bouquet = new MarriedBouquet();
         bouquet.addFlower(new Rose());
+        bouquet.addFlower(new Chamomile(0, 0, mock(BigDecimal.class), mock(FreshnessInteger.class)));
     }
 
     @Test

@@ -15,12 +15,12 @@ public class CalculatorTest {
 
     @Test
     public void maxValueTest() {
-        Integer actual = calculator.maxValue(Integer.valueOf(10), Integer.valueOf(20));
+        Integer actual = calculator.maxValue(10, 20);
         Assert.assertEquals(Integer.valueOf(20), actual);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void exceptionTest() {
-        calculator.maxValue(Integer.valueOf(10), null);
+        calculator.maxValue(10, null);
     }
 }

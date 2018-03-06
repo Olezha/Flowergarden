@@ -6,12 +6,13 @@ import com.flowergarden.properties.FreshnessInteger;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -19,33 +20,43 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class MarriedBouquetTest {
 
+    @Mock
+    private Flower flower;
+
+    @Mock
+    private GeneralFlower generalFlower;
+
+    @Mock
+    private Tulip tulip;
+
+    @Mock
+    private Rose rose;
+
+    @Mock
+    private Chamomile chamomile;
+
     @Spy
     private MarriedBouquet marriedBouquet = new MarriedBouquet();
 
     @Before
     public void context() {
-        Flower flower = mock(Flower.class);
         when(flower.getPrice()).thenReturn(BigDecimal.ONE);
         when(flower.getLength()).thenReturn(-1);
         when(flower.getFreshness()).thenReturn(mock(FreshnessInteger.class));
         marriedBouquet.addFlower(flower);
 
-        GeneralFlower generalFlower = mock(GeneralFlower.class);
         when(generalFlower.getLength()).thenReturn(100);
         when(generalFlower.getFreshness()).thenReturn(mock(FreshnessInteger.class));
         marriedBouquet.addFlower(generalFlower);
 
-        Flower tulip = mock(Tulip.class);
         when(tulip.getFreshness()).thenReturn(new FreshnessInteger(15));
         when(tulip.getPrice()).thenReturn(BigDecimal.TEN);
         marriedBouquet.addFlower(tulip);
 
-        Flower rose = mock(Rose.class);
         when(rose.getFreshness()).thenReturn(new FreshnessInteger(10));
         when(rose.getPrice()).thenReturn(BigDecimal.valueOf(25));
         marriedBouquet.addFlower(rose);
 
-        Flower chamomile = mock(Chamomile.class);
         when(chamomile.getFreshness()).thenReturn(new FreshnessInteger(5));
         when(chamomile.getPrice()).thenReturn(BigDecimal.valueOf(3));
         when(chamomile.getLength()).thenReturn(25);
@@ -71,7 +82,7 @@ public class MarriedBouquetTest {
 
     @Test(expected = ArithmeticException.class)
     public void GivenBouquet_WhenPriceIsLessThanZero_ThenArithmeticException() {
-        MarriedBouquet marriedBouquet = new MarriedBouquet(new ArrayList(), new BigDecimal(-1));
+        MarriedBouquet marriedBouquet = new MarriedBouquet(mock(List.class), new BigDecimal(-1));
         marriedBouquet.getPrice();
     }
 
