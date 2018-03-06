@@ -10,11 +10,9 @@ import org.junit.Test;
 
 import com.flowergarden.bouquet.*;
 import com.flowergarden.flowers.Rose;
-import org.mockito.Mock;
 
 public class BouquetTest {
 
-    @Mock
     private Bouquet<Flower> bouquet;
 
     @Before
