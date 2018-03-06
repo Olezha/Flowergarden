@@ -1,24 +1,19 @@
 package com.flowergarden.properties;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class FreshnessTest {
+
+    @Mock
+    Freshness freshness;
 
     @Test(expected = UnsupportedOperationException.class)
     public void freshnessIntegerCompareToFreshnessTest() {
         FreshnessInteger freshnessInteger = new FreshnessInteger();
-        Freshness<Integer> freshness = new Freshness<Integer>() {
-            @Override
-            public Integer getFreshness() {
-                return null;
-            }
-
-            @Override
-            public int compareTo(Freshness o) {
-                return 0;
-            }
-        };
-
         freshnessInteger.compareTo(freshness);
     }
 }
