@@ -24,18 +24,37 @@ public class MarriedBouquetTest {
 
     @Before
     public void context() {
-        GeneralFlower tulip = new Tulip();
-        tulip.setFreshness(new FreshnessInteger(15));
+        Flower flower = mock(Flower.class);
+        when(flower.getPrice()).thenReturn(BigDecimal.ONE);
+        when(flower.getLength()).thenReturn(-1);
+        when(flower.getFreshness()).thenReturn(mock(FreshnessInteger.class));
+        marriedBouquet.addFlower(flower);
+
+        GeneralFlower generalFlower = mock(GeneralFlower.class);
+        when(generalFlower.getLength()).thenReturn(100);
+        when(generalFlower.getFreshness()).thenReturn(mock(FreshnessInteger.class));
+        marriedBouquet.addFlower(generalFlower);
+
+        Flower tulip = mock(Tulip.class);
+        when(tulip.getFreshness()).thenReturn(new FreshnessInteger(15));
+        when(tulip.getPrice()).thenReturn(BigDecimal.TEN);
         marriedBouquet.addFlower(tulip);
-        GeneralFlower rose = new Rose();
-        rose.setFreshness(new FreshnessInteger(10));
+
+        Flower rose = mock(Rose.class);
+        when(rose.getFreshness()).thenReturn(new FreshnessInteger(10));
+        when(rose.getPrice()).thenReturn(BigDecimal.valueOf(25));
         marriedBouquet.addFlower(rose);
-        marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(5)));
+
+        Flower chamomile = mock(Chamomile.class);
+        when(chamomile.getFreshness()).thenReturn(new FreshnessInteger(5));
+        when(chamomile.getPrice()).thenReturn(BigDecimal.valueOf(3));
+        when(chamomile.getLength()).thenReturn(25);
+        marriedBouquet.addFlower(chamomile);
     }
 
     @Test
     public void getPriceTest() {
-        assertEquals(BigDecimal.valueOf(121), marriedBouquet.getPrice());
+        assertEquals(BigDecimal.valueOf(159), marriedBouquet.getPrice());
         verify(marriedBouquet).getPrice();
     }
 
@@ -45,8 +64,8 @@ public class MarriedBouquetTest {
     }
 
     @Test
-    public void searchFlowersByLengthTest() {
-        assertEquals(1, marriedBouquet.searchFlowersByLength(1, 2).size());
+    public void searchFlowersInRangeTest() {
+        assertEquals(1, marriedBouquet.searchFlowersByLength(20, 30).size());
         assertEquals(2, marriedBouquet.searchFlowersByLength(0, 0).size());
     }
 
