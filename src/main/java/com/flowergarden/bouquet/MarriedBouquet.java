@@ -16,7 +16,7 @@ public class MarriedBouquet implements Bouquet<Flower> {
     public MarriedBouquet() {
     }
 
-    public MarriedBouquet(ArrayList<Flower> flowers, BigDecimal price) {
+    public MarriedBouquet(List<Flower> flowers, BigDecimal price) {
         flowerList = flowers;
         this.price = price;
     }

@@ -1,7 +1,6 @@
 package com.flowergarden.bouquet;
 
 import com.flowergarden.flowers.*;
-import com.flowergarden.properties.Freshness;
 import com.flowergarden.properties.FreshnessInteger;
 
 import org.junit.Before;
@@ -60,12 +59,13 @@ public class MarriedBouquetTest {
     @Test
     public void sortByFreshnessTest() {
         marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(5)));
+        marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(25)));
         marriedBouquet.sortByFreshness();
         Iterator<Flower> iterator = marriedBouquet.getFlowers().iterator();
-        Flower firstFlower = (GeneralFlower) iterator.next();
+        Flower firstFlower = iterator.next();
         Flower lastFlower = firstFlower;
         while (iterator.hasNext())
-            lastFlower = (GeneralFlower) iterator.next();
+            lastFlower = iterator.next();
 
         assertTrue(firstFlower.getFreshness().compareTo(lastFlower.getFreshness()) <= 0);
     }
