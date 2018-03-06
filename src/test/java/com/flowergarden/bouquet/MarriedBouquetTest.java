@@ -1,52 +1,54 @@
 package com.flowergarden.bouquet;
 
-import com.flowergarden.flowers.Flower;
-import com.flowergarden.flowers.GeneralFlower;
-import com.flowergarden.flowers.Tulip;
+import com.flowergarden.flowers.*;
 import com.flowergarden.properties.FreshnessInteger;
-import org.junit.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+@RunWith(MockitoJUnitRunner.class)
 public class MarriedBouquetTest {
 
-    private MarriedBouquet marriedBouquet;
+    @Spy
+    private MarriedBouquet marriedBouquet = new MarriedBouquet();
 
     @Before
     public void context() {
-        marriedBouquet = new MarriedBouquet();
         GeneralFlower flower1 = new Tulip();
         flower1.setFreshness(new FreshnessInteger(15));
         marriedBouquet.addFlower(flower1);
-        GeneralFlower flower2 = new Tulip();
+        GeneralFlower flower2 = new Rose();
         flower2.setFreshness(new FreshnessInteger(10));
         marriedBouquet.addFlower(flower2);
-        GeneralFlower flower3 = new Tulip();
-        flower3.setFreshness(new FreshnessInteger(5));
+        GeneralFlower flower3 = new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(5));
         marriedBouquet.addFlower(flower3);
-        GeneralFlower flower4 = new Tulip();
-        flower4.setFreshness(new FreshnessInteger(1));
-        marriedBouquet.addFlower(flower4);
     }
 
     @Test
     public void getPriceTest() {
-        Assert.assertEquals(new BigDecimal(120), marriedBouquet.getPrice());
+        assertEquals(BigDecimal.valueOf(121), marriedBouquet.getPrice());
+        verify(marriedBouquet).getPrice();
     }
 
     @Test
     public void GivenBouquet_WhenAllOk_ThenBouquetIsWorthSomething() {
-        Assert.assertTrue(marriedBouquet.getPrice().signum() > 0);
+        assertTrue(marriedBouquet.getPrice().signum() > 0);
     }
 
     @Test
-    public void searchFlowersByLenghtTest() {
-        Assert.assertTrue(marriedBouquet.searchFlowersByLength(1, 2).isEmpty());
-        Assert.assertEquals(4, marriedBouquet.searchFlowersByLength(0, 0).size());
+    public void searchFlowersByLengthTest() {
+        assertEquals(1, marriedBouquet.searchFlowersByLength(1, 2).size());
+        assertEquals(2, marriedBouquet.searchFlowersByLength(0, 0).size());
     }
 
     @Test(expected = ArithmeticException.class)
@@ -64,6 +66,6 @@ public class MarriedBouquetTest {
         while (iterator.hasNext())
             lastFlower = (GeneralFlower) iterator.next();
 
-        Assert.assertTrue(firstFlower.getFreshness().compareTo(lastFlower.getFreshness()) <= 0);
+        assertTrue(firstFlower.getFreshness().compareTo(lastFlower.getFreshness()) <= 0);
     }
 }
