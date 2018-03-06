@@ -6,7 +6,6 @@ import com.flowergarden.flowers.Tulip;
 import com.flowergarden.properties.FreshnessInteger;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -41,7 +40,7 @@ public class MarriedBouquetTest {
 
     @Test
     public void GivenBouquet_WhenAllOk_ThenBouquetIsWorthSomething() {
-        Assert.assertTrue(marriedBouquet.getPrice().compareTo(BigDecimal.ZERO) > 0);
+        Assert.assertTrue(marriedBouquet.getPrice().signum() > 0);
     }
 
     @Test
@@ -50,7 +49,6 @@ public class MarriedBouquetTest {
         Assert.assertEquals(4, marriedBouquet.searchFlowersByLength(0, 0).size());
     }
 
-    @Ignore
     @Test(expected = ArithmeticException.class)
     public void GivenBouquet_WhenPriceIsLessThanZero_ThenArithmeticException() {
         MarriedBouquet marriedBouquet = new MarriedBouquet(new ArrayList(), new BigDecimal(-1));
@@ -66,6 +64,6 @@ public class MarriedBouquetTest {
         while (iterator.hasNext())
             lastFlower = (GeneralFlower) iterator.next();
 
-        Assert.assertTrue(firstFlower.getFreshness().compareTo(lastFlower.getFreshness()) <=0);
+        Assert.assertTrue(firstFlower.getFreshness().compareTo(lastFlower.getFreshness()) <= 0);
     }
 }

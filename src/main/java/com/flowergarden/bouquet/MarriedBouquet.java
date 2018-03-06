@@ -26,6 +26,9 @@ public class MarriedBouquet implements Bouquet<Flower> {
         if (price == null)
             this.price = calcPrice();
 
+        if (price.signum() < 0)
+            throw new ArithmeticException("Price cannot be less than zero");
+
         return price;
     }
 
