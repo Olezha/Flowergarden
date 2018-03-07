@@ -1,4 +1,4 @@
-package com.flowergarden.properties;
+package com.flowergarden.model.properties;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

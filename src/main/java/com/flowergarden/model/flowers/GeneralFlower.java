@@ -1,8 +1,8 @@
-package com.flowergarden.flowers;
+package com.flowergarden.model.flowers;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import com.flowergarden.properties.FreshnessInteger;
+import com.flowergarden.model.properties.FreshnessInteger;
 
 import java.math.BigDecimal;
 

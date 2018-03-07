@@ -1,6 +1,6 @@
-package com.flowergarden.bouquet;
+package com.flowergarden.model.bouquet;
 
-import com.flowergarden.flowers.Flower;
+import com.flowergarden.model.flowers.Flower;
 
 import java.math.BigDecimal;
 import java.util.*;

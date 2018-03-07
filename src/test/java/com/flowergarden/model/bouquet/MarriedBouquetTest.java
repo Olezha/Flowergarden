@@ -1,7 +1,7 @@
-package com.flowergarden.bouquet;
+package com.flowergarden.model.bouquet;
 
-import com.flowergarden.flowers.*;
-import com.flowergarden.properties.FreshnessInteger;
+import com.flowergarden.model.flowers.*;
+import com.flowergarden.model.properties.FreshnessInteger;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,6 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.*;

@@ -1,6 +1,6 @@
-package com.flowergarden.flowers;
+package com.flowergarden.model.flowers;
 
-import com.flowergarden.properties.Freshness;
+import com.flowergarden.model.properties.Freshness;
 
 import java.math.BigDecimal;
 

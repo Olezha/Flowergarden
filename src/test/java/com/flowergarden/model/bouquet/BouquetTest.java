@@ -1,11 +1,9 @@
-package com.flowergarden.bouquet;
+package com.flowergarden.model.bouquet;
 
-import com.flowergarden.bouquet.Bouquet;
-import com.flowergarden.bouquet.MarriedBouquet;
-import com.flowergarden.flowers.Chamomile;
-import com.flowergarden.flowers.Flower;
-import com.flowergarden.flowers.Rose;
-import com.flowergarden.properties.FreshnessInteger;
+import com.flowergarden.model.flowers.Chamomile;
+import com.flowergarden.model.flowers.Flower;
+import com.flowergarden.model.flowers.Rose;
+import com.flowergarden.model.properties.FreshnessInteger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
