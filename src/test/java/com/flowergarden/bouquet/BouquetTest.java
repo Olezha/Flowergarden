@@ -1,4 +1,4 @@
-package com.flowergarden.run;
+package com.flowergarden.bouquet;
 
 import com.flowergarden.bouquet.Bouquet;
 import com.flowergarden.bouquet.MarriedBouquet;
