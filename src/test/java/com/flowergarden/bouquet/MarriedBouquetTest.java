@@ -90,13 +90,14 @@ public class MarriedBouquetTest {
     public void sortByFreshnessTest() {
         marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(5)));
         marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(25)));
-        marriedBouquet.sortByFreshness();
-        Iterator<Flower> iterator = marriedBouquet.getFlowers().iterator();
-        Flower firstFlower = iterator.next();
-        Flower lastFlower = firstFlower;
-        while (iterator.hasNext())
-            lastFlower = iterator.next();
 
-        assertTrue(firstFlower.getFreshness().compareTo(lastFlower.getFreshness()) <= 0);
+        marriedBouquet.sortByFreshness();
+
+        Flower previousFlower = null;
+        for (Flower<Integer> flower : marriedBouquet.getFlowers()) {
+            if (previousFlower != null)
+                assertTrue((int) previousFlower.getFreshness().getFreshness() <= flower.getFreshness().getFreshness());
+            previousFlower = flower;
+        }
     }
 }
