@@ -87,8 +87,8 @@ public class MarriedBouquetTest {
 
     @Test
     public void sortByFreshnessTest() {
-        marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(5)));
         marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(25)));
+        marriedBouquet.addFlower(new Chamomile(1, 1, BigDecimal.ONE, new FreshnessInteger(5)));
 
         marriedBouquet.sortByFreshness();
 
