@@ -3,6 +3,7 @@ package com.flowergarden.storage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class JdbcConnectionPool {
                             DriverManager.getConnection(datasourceUrl)));
     }
 
-    public JdbcConnectionFromPool getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return null;
     }
 

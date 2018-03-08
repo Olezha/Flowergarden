@@ -1,8 +1,9 @@
 package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
-import com.flowergarden.storage.JdbcConnectionFromPool;
 import com.flowergarden.storage.JdbcConnectionPool;
+
+import java.sql.Connection;
 
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
@@ -10,7 +11,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Bouquet saveOrUpdate(Bouquet bouquet) throws Exception {
-        try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
         return null;
@@ -18,7 +19,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Bouquet findOne(int id) throws Exception {
-        try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
         return null;
@@ -26,7 +27,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Iterable<Bouquet> findAll() throws Exception {
-        try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
         return null;
@@ -34,21 +35,21 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public void delete(int id) throws Exception {
-        try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
     }
 
     @Override
     public void delete(Bouquet bouquet) throws Exception {
-        try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
     }
 
     @Override
     public void deleteAll() throws Exception {
-        try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
+        try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
     }
