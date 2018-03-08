@@ -9,7 +9,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     private JdbcConnectionPool connectionPool;
 
     @Override
-    public Bouquet saveOrUpdate(Bouquet flower) throws Exception {
+    public Bouquet saveOrUpdate(Bouquet bouquet) throws Exception {
         try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
             // TODO
         }
@@ -40,7 +40,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
-    public void delete(Bouquet flower) throws Exception {
+    public void delete(Bouquet bouquet) throws Exception {
         try (JdbcConnectionFromPool connection = connectionPool.getConnection()) {
             // TODO
         }

@@ -11,12 +11,8 @@ import java.util.Properties;
 
 public class JdbcConnectionPool {
 
-    public static void main(String[] args) throws SQLException {
-        JdbcConnectionPool jdbcConnectionPool = new JdbcConnectionPool();
-    }
-
     private List<JdbcConnectionFromPool> connections = new ArrayList<>();
-    private String datasourceUrl = "jdbc:sqlite:./flowergarden.db";
+    private String datasourceUrl;
     private int connectionPoolSize = 10;
 
     public JdbcConnectionPool() throws SQLException {
@@ -40,13 +36,14 @@ public class JdbcConnectionPool {
             properties.load(propertiesStream);
 
             if (properties.containsKey("datasource.url"))
-                System.out.println("properties.contains(\"datasource.url\")");
-            if (properties.containsKey("connection.pool.size"))
+                datasourceUrl = properties.getProperty("datasource.url");
+            if (properties.containsKey("connection.pool.size")) {
                 try {
                     connectionPoolSize = Integer.parseInt(properties.getProperty("connection.pool.size"));
                 } catch (NumberFormatException e) {
                     System.out.println("Parameter \"connection.pool.size\" has a wrong format");
                 }
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
