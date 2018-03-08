@@ -8,8 +8,17 @@ import java.util.concurrent.Executor;
 public class JdbcConnectionFromPool implements Connection {
 
     private Connection connection;
+    private boolean busy = false;
 
-    public JdbcConnectionFromPool(Connection connection) {
+    boolean isBusy() {
+        return busy;
+    }
+
+    void setBusy() {
+        this.busy = true;
+    }
+
+    JdbcConnectionFromPool(Connection connection) {
         this.connection = connection;
     }
 
@@ -53,9 +62,13 @@ public class JdbcConnectionFromPool implements Connection {
         connection.rollback();
     }
 
+    void closeConnection() throws SQLException {
+        connection.close();
+    }
+
     @Override
     public void close() throws SQLException {
-        // TODO
+        busy = false;
     }
 
     @Override

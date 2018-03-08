@@ -1,38 +1,50 @@
 package com.flowergarden.storage;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
-public class JdbcConnectionPool {
+public class JdbcConnectionPool implements AutoCloseable {
 
-    private List<JdbcConnectionFromPool> connections = new ArrayList<>();
+    private List<JdbcConnectionFromPool> connectionsPool = new ArrayList<>();
     private String datasourceUrl;
     private int connectionPoolSize = 10;
 
     public JdbcConnectionPool() throws SQLException {
-        loadProperties("application.properties");
+        loadProperties();
 
         for (int i = 0; i < connectionPoolSize; i++)
-            connections.add(
+            connectionsPool.add(
                     new JdbcConnectionFromPool(
                             DriverManager.getConnection(datasourceUrl)));
     }
 
     public Connection getConnection() throws SQLException {
+        for (JdbcConnectionFromPool connection : connectionsPool) {
+            if (!connection.isBusy()) {
+                connection.setBusy();
+                return connection;
+            }
+        }
+
+        // TODO: implement a queue
         return null;
     }
 
-    private void loadProperties(String propertiesFileName) {
+    @Override
+    public void close() throws Exception {
+        for (JdbcConnectionFromPool connection : connectionsPool) {
+            connection.closeConnection();
+        }
+    }
+
+    private void loadProperties() {
         try (InputStream propertiesStream =
                      Thread.currentThread().getContextClassLoader()
-                             .getResourceAsStream(propertiesFileName)) {
+                             .getResourceAsStream("application.properties")) {
             Properties properties = new Properties();
             properties.load(propertiesStream);
 
@@ -45,8 +57,6 @@ public class JdbcConnectionPool {
                     System.out.println("Parameter \"connection.pool.size\" has a wrong format");
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
