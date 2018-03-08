@@ -21,13 +21,16 @@ public class JdbcConnectionPool implements AutoCloseable {
         this.datasourceUrl = environment.getRequiredProperty("datasource.url");
 
         int poolSize = 10;
-        try {
-            String poolSizePropertyString = environment.getProperty("connection.pool.size");
-            int poolSizeProperty = Integer.parseInt(poolSizePropertyString);
-            if (poolSizeProperty > 0)
-                poolSize = poolSizeProperty;
-        } catch (NumberFormatException e) {
-            // ok
+
+        String poolSizePropertyString = environment.getProperty("connection.pool.size");
+        if (poolSizePropertyString != null) {
+            try {
+                int poolSizeProperty = Integer.parseInt(poolSizePropertyString);
+                if (poolSizeProperty > 0)
+                    poolSize = poolSizeProperty;
+            } catch (NumberFormatException e) {
+                System.out.println("Wrong property \"connection.pool.size\"");
+            }
         }
 
         for (int i = 0; i < poolSize; i++)

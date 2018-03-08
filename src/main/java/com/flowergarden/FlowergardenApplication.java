@@ -10,11 +10,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FlowergardenApplication implements CommandLineRunner {
 
-    @Autowired
-    BouquetRepository bouquetRepository;
+    private FlowerRepository flowerRepository;
+    private BouquetRepository bouquetRepository;
 
     @Autowired
-    FlowerRepository flowerRepository;
+    public FlowergardenApplication(
+            FlowerRepository flowerRepository,
+            BouquetRepository bouquetRepository) {
+        this.flowerRepository = flowerRepository;
+        this.bouquetRepository = bouquetRepository;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(FlowergardenApplication.class, args);

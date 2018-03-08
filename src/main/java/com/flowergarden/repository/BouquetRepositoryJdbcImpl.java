@@ -3,7 +3,6 @@ package com.flowergarden.repository;
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.storage.JdbcConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -11,8 +10,12 @@ import java.sql.Connection;
 @Repository
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
-    @Autowired
     private JdbcConnectionPool connectionPool;
+
+    @Autowired
+    public BouquetRepositoryJdbcImpl(JdbcConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+    }
 
     @Override
     public Bouquet saveOrUpdate(Bouquet bouquet) throws Exception {

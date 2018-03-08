@@ -3,7 +3,6 @@ package com.flowergarden.repository;
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.storage.JdbcConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -11,8 +10,12 @@ import java.sql.Connection;
 @Repository
 public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
-    @Autowired
     private JdbcConnectionPool connectionPool;
+
+    @Autowired
+    public FlowerRepositoryJdbcImpl(JdbcConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
+    }
 
     @Override
     public Flower saveOrUpdate(Flower flower) throws Exception {
