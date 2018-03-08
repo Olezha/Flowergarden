@@ -8,19 +8,25 @@ import java.util.concurrent.Executor;
 public class JdbcConnectionFromPool implements Connection {
 
     private Connection connection;
-    private boolean busy = false;
+    private JdbcConnectionPool pool;
 
-    boolean isBusy() {
-        return busy;
-    }
-
-    void setBusy() {
-        this.busy = true;
-    }
-
-    JdbcConnectionFromPool(Connection connection) {
+    JdbcConnectionFromPool(Connection connection, JdbcConnectionPool pool) {
         this.connection = connection;
+        this.pool = pool;
     }
+
+    @Override
+    public void close() throws SQLException {
+        pool.putConnection(this);
+    }
+
+    void closeConnection() throws SQLException {
+        connection.close();
+    }
+
+    /*
+     * and more other wrapper methods for Connection
+     */
 
     @Override
     public Statement createStatement() throws SQLException {
@@ -60,15 +66,6 @@ public class JdbcConnectionFromPool implements Connection {
     @Override
     public void rollback() throws SQLException {
         connection.rollback();
-    }
-
-    void closeConnection() throws SQLException {
-        connection.close();
-    }
-
-    @Override
-    public void close() throws SQLException {
-        busy = false;
     }
 
     @Override

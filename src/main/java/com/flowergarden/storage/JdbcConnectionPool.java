@@ -5,7 +5,9 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class JdbcConnectionPool implements AutoCloseable {
 
@@ -17,21 +19,22 @@ public class JdbcConnectionPool implements AutoCloseable {
         loadProperties();
 
         for (int i = 0; i < connectionPoolSize; i++)
-            connectionsPool.add(
-                    new JdbcConnectionFromPool(
-                            DriverManager.getConnection(datasourceUrl)));
+            putConnection(newConnection());
     }
 
     public Connection getConnection() throws SQLException {
-        for (JdbcConnectionFromPool connection : connectionsPool) {
-            if (!connection.isBusy()) {
-                connection.setBusy();
-                return connection;
-            }
-        }
+        if (!connectionsPool.isEmpty())
+            return connectionsPool.remove(0);
 
-        // TODO: implement a queue
-        return null;
+        return newConnection();
+    }
+
+    void putConnection(JdbcConnectionFromPool connection) {
+        connectionsPool.add(connection);
+    }
+
+    private JdbcConnectionFromPool newConnection() throws SQLException {
+        return new JdbcConnectionFromPool(DriverManager.getConnection(datasourceUrl), this);
     }
 
     @Override
