@@ -2,11 +2,13 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.storage.JdbcConnectionPool;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
 
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
+    @Autowired
     private JdbcConnectionPool connectionPool;
 
     @Override
