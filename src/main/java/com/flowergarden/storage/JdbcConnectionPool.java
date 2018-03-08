@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class JdbcConnectionPool implements AutoCloseable {
 
-    private List<JdbcConnectionFromPool> connectionsPool = new ArrayList<>();
+    private List<JdbcConnectionForPool> connectionsPool = new ArrayList<>();
     private String datasourceUrl;
     private int connectionPoolSize = 10;
 
@@ -29,17 +29,17 @@ public class JdbcConnectionPool implements AutoCloseable {
         return newConnection();
     }
 
-    void putConnection(JdbcConnectionFromPool connection) {
+    void putConnection(JdbcConnectionForPool connection) {
         connectionsPool.add(connection);
     }
 
-    private JdbcConnectionFromPool newConnection() throws SQLException {
-        return new JdbcConnectionFromPool(DriverManager.getConnection(datasourceUrl), this);
+    private JdbcConnectionForPool newConnection() throws SQLException {
+        return new JdbcConnectionForPool(DriverManager.getConnection(datasourceUrl), this);
     }
 
     @Override
     public void close() throws Exception {
-        for (JdbcConnectionFromPool connection : connectionsPool) {
+        for (JdbcConnectionForPool connection : connectionsPool) {
             connection.closeConnection();
         }
     }
@@ -61,7 +61,7 @@ public class JdbcConnectionPool implements AutoCloseable {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Could not read the \"application.properties\"");
         }
     }
 }

@@ -5,12 +5,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class JdbcConnectionFromPool implements Connection {
+public class JdbcConnectionForPool implements Connection {
 
     private Connection connection;
     private JdbcConnectionPool pool;
 
-    JdbcConnectionFromPool(Connection connection, JdbcConnectionPool pool) {
+    JdbcConnectionForPool(Connection connection, JdbcConnectionPool pool) {
         this.connection = connection;
         this.pool = pool;
     }
