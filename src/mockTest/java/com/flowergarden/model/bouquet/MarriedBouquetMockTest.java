@@ -11,7 +11,6 @@ import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -77,12 +76,6 @@ public class MarriedBouquetMockTest {
     public void searchFlowersInRangeTest() {
         assertEquals(1, marriedBouquet.searchFlowersByLength(20, 30).size());
         assertEquals(2, marriedBouquet.searchFlowersByLength(0, 0).size());
-    }
-
-    @Test(expected = ArithmeticException.class)
-    public void GivenBouquet_WhenPriceIsLessThanZero_ThenArithmeticException() {
-        MarriedBouquet marriedBouquet = new MarriedBouquet(mock(List.class), new BigDecimal(-1));
-        marriedBouquet.getPrice();
     }
 
     @Test
