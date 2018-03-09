@@ -6,10 +6,10 @@ import java.sql.SQLException;
 
 public interface FlowerRepository {
 
-    Flower saveOrUpdate(Flower flower) throws Exception;
-    Flower findOne(int id) throws Exception;
-    Iterable<Flower> findAll() throws Exception;
-    void delete(int id) throws Exception;
-    void delete(Flower flower) throws Exception;
-    void deleteAll() throws Exception;
+    Flower saveOrUpdate(Flower flower) throws SQLException;
+    Flower findOne(int id) throws SQLException;
+    Iterable<Flower> findAll() throws SQLException;
+    void delete(int id) throws SQLException;
+    void delete(Flower flower) throws SQLException;
+    void deleteAll() throws SQLException;
 }

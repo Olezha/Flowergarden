@@ -6,10 +6,10 @@ import java.sql.SQLException;
 
 public interface BouquetRepository {
 
-    Bouquet saveOrUpdate(Bouquet flower) throws Exception;
-    Bouquet findOne(int id) throws Exception;
-    Iterable<Bouquet> findAll() throws Exception;
-    void delete(int id) throws Exception;
-    void delete(Bouquet flower) throws Exception;
-    void deleteAll() throws Exception;
+    Bouquet saveOrUpdate(Bouquet flower) throws SQLException;
+    Bouquet findOne(int id) throws SQLException;
+    Iterable<Bouquet> findAll() throws SQLException;
+    void delete(int id) throws SQLException;
+    void delete(Bouquet flower) throws SQLException;
+    void deleteAll() throws SQLException;
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 @Repository
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
@@ -18,7 +19,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
-    public Bouquet saveOrUpdate(Bouquet bouquet) throws Exception {
+    public Bouquet saveOrUpdate(Bouquet bouquet) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
@@ -26,7 +27,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
-    public Bouquet findOne(int id) throws Exception {
+    public Bouquet findOne(int id) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
@@ -34,7 +35,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
-    public Iterable<Bouquet> findAll() throws Exception {
+    public Iterable<Bouquet> findAll() throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
@@ -42,21 +43,21 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
-    public void delete(int id) throws Exception {
+    public void delete(int id) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
     }
 
     @Override
-    public void delete(Bouquet bouquet) throws Exception {
+    public void delete(Bouquet bouquet) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
     }
 
     @Override
-    public void deleteAll() throws Exception {
+    public void deleteAll() throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
