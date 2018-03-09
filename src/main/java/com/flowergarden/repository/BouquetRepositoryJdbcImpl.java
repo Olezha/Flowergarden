@@ -38,12 +38,11 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Bouquet findOne(int id) throws SQLException {
-        List<Bouquet> bouquets;
+        List<Bouquet> bouquets = new ArrayList<>();
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ONE_SQL)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            bouquets = new ArrayList<>();
             while (resultSet.next()) {
                 Bouquet bouquet = new MarriedBouquet();
                 bouquet.setId(resultSet.getInt("id"));

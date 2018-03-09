@@ -9,7 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.math.BigDecimal;
+import java.sql.SQLException;
 
 @SpringBootApplication
 public class FlowergardenApplication implements CommandLineRunner {
@@ -30,12 +30,12 @@ public class FlowergardenApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... strings) throws Exception {
+    public void run(String... strings) throws SQLException {
         Bouquet bouquet = bouquetRepository.findOne(1);
         Iterable<Flower> flowers = flowerRepository.findBouquetFlowers(1);
         for (Flower flower : flowers)
             bouquet.addFlower(flower);
 
-        System.out.println("Bouquet1 price is " + bouquet.getPrice());
+        System.out.println("Bouquet price is " + bouquet.getPrice());
     }
 }

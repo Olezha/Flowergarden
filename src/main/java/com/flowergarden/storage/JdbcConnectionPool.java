@@ -43,8 +43,10 @@ public class JdbcConnectionPool implements AutoCloseable {
                 connection = null;
             else break;
         }
-        if (connection == null)
+        if (connection == null) {
             connection = newConnection();
+            System.out.println("Additional connection created (total " + (inUseConnections.size() + 1) + ")");
+        }
 
         inUseConnections.add(connection);
         return connection;
