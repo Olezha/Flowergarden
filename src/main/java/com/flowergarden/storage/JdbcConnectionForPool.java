@@ -17,7 +17,8 @@ public class JdbcConnectionForPool implements Connection {
 
     @Override
     public void close() throws SQLException {
-        pool.putConnection(this);
+        // TODO: Switch connection to initial state
+        pool.returnConnectionInPool(this);
     }
 
     void closeConnection() throws SQLException {

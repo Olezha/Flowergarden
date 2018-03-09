@@ -14,6 +14,7 @@ import java.util.List;
 public class JdbcConnectionPool implements AutoCloseable {
 
     private List<JdbcConnectionForPool> connectionsPool = new ArrayList<>();
+    private List<JdbcConnectionForPool> inUseConnections = new ArrayList<>();
     private String datasourceUrl;
 
     @Autowired
@@ -21,30 +22,36 @@ public class JdbcConnectionPool implements AutoCloseable {
         this.datasourceUrl = environment.getRequiredProperty("datasource.url");
 
         int poolSize = 10;
-
         String poolSizePropertyString = environment.getProperty("connection.pool.size");
         if (poolSizePropertyString != null) {
             try {
-                int poolSizeProperty = Integer.parseInt(poolSizePropertyString);
-                if (poolSizeProperty > 0)
-                    poolSize = poolSizeProperty;
+                poolSize = Integer.parseUnsignedInt(poolSizePropertyString);
             } catch (NumberFormatException e) {
                 System.out.println("Wrong property \"connection.pool.size\"");
             }
         }
 
         for (int i = 0; i < poolSize; i++)
-            putConnection(newConnection());
+            connectionsPool.add(newConnection());
     }
 
     public Connection getConnection() throws SQLException {
-        if (!connectionsPool.isEmpty())
-            return connectionsPool.remove(0);
+        JdbcConnectionForPool connection = null;
+        while (!connectionsPool.isEmpty()) {
+            connection = connectionsPool.remove(0);
+            if (connection.isClosed())
+                connection = null;
+            else break;
+        }
+        if (connection == null)
+            connection = newConnection();
 
-        return newConnection();
+        inUseConnections.add(connection);
+        return connection;
     }
 
-    void putConnection(JdbcConnectionForPool connection) {
+    void returnConnectionInPool(JdbcConnectionForPool connection) {
+        inUseConnections.remove(connection);
         connectionsPool.add(connection);
     }
 
@@ -55,6 +62,9 @@ public class JdbcConnectionPool implements AutoCloseable {
     @Override
     public void close() throws Exception {
         for (JdbcConnectionForPool connection : connectionsPool) {
+            connection.closeConnection();
+        }
+        for (JdbcConnectionForPool connection : inUseConnections) {
             connection.closeConnection();
         }
     }
