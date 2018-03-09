@@ -1,7 +1,5 @@
 package com.flowergarden.bouquet;
 
-import com.flowergarden.bouquet.Bouquet;
-import com.flowergarden.bouquet.MarriedBouquet;
 import com.flowergarden.flowers.Chamomile;
 import com.flowergarden.flowers.Flower;
 import com.flowergarden.flowers.Rose;
