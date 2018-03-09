@@ -2,5 +2,5 @@
 
 #### for launching
 ```sh
-mvn package && java -jar target/flowergarden-0.0.1-SNAPSHOT.jar
+mvn package && java -jar target/flowergarden-0.0.3-SNAPSHOT.jar
 ```
