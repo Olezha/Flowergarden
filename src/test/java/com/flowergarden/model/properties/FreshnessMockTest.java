@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class FreshnessTest {
+public class FreshnessMockTest {
 
     @Mock
     private Freshness freshness;

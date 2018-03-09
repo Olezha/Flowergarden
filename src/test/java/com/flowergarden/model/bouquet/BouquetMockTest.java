@@ -11,17 +11,23 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Collection;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class BouquetTest {
+public class BouquetMockTest {
 
     private Bouquet<Flower> bouquet;
+    private Rose rose = new Rose();
+    private Chamomile chamomile =
+            new Chamomile(0, 0,
+                    mock(BigDecimal.class), mock(FreshnessInteger.class));
 
     @Before
     public void initBouquet() {
         bouquet = new MarriedBouquet();
-        bouquet.addFlower(new Rose());
-        bouquet.addFlower(new Chamomile(0, 0, mock(BigDecimal.class), mock(FreshnessInteger.class)));
+        bouquet.addFlower(rose);
+        bouquet.addFlower(chamomile);
     }
 
     @Test
@@ -33,6 +39,6 @@ public class BouquetTest {
     @Test
     public void searchFlowersByLengthTest() {
         Collection<Flower> flowers = bouquet.searchFlowersByLength(0, 0);
-        Assert.assertEquals(flowers.isEmpty(), false);
+        assertThat(bouquet.getFlowers(), hasItems(rose, chamomile));
     }
 }

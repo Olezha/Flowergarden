@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MarriedBouquetTest {
+public class MarriedBouquetMockTest {
 
     @Mock
     private Flower flower;
