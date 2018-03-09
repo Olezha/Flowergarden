@@ -13,7 +13,6 @@ import java.util.Collection;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 public class BouquetTest {
 
@@ -21,7 +20,7 @@ public class BouquetTest {
     private Rose rose = new Rose();
     private Chamomile chamomile =
             new Chamomile(0, 1,
-                    mock(BigDecimal.class), mock(FreshnessInteger.class));
+                    BigDecimal.ZERO, new FreshnessInteger(1));
 
     @Before
     public void initBouquet() {
