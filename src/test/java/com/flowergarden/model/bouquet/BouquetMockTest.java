@@ -20,7 +20,7 @@ public class BouquetMockTest {
     private Bouquet<Flower> bouquet;
     private Rose rose = new Rose();
     private Chamomile chamomile =
-            new Chamomile(0, 0,
+            new Chamomile(0, 1,
                     mock(BigDecimal.class), mock(FreshnessInteger.class));
 
     @Before
@@ -38,7 +38,7 @@ public class BouquetMockTest {
 
     @Test
     public void searchFlowersByLengthTest() {
-        Collection<Flower> flowers = bouquet.searchFlowersByLength(0, 0);
-        assertThat(bouquet.getFlowers(), hasItems(rose, chamomile));
+        Collection<Flower> flowers = bouquet.searchFlowersByLength(0, 1);
+        assertThat(flowers, hasItems(rose, chamomile));
     }
 }
