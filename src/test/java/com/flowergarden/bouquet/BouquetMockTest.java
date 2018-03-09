@@ -4,7 +4,6 @@ import com.flowergarden.flowers.Chamomile;
 import com.flowergarden.flowers.Flower;
 import com.flowergarden.flowers.Rose;
 import com.flowergarden.properties.FreshnessInteger;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-public class BouquetTest {
+public class BouquetMockTest {
 
     private Bouquet<Flower> bouquet;
     private Rose rose = new Rose();
