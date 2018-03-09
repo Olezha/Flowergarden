@@ -1,11 +1,15 @@
 package com.flowergarden;
 
+import com.flowergarden.model.bouquet.Bouquet;
+import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.repository.BouquetRepository;
 import com.flowergarden.repository.FlowerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.math.BigDecimal;
 
 @SpringBootApplication
 public class FlowergardenApplication implements CommandLineRunner {
@@ -27,7 +31,11 @@ public class FlowergardenApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        System.out.println(bouquetRepository);
-        System.out.println(flowerRepository);
+        Bouquet bouquet = bouquetRepository.findOne(1);
+        Iterable<Flower> flowers = flowerRepository.findBouquetFlowers(1);
+        for (Flower flower : flowers)
+            bouquet.addFlower(flower);
+
+        System.out.println("Bouquet1 price is " + bouquet.getPrice());
     }
 }

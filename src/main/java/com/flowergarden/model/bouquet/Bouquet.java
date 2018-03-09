@@ -9,6 +9,10 @@ public interface Bouquet<T> {
 
     BigDecimal getPrice();
 
+    String getName();
+
+    void setAssemblePrice(BigDecimal assemblePrice);
+
     void addFlower(T flower);
 
     Collection<Flower> searchFlowersByLength(int start, int end);
@@ -16,4 +20,8 @@ public interface Bouquet<T> {
     void sortByFreshness();
 
     Collection<Flower> getFlowers();
+
+    Integer getId();
+
+    void setId(Integer id);
 }

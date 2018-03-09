@@ -11,4 +11,8 @@ public interface Flower<T> {
     BigDecimal getPrice();
 
     int getLength();
+
+    Integer getId();
+
+    void setId(Integer id);
 }

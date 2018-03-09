@@ -7,6 +7,8 @@ import java.util.*;
 
 public class MarriedBouquet implements Bouquet<Flower> {
 
+    private Integer id;
+
     private BigDecimal assemblePrice = new BigDecimal(120);
 
     private List<Flower> flowerList = new ArrayList<>();
@@ -33,6 +35,16 @@ public class MarriedBouquet implements Bouquet<Flower> {
     }
 
     @Override
+    public String getName() {
+        return "married";
+    }
+
+    @Override
+    public void setAssemblePrice(BigDecimal assemblePrice) {
+        this.assemblePrice = assemblePrice;
+    }
+
+    @Override
     public void addFlower(Flower flower) {
         flowerList.add(flower);
     }
@@ -56,6 +68,16 @@ public class MarriedBouquet implements Bouquet<Flower> {
     @Override
     public Collection<Flower> getFlowers() {
         return flowerList;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public void setAssembledPrice(BigDecimal price) {

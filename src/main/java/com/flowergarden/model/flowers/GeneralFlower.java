@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 
 public abstract class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower> {
 
+    private Integer id;
+
     FreshnessInteger freshness;
 
     @XmlElement
@@ -33,6 +35,16 @@ public abstract class GeneralFlower implements Flower<Integer>, Comparable<Gener
     @Override
     public int getLength() {
         return length;
+    }
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

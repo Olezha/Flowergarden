@@ -9,6 +9,7 @@ public interface FlowerRepository {
     Flower saveOrUpdate(Flower flower) throws SQLException;
     Flower findOne(int id) throws SQLException;
     Iterable<Flower> findAll() throws SQLException;
+    Iterable<Flower> findBouquetFlowers(int bouquetId) throws SQLException;
     void delete(int id) throws SQLException;
     void delete(Flower flower) throws SQLException;
     void deleteAll() throws SQLException;

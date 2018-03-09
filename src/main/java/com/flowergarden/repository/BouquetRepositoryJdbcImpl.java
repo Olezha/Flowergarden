@@ -1,17 +1,22 @@
 package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
+import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.storage.JdbcConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     private JdbcConnectionPool connectionPool;
+
+    private static final String FIND_ONE_SQL = "SELECT * FROM bouquet WHERE id=?";
 
     @Autowired
     public BouquetRepositoryJdbcImpl(JdbcConnectionPool connectionPool) {
@@ -21,17 +26,39 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     @Override
     public Bouquet saveOrUpdate(Bouquet bouquet) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
-            // TODO
+            if (bouquet.getId() == null) {
+                // TODO: save
+            }
+            else {
+                // TODO: update
+            }
         }
         return null;
     }
 
     @Override
     public Bouquet findOne(int id) throws SQLException {
-        try (Connection connection = connectionPool.getConnection()) {
-            // TODO
+        List<Bouquet> bouquets;
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(FIND_ONE_SQL)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            bouquets = new ArrayList<>();
+            while (resultSet.next()) {
+                Bouquet bouquet = new MarriedBouquet();
+                bouquet.setId(resultSet.getInt("id"));
+                bouquet.setAssemblePrice(new BigDecimal(resultSet.getString("assemble_price")));
+                bouquets.add(bouquet);
+            }
         }
-        return null;
+
+        if (bouquets.isEmpty())
+            return null;
+
+        if (bouquets.size() > 1)
+            throw new SQLIntegrityConstraintViolationException("unique id");
+
+        return bouquets.get(0);
     }
 
     @Override
