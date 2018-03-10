@@ -2,6 +2,7 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
+import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.storage.JdbcConnectionPool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,14 +38,14 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
-    public Bouquet findOne(int id) throws SQLException {
-        List<Bouquet> bouquets = new ArrayList<>();
+    public Bouquet<Flower> findOne(int id) throws SQLException {
+        List<Bouquet<Flower>> bouquets = new ArrayList<>();
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ONE_SQL)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Bouquet bouquet = new MarriedBouquet();
+                Bouquet<Flower> bouquet = new MarriedBouquet();
                 bouquet.setId(resultSet.getInt("id"));
                 bouquet.setAssemblePrice(new BigDecimal(resultSet.getString("assemble_price")));
                 bouquets.add(bouquet);

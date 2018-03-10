@@ -1,28 +1,19 @@
 package com.flowergarden;
 
-import com.flowergarden.model.bouquet.Bouquet;
-import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.repository.BouquetRepository;
-import com.flowergarden.repository.FlowerRepository;
+import com.flowergarden.service.BouquetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.sql.SQLException;
-
 @SpringBootApplication
 public class FlowergardenApplication implements CommandLineRunner {
 
-    private FlowerRepository flowerRepository;
-    private BouquetRepository bouquetRepository;
+    private BouquetService bouquetService;
 
     @Autowired
-    public FlowergardenApplication(
-            FlowerRepository flowerRepository,
-            BouquetRepository bouquetRepository) {
-        this.flowerRepository = flowerRepository;
-        this.bouquetRepository = bouquetRepository;
+    public FlowergardenApplication(BouquetService bouquetService) {
+        this.bouquetService = bouquetService;
     }
 
     public static void main(String[] args) {
@@ -30,12 +21,7 @@ public class FlowergardenApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... strings) throws SQLException {
-        Bouquet bouquet = bouquetRepository.findOne(1);
-        Iterable<Flower> flowers = flowerRepository.findBouquetFlowers(1);
-        for (Flower flower : flowers)
-            bouquet.addFlower(flower);
-
-        System.out.println("Bouquet price is " + bouquet.getPrice());
+    public void run(String... strings) {
+        System.out.println("Bouquet price is " + bouquetService.getBouquetPrice(1));
     }
 }
