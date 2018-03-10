@@ -1,7 +1,5 @@
 package com.flowergarden.service;
 
-import com.flowergarden.model.bouquet.Bouquet;
-import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.repository.BouquetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +22,11 @@ public class BouquetServiceImpl implements BouquetService {
 
     @Override
     public BigDecimal getBouquetPrice(Integer id) {
-        Bouquet<Flower> bouquet;
         try {
-            bouquet = bouquetRepository.findOne(1);
+            return bouquetRepository.getBouquetPrice(1);
         } catch (SQLException e) {
             log.error("{}", e);
             return null;
         }
-
-        return bouquet.getPrice();
     }
 }

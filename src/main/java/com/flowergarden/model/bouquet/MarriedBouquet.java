@@ -80,8 +80,9 @@ public class MarriedBouquet implements Bouquet<Flower> {
         this.id = id;
     }
 
-    public void setAssembledPrice(BigDecimal price) {
-        assemblePrice = price;
+    @Override
+    public BigDecimal getAssemblePrice() {
+        return assemblePrice;
     }
 
     private BigDecimal calcPrice() {

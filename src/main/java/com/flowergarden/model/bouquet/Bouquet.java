@@ -24,4 +24,6 @@ public interface Bouquet<T> {
     Integer getId();
 
     void setId(Integer id);
+
+    BigDecimal getAssemblePrice();
 }

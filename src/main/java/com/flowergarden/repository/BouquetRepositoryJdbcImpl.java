@@ -3,7 +3,7 @@ package com.flowergarden.repository;
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.storage.JdbcConnectionPool;
+import com.flowergarden.sql.JdbcConnectionPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,23 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     private FlowerRepository flowerRepository;
 
+    private static final String SAVE_SQL =
+            "INSERT INTO bouquet (name, assemble_price) VALUES ('married', ?)";
+
     private static final String FIND_ONE_SQL = "SELECT * FROM bouquet WHERE id=?";
+
+    private static final String FIND_ALL_SQL = "SELECT * FROM bouquet";
+
+    private static final String BOUQUET_PRICE_SQL =
+            "SELECT SUM(price) + b.assemble_price " +
+                    "FROM bouquet b JOIN flower f ON b.id=f.bouquet_id WHERE b.id=?";
+
+    private static final String UPDATE_SQL =
+            "UPDATE bouquet SET assemble_price=? WHERE id=?";
+
+    private static final String DELETE_SQL = "DELETE FROM bouquet WHERE id=?";
+
+    private static final String DELETE_ALL_SQL = "DELETE FROM bouquet";
 
     @Autowired
     public BouquetRepositoryJdbcImpl(
@@ -36,66 +52,95 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     public Bouquet saveOrUpdate(Bouquet bouquet) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             if (bouquet.getId() == null) {
-                // TODO: save
+                try (PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
+                    statement.setBigDecimal(1, bouquet.getAssemblePrice());
+                    statement.executeUpdate();
+                    bouquet.setId(statement.getGeneratedKeys().getInt(1));
+                }
             }
             else {
-                // TODO: update
+                try (PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+                    statement.setBigDecimal(1, bouquet.getAssemblePrice());
+                    statement.setInt(2, bouquet.getId());
+                    statement.executeUpdate();
+                }
             }
         }
-        return null;
+        flowerRepository.saveOrUpdateBouquetFlowers(bouquet.getFlowers(), bouquet.getId());
+        return bouquet;
     }
 
     @Override
     public Bouquet<Flower> findOne(int id) throws SQLException {
-        List<Bouquet<Flower>> bouquets = new ArrayList<>();
+        List<Bouquet<Flower>> bouquets;
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(FIND_ONE_SQL)) {
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Bouquet<Flower> bouquet = new MarriedBouquet();
-                bouquet.setId(resultSet.getInt("id"));
-                bouquet.setAssemblePrice(new BigDecimal(resultSet.getString("assemble_price")));
-                bouquets.add(bouquet);
-            }
+            bouquets = convert(statement.executeQuery());
         }
 
         if (bouquets.isEmpty())
             return null;
 
         if (bouquets.size() > 1)
-            throw new SQLIntegrityConstraintViolationException("unique id");
+            throw new SQLIntegrityConstraintViolationException("Unique id");
 
         return new LazyBouquet(flowerRepository, bouquets.get(0));
     }
 
     @Override
-    public Iterable<Bouquet> findAll() throws SQLException {
-        try (Connection connection = connectionPool.getConnection()) {
-            // TODO
+    public Iterable<Bouquet<Flower>> findAll() throws SQLException {
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement()) {
+            return convert(statement.executeQuery(FIND_ALL_SQL));
         }
-        return null;
     }
 
     @Override
     public void delete(int id) throws SQLException {
-        try (Connection connection = connectionPool.getConnection()) {
-            // TODO
+        flowerRepository.deleteBouquetFlowers(id);
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
         }
     }
 
     @Override
     public void delete(Bouquet bouquet) throws SQLException {
-        try (Connection connection = connectionPool.getConnection()) {
-            // TODO
-        }
+        if (bouquet.getId() == null)
+            throw new IllegalArgumentException("Not persisted entity");
+        delete(bouquet.getId());
     }
 
     @Override
     public void deleteAll() throws SQLException {
-        try (Connection connection = connectionPool.getConnection()) {
-            // TODO
+        flowerRepository.deleteAll();
+        try (Connection connection = connectionPool.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.executeUpdate(DELETE_ALL_SQL);
         }
+    }
+
+    @Override
+    public BigDecimal getBouquetPrice(int bouquetId) throws SQLException {
+        // TODO: change db money columns to INTEGER
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement statement = connection.prepareStatement(BOUQUET_PRICE_SQL)) {
+            statement.setInt(1, bouquetId);
+            return new BigDecimal(statement.executeQuery().getString(1));
+        }
+    }
+
+    private List<Bouquet<Flower>> convert(ResultSet resultSet) throws SQLException {
+        List<Bouquet<Flower>> bouquets = new ArrayList<>();
+        while (resultSet.next()) {
+            Bouquet<Flower> bouquet = new MarriedBouquet();
+            bouquet.setId(resultSet.getInt("id"));
+            bouquet.setAssemblePrice(new BigDecimal(resultSet.getString("assemble_price")));
+            bouquets.add(bouquet);
+        }
+        return bouquets;
     }
 }
 
@@ -174,5 +219,10 @@ class LazyBouquet implements Bouquet<Flower> {
     @Override
     public void setId(Integer id) {
         bouquet.setId(id);
+    }
+
+    @Override
+    public BigDecimal getAssemblePrice() {
+        return bouquet.getAssemblePrice();
     }
 }

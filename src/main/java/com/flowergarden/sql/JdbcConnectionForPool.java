@@ -1,4 +1,4 @@
-package com.flowergarden.storage;
+package com.flowergarden.sql;
 
 import java.sql.*;
 import java.util.Map;
@@ -17,7 +17,7 @@ public class JdbcConnectionForPool implements Connection {
 
     @Override
     public void close() throws SQLException {
-        // TODO: Switch connection to initial state
+        // TODO: Switch connection to initial state (Q)
         pool.returnConnectionInPool(this);
     }
 
