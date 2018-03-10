@@ -4,6 +4,8 @@ import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.storage.JdbcConnectionPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -103,20 +105,20 @@ class LazyBouquet implements Bouquet<Flower> {
 
     private Bouquet<Flower> bouquet;
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     LazyBouquet(FlowerRepository flowerRepository, Bouquet<Flower> bouquet) {
         this.flowerRepository = flowerRepository;
         this.bouquet = bouquet;
     }
 
     private void loadFlowers() {
-        Iterable<Flower> flowers;
         try {
-            flowers = flowerRepository.findBouquetFlowers(bouquet.getId());
+            for (Flower flower : flowerRepository.findBouquetFlowers(bouquet.getId()))
+                bouquet.addFlower(flower);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            log.error("{}", e);
         }
-        for (Flower flower : flowers)
-            bouquet.addFlower(flower);
     }
 
     @Override

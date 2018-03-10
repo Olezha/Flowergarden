@@ -3,6 +3,8 @@ package com.flowergarden.service;
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.repository.BouquetRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import java.sql.SQLException;
 public class BouquetServiceImpl implements BouquetService {
 
     private BouquetRepository bouquetRepository;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public BouquetServiceImpl(BouquetRepository bouquetRepository) {
@@ -25,7 +28,8 @@ public class BouquetServiceImpl implements BouquetService {
         try {
             bouquet = bouquetRepository.findOne(1);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            log.error("{}", e);
+            return null;
         }
 
         return bouquet.getPrice();

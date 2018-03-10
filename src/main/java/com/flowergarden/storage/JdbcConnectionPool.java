@@ -1,5 +1,7 @@
 package com.flowergarden.storage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,7 @@ public class JdbcConnectionPool implements AutoCloseable {
     private List<JdbcConnectionForPool> connectionsPool = new ArrayList<>();
     private List<JdbcConnectionForPool> inUseConnections = new ArrayList<>();
     private String datasourceUrl;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public JdbcConnectionPool(Environment environment) throws SQLException {
@@ -27,7 +30,7 @@ public class JdbcConnectionPool implements AutoCloseable {
             try {
                 poolSize = Integer.parseUnsignedInt(poolSizePropertyString);
             } catch (NumberFormatException e) {
-                System.out.println("Wrong property \"connection.pool.size\"");
+                log.warn("Wrong property \"connection.pool.size\"");
             }
         }
 
@@ -45,7 +48,7 @@ public class JdbcConnectionPool implements AutoCloseable {
         }
         if (connection == null) {
             connection = newConnection();
-            System.out.println("Additional connection created (total " + (inUseConnections.size() + 1) + ")");
+            log.debug("Additional connection created (total {})", inUseConnections.size() + 1);
         }
 
         inUseConnections.add(connection);
