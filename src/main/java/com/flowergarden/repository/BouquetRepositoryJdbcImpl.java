@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -17,11 +18,16 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     private JdbcConnectionPool connectionPool;
 
+    private FlowerRepository flowerRepository;
+
     private static final String FIND_ONE_SQL = "SELECT * FROM bouquet WHERE id=?";
 
     @Autowired
-    public BouquetRepositoryJdbcImpl(JdbcConnectionPool connectionPool) {
+    public BouquetRepositoryJdbcImpl(
+            JdbcConnectionPool connectionPool,
+            FlowerRepository flowerRepository) {
         this.connectionPool = connectionPool;
+        this.flowerRepository = flowerRepository;
     }
 
     @Override
@@ -58,7 +64,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         if (bouquets.size() > 1)
             throw new SQLIntegrityConstraintViolationException("unique id");
 
-        return bouquets.get(0);
+        return new LazyBouquet(flowerRepository, bouquets.get(0));
     }
 
     @Override
@@ -88,5 +94,83 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         try (Connection connection = connectionPool.getConnection()) {
             // TODO
         }
+    }
+}
+
+class LazyBouquet implements Bouquet<Flower> {
+
+    private FlowerRepository flowerRepository;
+
+    private Bouquet<Flower> bouquet;
+
+    LazyBouquet(FlowerRepository flowerRepository, Bouquet<Flower> bouquet) {
+        this.flowerRepository = flowerRepository;
+        this.bouquet = bouquet;
+    }
+
+    private void loadFlowers() {
+        Iterable<Flower> flowers;
+        try {
+            flowers = flowerRepository.findBouquetFlowers(bouquet.getId());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        for (Flower flower : flowers)
+            bouquet.addFlower(flower);
+    }
+
+    @Override
+    public BigDecimal getPrice() {
+        if (bouquet.getFlowers().isEmpty())
+            loadFlowers();
+        return bouquet.getPrice();
+    }
+
+    @Override
+    public void addFlower(Flower flower) {
+        if (bouquet.getFlowers().isEmpty())
+            loadFlowers();
+        bouquet.addFlower(flower);
+    }
+
+    @Override
+    public Collection<Flower> searchFlowersByLength(int start, int end) {
+        if (bouquet.getFlowers().isEmpty())
+            loadFlowers();
+        return bouquet.searchFlowersByLength(start, end);
+    }
+
+    @Override
+    public void sortByFreshness() {
+        if (bouquet.getFlowers().isEmpty())
+            loadFlowers();
+        bouquet.sortByFreshness();
+    }
+
+    @Override
+    public Collection<Flower> getFlowers() {
+        if (bouquet.getFlowers().isEmpty())
+            loadFlowers();
+        return bouquet.getFlowers();
+    }
+
+    @Override
+    public String getName() {
+        return bouquet.getName();
+    }
+
+    @Override
+    public void setAssemblePrice(BigDecimal assemblePrice) {
+        bouquet.setAssemblePrice(assemblePrice);
+    }
+
+    @Override
+    public Integer getId() {
+        return bouquet.getId();
+    }
+
+    @Override
+    public void setId(Integer id) {
+        bouquet.setId(id);
     }
 }
