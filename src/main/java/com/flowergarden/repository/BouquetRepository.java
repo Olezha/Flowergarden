@@ -10,6 +10,6 @@ public interface BouquetRepository {
     Bouquet findOne(int id) throws SQLException;
     Iterable<Bouquet> findAll() throws SQLException;
     void delete(int id) throws SQLException;
-    void delete(Bouquet flower) throws SQLException;
+    void delete(Bouquet bouquet) throws SQLException;
     void deleteAll() throws SQLException;
 }
