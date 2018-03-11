@@ -1,7 +1,6 @@
 package com.flowergarden.repository;
 
-import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.model.flowers.GeneralFlower;
+import com.flowergarden.model.flowers.*;
 import com.flowergarden.model.properties.FreshnessInteger;
 import com.flowergarden.sql.JdbcConnectionPool;
 import com.flowergarden.sql.SqlStatements;
@@ -39,34 +38,47 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         try (Connection connection = connectionPool.getConnection()) {
             if (flower.getId() == null) {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_SAVE"))) {
-                    // TODO
-//                    statement.setString(1, name);
+                    statement.setString(1, flower.getClass().getSimpleName().toLowerCase());
                     statement.setInt(2, flower.getLength());
-//                    statement.setInt(3, flower.getFreshness().getFreshness());
+                    if (flower instanceof GeneralFlower) {
+                        GeneralFlower generalFlower = (GeneralFlower) flower;
+                        statement.setInt(3, generalFlower.getFreshness().getFreshness());
+                    }
                     statement.setBigDecimal(4, flower.getPrice());
-//                    statement.setInt(5, petals);
-//                    statement.setBoolean(6, spike);
+                    if (flower instanceof Chamomile) {
+                        Chamomile chamomile = (Chamomile) flower;
+                        statement.setInt(5, chamomile.getPetals());
+                    }
+                    if (flower instanceof Rose) {
+                        Rose rose = (Rose) flower;
+                        statement.setBoolean(6, rose.getSpike());
+                    }
                     statement.setInt(7, bouquetId);
                     statement.executeUpdate();
+
                     flower.setId(statement.getGeneratedKeys().getInt(1));
                 }
             }
             else {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_UPDATE"))) {
-//                    length=?, freshness=?, price=?, petals=?, bouquet_id=? WHERE id=?
-                    // TODO
                     statement.setInt(1, flower.getLength());
-//                    statement.setInt(2, flower.getFreshness().getFreshness());
+                    if (flower instanceof GeneralFlower) {
+                        GeneralFlower generalFlower = (GeneralFlower) flower;
+                        statement.setInt(2, generalFlower.getFreshness().getFreshness());
+                    }
                     statement.setBigDecimal(3, flower.getPrice());
-//                    statement.setInt(4, petals);
-//                    statement.setInt(5, bouquet.id);
+                    if (flower instanceof Chamomile) {
+                        Chamomile chamomile = (Chamomile) flower;
+                        statement.setInt(4, chamomile.getPetals());
+                    }
+                    if (bouquetId != null)
+                    statement.setInt(5, bouquetId);
                     statement.setInt(6, flower.getId());
                     statement.executeUpdate();
                 }
             }
         }
-        // TODO
-        return null;
+        return flower;
     }
 
     @Override
@@ -156,12 +168,39 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     private List<Flower> convert(ResultSet resultSet) throws SQLException {
         List<Flower> flowers = new ArrayList<>();
         while (resultSet.next()) {
-            // TODO
-//            Flower flower = new Flower();
-//            flower.setId(resultSet.getInt("id"));
-//            flower.setPrice(new BigDecimal(resultSet.getString("price")));
-//            ...
-//            flowers.add(flower);
+            Flower flower = null;
+            switch (resultSet.getString("name")) {
+                case "chamomile": {
+                    Chamomile chamomile = new Chamomile(
+                            resultSet.getInt("petals"),
+                            resultSet.getInt("length"),
+                            new BigDecimal(resultSet.getString("price")),
+                            new FreshnessInteger(resultSet.getInt("freshness")));
+                    chamomile.setId(resultSet.getInt("id"));
+                    flower = chamomile;
+                    break;
+                }
+                case "rose": {
+                    Rose rose = new Rose(
+                            resultSet.getBoolean("spike"),
+                            resultSet.getInt("length"),
+                            new BigDecimal(resultSet.getString("price")),
+                            new FreshnessInteger(resultSet.getInt("freshness")));
+                    rose.setId(resultSet.getInt("id"));
+                    flower = rose;
+                    break;
+                }
+                case "tulip": {
+                    Tulip tulip = new Tulip();
+                    tulip.setFreshness(new FreshnessInteger(resultSet.getInt("freshness")));
+                    tulip.setLength(resultSet.getInt("length"));
+                    tulip.setPrice(new BigDecimal(resultSet.getString("price")));
+                    tulip.setId(resultSet.getInt("id"));
+                    flower = tulip;
+                    break;
+                }
+            }
+            flowers.add(flower);
         }
         return flowers;
     }

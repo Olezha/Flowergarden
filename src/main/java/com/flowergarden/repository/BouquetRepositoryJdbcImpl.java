@@ -40,7 +40,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         try (Connection connection = connectionPool.getConnection()) {
             if (bouquet.getId() == null) {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
-                    // TODO
+                    // We'll cross this bridge when we come to it
                     statement.setString(1, "married");
                     statement.setBigDecimal(2, bouquet.getAssemblePrice());
                     statement.executeUpdate();
@@ -113,7 +113,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public BigDecimal getBouquetPrice(int bouquetId) throws SQLException {
-        // TODO: change db money columns to INTEGER
+        // TODO: change money columns to INTEGER
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_PRICE"))) {
             statement.setInt(1, bouquetId);
