@@ -4,6 +4,7 @@ import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.model.flowers.GeneralFlower;
 import com.flowergarden.model.properties.FreshnessInteger;
 import com.flowergarden.sql.JdbcConnectionPool;
+import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,32 +19,14 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     private JdbcConnectionPool connectionPool;
 
-    private static final String SAVE_SQL =
-            "INSERT INTO flower " +
-                    "(name, length, freshness, price, petals, spike, bouquet_id) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-    private static final String FIND_ONE_SQL = "SELECT * FROM flower WHERE id=?";
-
-    private static final String FIND_ALL_SQL = "SELECT * FROM flower";
-
-    private static final String FIND_BOUQUET_FLOWERS_SQL =
-            "SELECT * FROM flower WHERE bouquet_id=?";
-
-    private static final String UPDATE_SQL =
-            "UPDATE flower SET " +
-                    "length=?, freshness=?, price=?, petals=?, bouquet_id=? WHERE id=?";
-
-    private static final String DELETE_SQL = "DELETE FROM flower WHERE id=?";
-
-    private static final String DELETE_ALL_SQL = "DELETE FROM flower";
-
-    private static final String DELETE_BOUQUET_FLOWERS_SQL =
-            "DELETE FROM flower WHERE bouquet_id=?";
+    private SqlStatements sql;
 
     @Autowired
-    public FlowerRepositoryJdbcImpl(JdbcConnectionPool connectionPool) {
+    public FlowerRepositoryJdbcImpl(
+            JdbcConnectionPool connectionPool,
+            SqlStatements sql) {
         this.connectionPool = connectionPool;
+        this.sql = sql;
     }
 
     @Override
@@ -55,7 +38,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     public Flower saveOrUpdate(Flower flower, Integer bouquetId) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             if (flower.getId() == null) {
-                try (PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
+                try (PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_SAVE"))) {
                     // TODO
 //                    statement.setString(1, name);
                     statement.setInt(2, flower.getLength());
@@ -69,7 +52,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                 }
             }
             else {
-                try (PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+                try (PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_UPDATE"))) {
 //                    length=?, freshness=?, price=?, petals=?, bouquet_id=? WHERE id=?
                     // TODO
                     statement.setInt(1, flower.getLength());
@@ -96,7 +79,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     public Flower findOne(int id) throws SQLException {
         List<Flower> flowers;
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ONE_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
             statement.setInt(1, id);
             flowers = convert(statement.executeQuery());
         }
@@ -114,14 +97,14 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     public Iterable<Flower> findAll() throws SQLException {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
-            return convert(statement.executeQuery(FIND_ALL_SQL));
+            return convert(statement.executeQuery(sql.get("FLOWER_FIND_ALL")));
         }
     }
 
     @Override
     public Iterable<Flower> findBouquetFlowers(int bouquetId) throws SQLException {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_BOUQUET_FLOWERS_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_BOUQUET_FLOWERS"))) {
             statement.setInt(1, bouquetId);
             ResultSet resultSet = statement.executeQuery();
             List<Flower> flowers = new ArrayList<>();
@@ -140,7 +123,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     @Override
     public void delete(int id) throws SQLException {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_DELETE"))) {
             statement.setInt(1, id);
             statement.executeUpdate();
         }
@@ -157,14 +140,14 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     public void deleteAll() throws SQLException {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(DELETE_ALL_SQL);
+            statement.executeUpdate(sql.get("FLOWER_DELETE_ALL"));
         }
     }
 
     @Override
     public void deleteBouquetFlowers(int bouquetId) throws SQLException {
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_BOUQUET_FLOWERS_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_DELETE_BOUQUET_FLOWERS"))) {
             statement.setInt(1, bouquetId);
             statement.executeUpdate();
         }

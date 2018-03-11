@@ -4,6 +4,7 @@ import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.sql.JdbcConnectionPool;
+import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,44 +23,32 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     private FlowerRepository flowerRepository;
 
-    private static final String SAVE_SQL =
-            "INSERT INTO bouquet (name, assemble_price) VALUES ('married', ?)";
-
-    private static final String FIND_ONE_SQL = "SELECT * FROM bouquet WHERE id=?";
-
-    private static final String FIND_ALL_SQL = "SELECT * FROM bouquet";
-
-    private static final String BOUQUET_PRICE_SQL =
-            "SELECT SUM(price) + b.assemble_price " +
-                    "FROM bouquet b JOIN flower f ON b.id=f.bouquet_id WHERE b.id=?";
-
-    private static final String UPDATE_SQL =
-            "UPDATE bouquet SET assemble_price=? WHERE id=?";
-
-    private static final String DELETE_SQL = "DELETE FROM bouquet WHERE id=?";
-
-    private static final String DELETE_ALL_SQL = "DELETE FROM bouquet";
+    private SqlStatements sql;
 
     @Autowired
     public BouquetRepositoryJdbcImpl(
             JdbcConnectionPool connectionPool,
-            FlowerRepository flowerRepository) {
+            FlowerRepository flowerRepository,
+            SqlStatements sql) {
         this.connectionPool = connectionPool;
         this.flowerRepository = flowerRepository;
+        this.sql = sql;
     }
 
     @Override
     public Bouquet saveOrUpdate(Bouquet bouquet) throws SQLException {
         try (Connection connection = connectionPool.getConnection()) {
             if (bouquet.getId() == null) {
-                try (PreparedStatement statement = connection.prepareStatement(SAVE_SQL)) {
-                    statement.setBigDecimal(1, bouquet.getAssemblePrice());
+                try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
+                    // TODO
+                    statement.setString(1, "married");
+                    statement.setBigDecimal(2, bouquet.getAssemblePrice());
                     statement.executeUpdate();
                     bouquet.setId(statement.getGeneratedKeys().getInt(1));
                 }
             }
             else {
-                try (PreparedStatement statement = connection.prepareStatement(UPDATE_SQL)) {
+                try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_UPDATE"))) {
                     statement.setBigDecimal(1, bouquet.getAssemblePrice());
                     statement.setInt(2, bouquet.getId());
                     statement.executeUpdate();
@@ -74,7 +63,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     public Bouquet<Flower> findOne(int id) throws SQLException {
         List<Bouquet<Flower>> bouquets;
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(FIND_ONE_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_FIND_ONE"))) {
             statement.setInt(1, id);
             bouquets = convert(statement.executeQuery());
         }
@@ -92,7 +81,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     public Iterable<Bouquet<Flower>> findAll() throws SQLException {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
-            return convert(statement.executeQuery(FIND_ALL_SQL));
+            return convert(statement.executeQuery(sql.get("BOUQUET_FIND_ALL")));
         }
     }
 
@@ -100,7 +89,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     public void delete(int id) throws SQLException {
         flowerRepository.deleteBouquetFlowers(id);
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_DELETE"))) {
             statement.setInt(1, id);
             statement.executeUpdate();
         }
@@ -118,7 +107,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         flowerRepository.deleteAll();
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
-            statement.executeUpdate(DELETE_ALL_SQL);
+            statement.executeUpdate(sql.get("BOUQUET_DELETE_ALL"));
         }
     }
 
@@ -126,7 +115,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     public BigDecimal getBouquetPrice(int bouquetId) throws SQLException {
         // TODO: change db money columns to INTEGER
         try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(BOUQUET_PRICE_SQL)) {
+             PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_PRICE"))) {
             statement.setInt(1, bouquetId);
             return new BigDecimal(statement.executeQuery().getString(1));
         }

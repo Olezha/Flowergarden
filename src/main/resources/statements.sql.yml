@@ -1,0 +1,60 @@
+BOUQUET_SAVE: >-
+  INSERT INTO bouquet
+  (name, assemble_price)
+  VALUES (?, ?)
+
+BOUQUET_FIND_ONE: >-
+  SELECT * FROM bouquet
+  WHERE id=?
+
+BOUQUET_FIND_ALL: >-
+  SELECT * FROM bouquet
+
+BOUQUET_PRICE: >-
+  SELECT SUM(price) + b.assemble_price
+  FROM bouquet b JOIN flower f ON b.id=f.bouquet_id
+  WHERE b.id=?
+
+BOUQUET_UPDATE: >-
+  UPDATE bouquet
+  SET assemble_price=?
+  WHERE id=?
+
+BOUQUET_DELETE: >-
+  DELETE FROM bouquet
+  WHERE id=?
+
+BOUQUET_DELETE_ALL: >-
+  DELETE FROM bouquet
+
+FLOWER_SAVE: >-
+  INSERT INTO flower
+  (name, length, freshness, price, petals, spike, bouquet_id)
+  VALUES (?, ?, ?, ?, ?, ?, ?)
+
+FLOWER_FIND_ONE: >-
+  SELECT * FROM flower
+  WHERE id=?
+
+FLOWER_FIND_ALL: >-
+  SELECT * FROM flower
+
+FLOWER_FIND_BOUQUET_FLOWERS: >-
+  SELECT * FROM flower
+  WHERE bouquet_id=?
+
+FLOWER_UPDATE: >-
+  UPDATE flower
+  SET length=?, freshness=?, price=?, petals=?, bouquet_id=?
+  WHERE id=?
+
+FLOWER_DELETE: >-
+  DELETE FROM flower
+  WHERE id=?
+
+FLOWER_DELETE_ALL: >-
+  DELETE FROM flower
+
+FLOWER_DELETE_BOUQUET_FLOWERS: >-
+  DELETE FROM flower
+  WHERE bouquet_id=?
