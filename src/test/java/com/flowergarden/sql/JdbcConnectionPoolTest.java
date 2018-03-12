@@ -1,5 +1,6 @@
 package com.flowergarden.sql;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class JdbcConnectionPoolTest {
     @Autowired
     private JdbcConnectionPool jdbcConnectionPool;
 
+    @Ignore
     @Test
     public void poolTest() throws Exception {
         Field connectionsPoolField = jdbcConnectionPool.getClass().getDeclaredField("connectionsPool");
