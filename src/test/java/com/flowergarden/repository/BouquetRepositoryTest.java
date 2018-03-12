@@ -18,7 +18,7 @@ public class BouquetRepositoryTest {
     private BouquetRepository bouquetRepository;
 
     @Test
-    public void bouquetPriceTets() throws SQLException {
+    public void bouquetPriceTest() throws SQLException {
         assertEquals(bouquetRepository.findOne(1).getPrice(),
                 bouquetRepository.getBouquetPrice(1));
     }

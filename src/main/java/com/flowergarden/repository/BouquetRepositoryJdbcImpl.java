@@ -40,7 +40,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         try (Connection connection = connectionPool.getConnection()) {
             if (bouquet.getId() == null) {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
-                    // We'll cross this bridge when we come to it
+                    // We'll cross when we come
                     statement.setString(1, "married");
                     statement.setBigDecimal(2, bouquet.getAssemblePrice());
                     statement.executeUpdate();
