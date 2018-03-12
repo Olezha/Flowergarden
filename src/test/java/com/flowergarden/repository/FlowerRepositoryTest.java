@@ -1,6 +1,6 @@
 package com.flowergarden.repository;
 
-import com.flowergarden.model.bouquet.Bouquet;
+import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.sql.JdbcConnectionPool;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,10 +17,10 @@ import static org.junit.Assert.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
-public class BouquetRepositoryTest {
+public class FlowerRepositoryTest {
 
     @Autowired
-    private BouquetRepository bouquetRepository;
+    FlowerRepository flowerRepository;
 
     @Autowired
     private JdbcConnectionPool jdbcConnectionPool;
@@ -36,9 +36,26 @@ public class BouquetRepositoryTest {
     };
 
     @Test
-    public void bouquetPriceTest() throws SQLException {
-        Bouquet bouquet = bouquetRepository.findOne(1);
-        assertNotNull(bouquet);
-        assertEquals(bouquet.getPrice(), bouquetRepository.getBouquetPrice(1));
+    public void findOneFlowerTest() throws SQLException {
+        assertNotNull(flowerRepository.findOne(1));
+    }
+
+    @Test
+    public void deleteFlowerTest() throws SQLException {
+        flowerRepository.delete(flowerRepository.findOne(1));
+        assertNull(flowerRepository.findOne(1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deleteFlowerWithoutIdTest() throws SQLException {
+        Flower flower = flowerRepository.findOne(1);
+        flower.setId(null);
+        flowerRepository.delete(flower);
+    }
+
+    @Test
+    public void deleteAllTest() throws SQLException {
+        flowerRepository.deleteAll();
+        assertNull(flowerRepository.findOne(1));
     }
 }
