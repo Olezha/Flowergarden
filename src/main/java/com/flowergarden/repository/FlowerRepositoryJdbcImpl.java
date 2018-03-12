@@ -7,7 +7,6 @@ import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,15 +43,21 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                         GeneralFlower generalFlower = (GeneralFlower) flower;
                         statement.setInt(3, generalFlower.getFreshness().getFreshness());
                     }
+                    else
+                        statement.setNull(3, Types.INTEGER);
                     statement.setBigDecimal(4, flower.getPrice());
                     if (flower instanceof Chamomile) {
                         Chamomile chamomile = (Chamomile) flower;
                         statement.setInt(5, chamomile.getPetals());
                     }
+                    else
+                        statement.setNull(5, Types.INTEGER);
                     if (flower instanceof Rose) {
                         Rose rose = (Rose) flower;
                         statement.setBoolean(6, rose.getSpike());
                     }
+                    else
+                        statement.setNull(6, Types.BOOLEAN);
                     statement.setInt(7, bouquetId);
                     statement.executeUpdate();
 
@@ -66,13 +71,19 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                         GeneralFlower generalFlower = (GeneralFlower) flower;
                         statement.setInt(2, generalFlower.getFreshness().getFreshness());
                     }
+                    else
+                        statement.setNull(2, Types.INTEGER);
                     statement.setBigDecimal(3, flower.getPrice());
                     if (flower instanceof Chamomile) {
                         Chamomile chamomile = (Chamomile) flower;
                         statement.setInt(4, chamomile.getPetals());
                     }
+                    else
+                        statement.setNull(4, Types.INTEGER);
                     if (bouquetId != null)
-                    statement.setInt(5, bouquetId);
+                        statement.setInt(5, bouquetId);
+                    else
+                        statement.setNull(5, Types.INTEGER);
                     statement.setInt(6, flower.getId());
                     statement.executeUpdate();
                 }
@@ -124,7 +135,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                 GeneralFlower flower = new GeneralFlower() {};
                 flower.setId(resultSet.getInt("id"));
                 flower.setFreshness(new FreshnessInteger(resultSet.getInt("freshness")));
-                flower.setPrice(new BigDecimal(resultSet.getString("price")));
+                flower.setPrice(resultSet.getBigDecimal("price"));
                 flower.setLength(resultSet.getInt("length"));
                 flowers.add(flower);
             }
@@ -174,7 +185,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                     Chamomile chamomile = new Chamomile(
                             resultSet.getInt("petals"),
                             resultSet.getInt("length"),
-                            new BigDecimal(resultSet.getString("price")),
+                            resultSet.getBigDecimal("price"),
                             new FreshnessInteger(resultSet.getInt("freshness")));
                     chamomile.setId(resultSet.getInt("id"));
                     flower = chamomile;
@@ -184,7 +195,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                     Rose rose = new Rose(
                             resultSet.getBoolean("spike"),
                             resultSet.getInt("length"),
-                            new BigDecimal(resultSet.getString("price")),
+                            resultSet.getBigDecimal("price"),
                             new FreshnessInteger(resultSet.getInt("freshness")));
                     rose.setId(resultSet.getInt("id"));
                     flower = rose;
@@ -194,7 +205,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                     Tulip tulip = new Tulip();
                     tulip.setFreshness(new FreshnessInteger(resultSet.getInt("freshness")));
                     tulip.setLength(resultSet.getInt("length"));
-                    tulip.setPrice(new BigDecimal(resultSet.getString("price")));
+                    tulip.setPrice(resultSet.getBigDecimal("price"));
                     tulip.setId(resultSet.getInt("id"));
                     flower = tulip;
                     break;

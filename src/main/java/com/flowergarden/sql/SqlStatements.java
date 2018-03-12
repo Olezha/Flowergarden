@@ -18,7 +18,7 @@ public class SqlStatements {
     public SqlStatements() {
         try {
             try (InputStream inputStream = getClass().getClassLoader()
-                    .getResourceAsStream("statements.sql.yml")) {
+                    .getResourceAsStream("db/statements.sql.yml")) {
                 sqlStatements = new Yaml().load(inputStream);
             }
         } catch (IOException e) {

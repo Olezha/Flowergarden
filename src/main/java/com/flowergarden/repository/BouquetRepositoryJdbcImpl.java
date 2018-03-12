@@ -40,7 +40,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         try (Connection connection = connectionPool.getConnection()) {
             if (bouquet.getId() == null) {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
-                    // We'll cross this bridge when we come to it
+                    // We'll cross when we come
                     statement.setString(1, "married");
                     statement.setBigDecimal(2, bouquet.getAssemblePrice());
                     statement.executeUpdate();
@@ -117,7 +117,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_PRICE"))) {
             statement.setInt(1, bouquetId);
-            return new BigDecimal(statement.executeQuery().getString(1));
+            return statement.executeQuery().getBigDecimal(1);
         }
     }
 
@@ -126,7 +126,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         while (resultSet.next()) {
             Bouquet<Flower> bouquet = new MarriedBouquet();
             bouquet.setId(resultSet.getInt("id"));
-            bouquet.setAssemblePrice(new BigDecimal(resultSet.getString("assemble_price")));
+            bouquet.setAssemblePrice(resultSet.getBigDecimal("assemble_price"));
             bouquets.add(bouquet);
         }
         return bouquets;
