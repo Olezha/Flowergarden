@@ -1,28 +1,29 @@
 package com.flowergarden.sql;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 public class JdbcConnectionPoolTest {
 
-    @Autowired
-    private JdbcConnectionPool jdbcConnectionPool;
+    @Mock
+    private Environment environment;
 
-    @Ignore
     @Test
-    public void poolTest() throws Exception {
+    public void poolGetAndReturnConnectionsWhiteTest() throws Exception {
+        when(environment.getRequiredProperty("datasource.url")).thenReturn("jdbc:sqlite:");
+        JdbcConnectionPool jdbcConnectionPool = new JdbcConnectionPool(environment);
+
         Field connectionsPoolField = jdbcConnectionPool.getClass().getDeclaredField("connectionsPool");
         connectionsPoolField.setAccessible(true);
         List<Connection> connectionsPool = (List) connectionsPoolField.get(jdbcConnectionPool);
