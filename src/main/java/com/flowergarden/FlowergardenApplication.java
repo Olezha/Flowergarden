@@ -29,10 +29,9 @@ public class FlowergardenApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-        // TODO
-//        Flyway flyway = new Flyway();
-//        flyway.setDataSource(datasourceUrl, null, null);
-//        flyway.migrate();
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(datasourceUrl, null, null);
+        flyway.migrate();
 
         System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
     }
