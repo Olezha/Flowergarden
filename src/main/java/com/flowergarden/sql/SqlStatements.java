@@ -23,8 +23,8 @@ public class SqlStatements {
             }
         } catch (IOException e) {
             log.error("{}", e);
-            log.info("Unable to start program (code 256)");
-            System.exit(256);
+            log.info("Unable to start program (code 512)");
+            System.exit(512);
         }
     }
 
