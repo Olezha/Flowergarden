@@ -1,11 +1,15 @@
 package com.flowergarden.sql;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.*;
 
 public class Connection implements AutoCloseable {
 
     private java.sql.Connection connection;
     private ConnectionPoolJdbcImpl pool;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     Connection(java.sql.Connection connection, ConnectionPoolJdbcImpl pool) {
         this.connection = connection;
@@ -16,20 +20,16 @@ public class Connection implements AutoCloseable {
         try {
             return connection.createStatement();
         } catch (SQLException e) {
-            // TODO
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public PreparedStatement prepareStatement(String s) {
         try {
             return connection.prepareStatement(s);
         } catch (SQLException e) {
-            // TODO
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
@@ -41,8 +41,7 @@ public class Connection implements AutoCloseable {
         try {
             connection.close();
         } catch (SQLException e) {
-            // TODO
-            e.printStackTrace();
+            log.warn("{}", e);
         }
     }
 
@@ -50,8 +49,7 @@ public class Connection implements AutoCloseable {
         try {
             return connection.isClosed();
         } catch (SQLException e) {
-            // TODO
-            e.printStackTrace();
+            log.warn("{}", e);
         }
         return true;
     }

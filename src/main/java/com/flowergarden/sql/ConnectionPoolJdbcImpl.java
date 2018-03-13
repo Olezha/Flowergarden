@@ -64,11 +64,8 @@ public class ConnectionPoolJdbcImpl implements ConnectionPool {
         try {
             return new Connection(DriverManager.getConnection(datasourceUrl), this);
         } catch (SQLException e) {
-            log.debug("{}", e);
-            log.warn("");
-            // TODO
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
