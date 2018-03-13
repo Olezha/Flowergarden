@@ -1,11 +1,13 @@
-package com.flowergarden.sql;
+package com.flowergarden.sql.moduleTest;
 
+import com.flowergarden.sql.*;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.sql.Connection;
 
 import static org.junit.Assert.*;
 
@@ -19,7 +21,7 @@ public class SqlStatementsTest {
     public ExternalResource resource = new ExternalResource() {
         @Override
         protected void before() throws Throwable {
-            connection = new Connection(DriverManager.getConnection("jdbc:sqlite:"), null);
+            connection = DriverManager.getConnection("jdbc:sqlite:");
             try (Statement statement = connection.createStatement()) {
                 statement.executeUpdate("restore from db/flowergarden.backup.db");
             }
@@ -27,7 +29,11 @@ public class SqlStatementsTest {
 
         @Override
         protected void after() {
-            connection.closeConnection();
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     };
 

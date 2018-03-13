@@ -1,5 +1,7 @@
-package com.flowergarden.model.properties;
+package com.flowergarden.model.mockTest.properties;
 
+import com.flowergarden.model.properties.Freshness;
+import com.flowergarden.model.properties.FreshnessInteger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

@@ -1,5 +1,6 @@
-package com.flowergarden.sql;
+package com.flowergarden.sql.mockTest;
 
+import com.flowergarden.sql.Connection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -7,13 +8,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class JdbcConnectionPoolTest {
+public class ConnectionPoolJdbcImplWhiteMockTest {
 
     @Mock
     private Environment environment;
@@ -21,7 +24,7 @@ public class JdbcConnectionPoolTest {
     @Test
     public void poolGetAndReturnConnectionsWhiteTest() throws Exception {
         when(environment.getRequiredProperty("datasource.url")).thenReturn("jdbc:sqlite:");
-        ConnectionPoolJdbcImpl jdbcConnectionPool = new ConnectionPoolJdbcImpl(environment);
+        com.flowergarden.sql.ConnectionPoolJdbcImpl jdbcConnectionPool = new com.flowergarden.sql.ConnectionPoolJdbcImpl(environment);
 
         Field connectionsPoolField = jdbcConnectionPool.getClass().getDeclaredField("connectionsPool");
         connectionsPoolField.setAccessible(true);
@@ -43,14 +46,13 @@ public class JdbcConnectionPoolTest {
             inUseConnections.get(0).close();
 
         for (Connection connection : connectionsPool)
-            assertFalse(connection.isClosed());
+            assertFalse(isClosed(connection));
 
         assertSame(totalConnections + 2, connectionsPool.size());
         assertTrue(inUseConnections.isEmpty());
 
         for (Connection connection : connectionsPool) {
-            Connection jdbcConnectionForPool = (Connection) connection;
-            jdbcConnectionForPool.closeConnection();
+            closeConnection(connection);
         }
 
         jdbcConnectionPool.getConnection();
@@ -70,11 +72,23 @@ public class JdbcConnectionPoolTest {
         assertTrue(connectionsPool.size() == 16);
 
         for (Connection connection : connectionsPool)
-            assertTrue(connection.isClosed());
+            assertTrue(isClosed(connection));
 
         assertTrue(inUseConnections.size() == 10);
 
         for (Connection connection : inUseConnections)
-            assertTrue(connection.isClosed());
+            assertTrue(isClosed(connection));
+    }
+
+    private void closeConnection(Connection connection) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = connection.getClass().getDeclaredMethod("closeConnection");
+        method.setAccessible(true);
+        method.invoke(connection);
+    }
+
+    private boolean isClosed(Connection connection) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method method = connection.getClass().getDeclaredMethod("isClosed");
+        method.setAccessible(true);
+        return (boolean) method.invoke(connection);
     }
 }

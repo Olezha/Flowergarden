@@ -1,5 +1,7 @@
-package com.flowergarden.model.bouquet;
+package com.flowergarden.model.moduleTest.bouquet;
 
+import com.flowergarden.model.bouquet.Bouquet;
+import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Chamomile;
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.model.flowers.Rose;

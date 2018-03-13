@@ -1,5 +1,6 @@
-package com.flowergarden.model.bouquet;
+package com.flowergarden.model.moduleTest.bouquet;
 
+import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.*;
 
 import org.junit.Test;

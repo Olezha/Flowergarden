@@ -1,18 +1,19 @@
-package com.flowergarden.model.flowers;
+package com.flowergarden.model.moduleTest.flowers;
 
+import com.flowergarden.model.flowers.Chamomile;
+import com.flowergarden.model.flowers.Rose;
 import com.flowergarden.model.properties.FreshnessInteger;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
-public class FlowersMockTest {
+public class FlowersTest {
 
     @Test
     public void chamomilePetalsTest() {
-        Chamomile chamomile = new Chamomile(3, 15, mock(BigDecimal.class), mock(FreshnessInteger.class));
+        Chamomile chamomile = new Chamomile(3, 15, BigDecimal.ONE, new FreshnessInteger(2));
         assertEquals(3, chamomile.getPetals());
         assertTrue(chamomile.getPetal());
         assertEquals(-1, chamomile.getPetals());
@@ -21,7 +22,7 @@ public class FlowersMockTest {
 
     @Test
     public void roseTest() {
-        Rose rose = new Rose(true, 25, mock(BigDecimal.class), mock(FreshnessInteger.class));
+        Rose rose = new Rose(true, 25, BigDecimal.TEN, new FreshnessInteger(3));
         assertTrue(rose.getSpike());
     }
 }
