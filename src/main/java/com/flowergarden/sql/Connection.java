@@ -5,9 +5,9 @@ import java.sql.*;
 public class Connection implements AutoCloseable {
 
     private java.sql.Connection connection;
-    private JdbcConnectionPool pool;
+    private ConnectionPoolJdbcImpl pool;
 
-    Connection(java.sql.Connection connection, JdbcConnectionPool pool) {
+    Connection(java.sql.Connection connection, ConnectionPoolJdbcImpl pool) {
         this.connection = connection;
         this.pool = pool;
     }

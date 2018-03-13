@@ -21,7 +21,7 @@ public class JdbcConnectionPoolTest {
     @Test
     public void poolGetAndReturnConnectionsWhiteTest() throws Exception {
         when(environment.getRequiredProperty("datasource.url")).thenReturn("jdbc:sqlite:");
-        JdbcConnectionPool jdbcConnectionPool = new JdbcConnectionPool(environment);
+        ConnectionPoolJdbcImpl jdbcConnectionPool = new ConnectionPoolJdbcImpl(environment);
 
         Field connectionsPoolField = jdbcConnectionPool.getClass().getDeclaredField("connectionsPool");
         connectionsPoolField.setAccessible(true);

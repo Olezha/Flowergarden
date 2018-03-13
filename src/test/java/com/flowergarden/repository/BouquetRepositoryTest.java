@@ -1,7 +1,7 @@
 package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
-import com.flowergarden.sql.JdbcConnectionPool;
+import com.flowergarden.sql.ConnectionPoolJdbcImpl;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
@@ -23,7 +23,7 @@ public class BouquetRepositoryTest {
     private BouquetRepository bouquetRepository;
 
     @Autowired
-    private JdbcConnectionPool jdbcConnectionPool;
+    private ConnectionPoolJdbcImpl jdbcConnectionPool;
 
     @Rule
     public ExternalResource resource= new ExternalResource() {

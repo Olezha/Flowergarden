@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JdbcConnectionPool implements ConnectionPool {
+public class ConnectionPoolJdbcImpl implements ConnectionPool {
 
     private List<Connection> connectionsPool = new ArrayList<>();
     private List<Connection> inUseConnections = new ArrayList<>();
@@ -20,7 +20,7 @@ public class JdbcConnectionPool implements ConnectionPool {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public JdbcConnectionPool(Environment environment) {
+    public ConnectionPoolJdbcImpl(Environment environment) {
         this.datasourceUrl = environment.getRequiredProperty("datasource.url");
 
         int poolSize = 10;
