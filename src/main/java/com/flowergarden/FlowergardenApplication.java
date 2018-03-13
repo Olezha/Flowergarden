@@ -37,7 +37,7 @@ public class FlowergardenApplication implements CommandLineRunner {
             flyway.setDataSource(properties.getProperty("datasource.url"), null, null);
             flyway.migrate();
         } catch (IOException | NullPointerException e) {
-            log.warn("{}", e);
+            log.debug("{}", e);
             log.warn("Unable to migrate db");
         }
 

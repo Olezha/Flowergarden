@@ -2,7 +2,7 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.*;
 import com.flowergarden.model.properties.FreshnessInteger;
-import com.flowergarden.sql.JdbcConnectionPool;
+import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,13 +15,13 @@ import java.util.List;
 @Repository
 public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
-    private JdbcConnectionPool connectionPool;
+    private ConnectionPool connectionPool;
 
     private SqlStatements sql;
 
     @Autowired
     public FlowerRepositoryJdbcImpl(
-            JdbcConnectionPool connectionPool,
+            ConnectionPool connectionPool,
             SqlStatements sql) {
         this.connectionPool = connectionPool;
         this.sql = sql;

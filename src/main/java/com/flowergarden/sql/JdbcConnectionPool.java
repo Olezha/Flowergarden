@@ -1,6 +1,5 @@
 package com.flowergarden.sql;
 
-import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class JdbcConnectionPool implements AutoCloseable {
+public class JdbcConnectionPool implements ConnectionPool {
 
     private List<JdbcConnectionForPool> connectionsPool = new ArrayList<>();
     private List<JdbcConnectionForPool> inUseConnections = new ArrayList<>();
@@ -22,7 +21,7 @@ public class JdbcConnectionPool implements AutoCloseable {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public JdbcConnectionPool(Environment environment) throws SQLException {
+    public JdbcConnectionPool(Environment environment) {
         this.datasourceUrl = environment.getRequiredProperty("datasource.url");
 
         int poolSize = 10;
@@ -39,13 +38,19 @@ public class JdbcConnectionPool implements AutoCloseable {
             connectionsPool.add(newConnection());
     }
 
-    public Connection getConnection() throws SQLException {
+    @Override
+    public Connection getConnection() {
         JdbcConnectionForPool connection = null;
         while (!connectionsPool.isEmpty()) {
             connection = connectionsPool.remove(0);
-            if (connection.isClosed())
+            try {
+                if (connection.isClosed())
+                    connection = null;
+                else break;
+            } catch (SQLException e) {
+                log.debug("{}", e);
                 connection = null;
-            else break;
+            }
         }
         if (connection == null) {
             connection = newConnection();
@@ -61,17 +66,34 @@ public class JdbcConnectionPool implements AutoCloseable {
         connectionsPool.add(connection);
     }
 
-    private JdbcConnectionForPool newConnection() throws SQLException {
-        return new JdbcConnectionForPool(DriverManager.getConnection(datasourceUrl), this);
+    private JdbcConnectionForPool newConnection() {
+        try {
+            return new JdbcConnectionForPool(DriverManager.getConnection(datasourceUrl), this);
+        } catch (SQLException e) {
+            log.debug("{}", e);
+            log.warn("");
+            // TODO
+        }
+        return null;
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         for (JdbcConnectionForPool connection : connectionsPool) {
-            connection.closeConnection();
+            closeConnection(connection);
         }
         for (JdbcConnectionForPool connection : inUseConnections) {
+            closeConnection(connection);
+        }
+    }
+
+    private void closeConnection(JdbcConnectionForPool connection) {
+        try {
             connection.closeConnection();
+        } catch (SQLException e) {
+            log.debug("{}", e);
+            log.warn("");
+            // TODO
         }
     }
 }

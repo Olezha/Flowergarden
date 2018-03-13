@@ -13,7 +13,7 @@ public class SqlStatementsTest {
 
     private Connection connection;
 
-    private SqlStatements sql = new SqlStatements();
+    private SqlStatementsImpl sql = new SqlStatementsImpl();
 
     @Rule
     public ExternalResource resource= new ExternalResource() {

@@ -3,7 +3,7 @@ package com.flowergarden.repository;
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.sql.JdbcConnectionPool;
+import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.util.List;
 @Repository
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
-    private JdbcConnectionPool connectionPool;
+    private ConnectionPool connectionPool;
 
     private FlowerRepository flowerRepository;
 
@@ -27,7 +27,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Autowired
     public BouquetRepositoryJdbcImpl(
-            JdbcConnectionPool connectionPool,
+            ConnectionPool connectionPool,
             FlowerRepository flowerRepository,
             SqlStatements sql) {
         this.connectionPool = connectionPool;
