@@ -7,7 +7,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -50,7 +49,7 @@ public class JdbcConnectionPoolTest {
         assertTrue(inUseConnections.isEmpty());
 
         for (Connection connection : connectionsPool) {
-            JdbcConnectionForPool jdbcConnectionForPool = (JdbcConnectionForPool) connection;
+            Connection jdbcConnectionForPool = (Connection) connection;
             jdbcConnectionForPool.closeConnection();
         }
 

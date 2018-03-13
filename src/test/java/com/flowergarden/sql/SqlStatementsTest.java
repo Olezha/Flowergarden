@@ -16,10 +16,10 @@ public class SqlStatementsTest {
     private SqlStatementsImpl sql = new SqlStatementsImpl();
 
     @Rule
-    public ExternalResource resource= new ExternalResource() {
+    public ExternalResource resource = new ExternalResource() {
         @Override
         protected void before() throws Throwable {
-            connection = DriverManager.getConnection("jdbc:sqlite:");
+            connection = new Connection(DriverManager.getConnection("jdbc:sqlite:"), null);
             try (Statement statement = connection.createStatement()) {
                 statement.executeUpdate("restore from db/flowergarden.backup.db");
             }
@@ -27,11 +27,7 @@ public class SqlStatementsTest {
 
         @Override
         protected void after() {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            connection.closeConnection();
         }
     };
 

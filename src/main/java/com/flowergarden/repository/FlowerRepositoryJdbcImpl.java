@@ -2,6 +2,7 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.*;
 import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.sql.Connection;
 import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,8 +14,8 @@ import java.util.List;
 @Component
 public class JdbcConnectionPool implements ConnectionPool {
 
-    private List<JdbcConnectionForPool> connectionsPool = new ArrayList<>();
-    private List<JdbcConnectionForPool> inUseConnections = new ArrayList<>();
+    private List<Connection> connectionsPool = new ArrayList<>();
+    private List<Connection> inUseConnections = new ArrayList<>();
     private String datasourceUrl;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -40,17 +39,12 @@ public class JdbcConnectionPool implements ConnectionPool {
 
     @Override
     public Connection getConnection() {
-        JdbcConnectionForPool connection = null;
+        Connection connection = null;
         while (!connectionsPool.isEmpty()) {
             connection = connectionsPool.remove(0);
-            try {
-                if (connection.isClosed())
-                    connection = null;
-                else break;
-            } catch (SQLException e) {
-                log.debug("{}", e);
+            if (connection.isClosed())
                 connection = null;
-            }
+            else break;
         }
         if (connection == null) {
             connection = newConnection();
@@ -61,14 +55,14 @@ public class JdbcConnectionPool implements ConnectionPool {
         return connection;
     }
 
-    void returnConnectionInPool(JdbcConnectionForPool connection) {
+    void returnConnectionInPool(Connection connection) {
         inUseConnections.remove(connection);
         connectionsPool.add(connection);
     }
 
-    private JdbcConnectionForPool newConnection() {
+    private Connection newConnection() {
         try {
-            return new JdbcConnectionForPool(DriverManager.getConnection(datasourceUrl), this);
+            return new Connection(DriverManager.getConnection(datasourceUrl), this);
         } catch (SQLException e) {
             log.debug("{}", e);
             log.warn("");
@@ -79,21 +73,11 @@ public class JdbcConnectionPool implements ConnectionPool {
 
     @Override
     public void close() {
-        for (JdbcConnectionForPool connection : connectionsPool) {
-            closeConnection(connection);
-        }
-        for (JdbcConnectionForPool connection : inUseConnections) {
-            closeConnection(connection);
-        }
-    }
-
-    private void closeConnection(JdbcConnectionForPool connection) {
-        try {
+        for (Connection connection : connectionsPool) {
             connection.closeConnection();
-        } catch (SQLException e) {
-            log.debug("{}", e);
-            log.warn("");
-            // TODO
+        }
+        for (Connection connection : inUseConnections) {
+            connection.closeConnection();
         }
     }
 }
