@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,9 +22,9 @@ public class SqlStatements {
                     .getResourceAsStream("db/statements.sql.yml")) {
                 sqlStatements = new Yaml().load(inputStream);
             }
-        } catch (IOException e) {
-            log.error("{}", e);
-            log.info("Unable to start program (code 512)");
+        } catch (IOException | YAMLException e) {
+            log.debug("{}", e);
+            log.error("Unable to start program (code 512)");
             System.exit(512);
         }
     }

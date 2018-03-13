@@ -21,7 +21,7 @@ public class SqlStatementsTest {
         protected void before() throws Throwable {
             connection = DriverManager.getConnection("jdbc:sqlite:");
             try (Statement statement = connection.createStatement()) {
-                statement.executeUpdate("restore from flowergarden.backup.db");
+                statement.executeUpdate("restore from db/flowergarden.backup.db");
             }
         }
 
