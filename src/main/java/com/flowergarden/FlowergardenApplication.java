@@ -31,13 +31,13 @@ public class FlowergardenApplication implements CommandLineRunner {
     public void run(String... strings) {
         try {
             Properties properties = new Properties();
-            properties.load(ClassLoader.getSystemResourceAsStream("application.properties"));
+            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
 
             Flyway flyway = new Flyway();
             flyway.setDataSource(properties.getProperty("datasource.url"), null, null);
             flyway.migrate();
         } catch (IOException | NullPointerException e) {
-            log.debug("{}", e);
+            log.warn("{}", e);
             log.warn("Unable to migrate db");
         }
 
