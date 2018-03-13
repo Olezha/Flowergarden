@@ -30,7 +30,7 @@ public class FlowerRepositoryTest {
         @Override
         protected void before() throws Throwable {
             try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
-                statement.executeUpdate("restore from db/flowergarden.backup.db");
+                statement.executeUpdate("restore from flowergarden.db");
             }
         }
     };
