@@ -8,7 +8,10 @@ import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -33,12 +36,20 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
+    @CachePut(value = "flower", key = "#flower.id")
     public Flower saveOrUpdate(Flower flower) throws SQLException {
+        if (flower == null)
+            throw new IllegalArgumentException("Null entity");
+
         return saveOrUpdate(flower, null);
     }
 
     @Override
+    @CachePut(value = "flower", key = "#flower.id")
     public Flower saveOrUpdate(Flower flower, Integer bouquetId) throws SQLException {
+        if (flower == null)
+            throw new IllegalArgumentException("Null entity");
+
         try (Connection connection = connectionPool.getConnection()) {
             if (flower.getId() == null) {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_SAVE"))) {
@@ -98,17 +109,15 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
+    @CacheEvict(value = "flower", allEntries = true)
     public void saveOrUpdateBouquetFlowers(Collection<Flower> flowers, Integer bouquetId) throws SQLException {
         for (Flower flower : flowers)
             saveOrUpdate(flower, bouquetId);
     }
 
     @Override
-//    @Cacheable("flowers")
+    @Cacheable("flower")
     public Flower findOne(int id) throws SQLException {
-//        // TODO: remove
-//        simulateSlowService();
-
         List<Flower> flowers;
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
@@ -136,7 +145,10 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     public Iterable<Flower> findAll() throws SQLException {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
-            return convert(statement.executeQuery(sql.get("FLOWER_FIND_ALL")));
+            Iterable<Flower> flowers = convert(statement.executeQuery(sql.get("FLOWER_FIND_ALL")));
+            for (Flower flower : flowers)
+                cachePut(flower);
+            return flowers;
         }
     }
 
@@ -154,12 +166,14 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                 flower.setPrice(resultSet.getBigDecimal("price"));
                 flower.setLength(resultSet.getInt("length"));
                 flowers.add(flower);
+                cachePut(flower);
             }
             return flowers;
         }
     }
 
     @Override
+    @CacheEvict(value = "flower")
     public void delete(int id) throws SQLException {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_DELETE"))) {
@@ -169,13 +183,15 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
+    @CacheEvict(value = "flower", key = "#flower.id")
     public void delete(Flower flower) throws SQLException {
-        if (flower.getId() == null)
+        if (flower == null || flower.getId() == null)
             throw new IllegalArgumentException("Not persisted entity");
         delete(flower.getId());
     }
 
     @Override
+    @CacheEvict(value = "flower", allEntries = true)
     public void deleteAll() throws SQLException {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
@@ -184,6 +200,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
+    @CacheEvict(value = "flower", allEntries = true)
     public void deleteBouquetFlowers(int bouquetId) throws SQLException {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_DELETE_BOUQUET_FLOWERS"))) {
@@ -193,6 +210,10 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "flower", key = "#fromFlowerId"),
+            @CacheEvict(value = "flower", key = "#toFlowerId")
+    })
     public void movePartOfPrice(int fromFlowerId, int toFlowerId, BigDecimal val) throws SQLException {
         // TODO transaction
         java.sql.Connection connection = null;
@@ -247,12 +268,11 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         return flowers;
     }
 
-    private void simulateSlowService() {
-        try {
-            long time = 1000L;
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+    @CacheEvict(value = "flower", key = "#id")
+    public void cacheEvict(int id) {}
+
+    @CachePut(value = "flower", key = "#flower.id")
+    public Flower cachePut(Flower flower) {
+        return flower;
     }
 }
