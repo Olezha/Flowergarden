@@ -38,6 +38,9 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Bouquet saveOrUpdate(Bouquet bouquet) throws SQLException {
+        if (bouquet == null)
+            throw new IllegalArgumentException("Not persisted entity");
+
         try (Connection connection = connectionPool.getConnection()) {
             if (bouquet.getId() == null) {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
@@ -98,7 +101,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public void delete(Bouquet bouquet) throws SQLException {
-        if (bouquet.getId() == null)
+        if (bouquet == null || bouquet.getId() == null)
             throw new IllegalArgumentException("Not persisted entity");
         delete(bouquet.getId());
     }

@@ -2,13 +2,14 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.sql.ConnectionPoolJdbcImpl;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.SQLException;
@@ -24,6 +25,9 @@ public class FlowerRepositoryTest {
     FlowerRepository flowerRepository;
 
     @Autowired
+    CacheManager cacheManager;
+
+    @Autowired
     private ConnectionPoolJdbcImpl jdbcConnectionPool;
 
     @Rule
@@ -33,6 +37,9 @@ public class FlowerRepositoryTest {
             try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
                 statement.executeUpdate("restore from flowergarden.db");
             }
+
+            cacheManager.getCacheNames().stream()
+                    .map(cacheManager::getCache).forEach(Cache::clear);
         }
     };
 
