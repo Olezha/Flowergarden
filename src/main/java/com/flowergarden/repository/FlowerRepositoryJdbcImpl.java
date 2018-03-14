@@ -211,7 +211,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     })
     public boolean transferPartOfPrice(Flower from, Flower to, BigDecimal amount) {
         try (Connection connection = connectionPool.getConnection()) {
-            if (from.getPrice().compareTo(amount) < 0)
+            if (from.getPrice().compareTo(amount) < 0 || amount.compareTo(BigDecimal.ZERO) < 0)
                 return false;
 
             int connectionTransactionIsolation;
