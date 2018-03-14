@@ -6,6 +6,7 @@ import com.flowergarden.sql.Connection;
 import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -100,7 +101,11 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
+    @Cacheable("flowers")
     public Flower findOne(int id) throws SQLException {
+        // TODO: remove
+        simulateSlowService();
+
         List<Flower> flowers;
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
@@ -215,5 +220,14 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
             flowers.add(flower);
         }
         return flowers;
+    }
+
+    private void simulateSlowService() {
+        try {
+            long time = 1000L;
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
