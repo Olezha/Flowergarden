@@ -220,10 +220,10 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                 connection.setAutoCommit(false);
                 connectionTransactionIsolation = connection.getTransactionIsolation();
                 DatabaseMetaData databaseMetaData = connection.getMetaData();
-                if (databaseMetaData.supportsTransactionIsolationLevel(connection.TRANSACTION_SERIALIZABLE))
-                    connection.setTransactionIsolation(connection.TRANSACTION_SERIALIZABLE);
-                else if (databaseMetaData.supportsTransactionIsolationLevel(connection.TRANSACTION_REPEATABLE_READ))
-                    connection.setTransactionIsolation(connection.TRANSACTION_REPEATABLE_READ);
+                if (databaseMetaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE))
+                    connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+                else if (databaseMetaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_REPEATABLE_READ))
+                    connection.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
                 else
                     throw new RuntimeException("Current settings don't allow work with money");
             } catch (SQLException e) {
@@ -304,9 +304,9 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         return flowers;
     }
 
-    @CacheEvict(value = "flower", key = "#id")
-    public void cacheEvict(int id) {
-    }
+//    @CacheEvict(value = "flower", key = "#id")
+//    public void cacheEvict(int id) {
+//    }
 
     @CachePut(value = "flower", key = "#flower.id")
     public Flower cachePut(Flower flower) {
