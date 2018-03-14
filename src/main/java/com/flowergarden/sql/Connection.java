@@ -7,6 +7,8 @@ import java.sql.*;
 
 public class Connection implements AutoCloseable {
 
+    public static final int TRANSACTION_SERIALIZABLE = java.sql.Connection.TRANSACTION_SERIALIZABLE;
+    public static final int TRANSACTION_REPEATABLE_READ = java.sql.Connection.TRANSACTION_REPEATABLE_READ;
     private java.sql.Connection connection;
     private ConnectionPoolJdbcImpl pool;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
@@ -52,5 +54,29 @@ public class Connection implements AutoCloseable {
             log.warn("{}", e);
         }
         return true;
+    }
+
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        connection.setAutoCommit(autoCommit);
+    }
+
+    public int getTransactionIsolation() throws SQLException {
+        return connection.getTransactionIsolation();
+    }
+
+    public DatabaseMetaData getMetaData() throws SQLException {
+        return connection.getMetaData();
+    }
+
+    public void setTransactionIsolation(int transactionIsolation) throws SQLException {
+        connection.setTransactionIsolation(transactionIsolation);
+    }
+
+    public void commit() throws SQLException {
+        connection.commit();
+    }
+
+    public void rollback() throws SQLException {
+        connection.rollback();
     }
 }

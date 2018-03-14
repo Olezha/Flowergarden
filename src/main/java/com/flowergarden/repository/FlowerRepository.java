@@ -18,5 +18,5 @@ public interface FlowerRepository {
     void delete(Flower flower) throws SQLException;
     void deleteAll() throws SQLException;
     void deleteBouquetFlowers(int bouquetId) throws SQLException;
-    void movePartOfPrice(int fromFlowerId, int toFlowerId, BigDecimal val) throws SQLException;
+    boolean transferPartOfPrice(Flower from, Flower to, BigDecimal amount);
 }

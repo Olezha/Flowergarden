@@ -58,43 +58,37 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                     if (flower instanceof GeneralFlower) {
                         GeneralFlower generalFlower = (GeneralFlower) flower;
                         statement.setInt(3, generalFlower.getFreshness().getFreshness());
-                    }
-                    else
+                    } else
                         statement.setNull(3, Types.INTEGER);
                     statement.setBigDecimal(4, flower.getPrice());
                     if (flower instanceof Chamomile) {
                         Chamomile chamomile = (Chamomile) flower;
                         statement.setInt(5, chamomile.getPetals());
-                    }
-                    else
+                    } else
                         statement.setNull(5, Types.INTEGER);
                     if (flower instanceof Rose) {
                         Rose rose = (Rose) flower;
                         statement.setBoolean(6, rose.getSpike());
-                    }
-                    else
+                    } else
                         statement.setNull(6, Types.BOOLEAN);
                     statement.setInt(7, bouquetId);
                     statement.executeUpdate();
 
                     flower.setId(statement.getGeneratedKeys().getInt(1));
                 }
-            }
-            else {
+            } else {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_UPDATE"))) {
                     statement.setInt(1, flower.getLength());
                     if (flower instanceof GeneralFlower) {
                         GeneralFlower generalFlower = (GeneralFlower) flower;
                         statement.setInt(2, generalFlower.getFreshness().getFreshness());
-                    }
-                    else
+                    } else
                         statement.setNull(2, Types.INTEGER);
                     statement.setBigDecimal(3, flower.getPrice());
                     if (flower instanceof Chamomile) {
                         Chamomile chamomile = (Chamomile) flower;
                         statement.setInt(4, chamomile.getPetals());
-                    }
-                    else
+                    } else
                         statement.setNull(4, Types.INTEGER);
                     if (bouquetId != null)
                         statement.setInt(5, bouquetId);
@@ -160,7 +154,8 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
             ResultSet resultSet = statement.executeQuery();
             List<Flower> flowers = new ArrayList<>();
             while (resultSet.next()) {
-                GeneralFlower flower = new GeneralFlower() {};
+                GeneralFlower flower = new GeneralFlower() {
+                };
                 flower.setId(resultSet.getInt("id"));
                 flower.setFreshness(new FreshnessInteger(resultSet.getInt("freshness")));
                 flower.setPrice(resultSet.getBigDecimal("price"));
@@ -211,21 +206,62 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "flower", key = "#fromFlowerId"),
-            @CacheEvict(value = "flower", key = "#toFlowerId")
+            @CacheEvict(value = "flower", key = "#from.id"),
+            @CacheEvict(value = "flower", key = "#to.id")
     })
-    public void movePartOfPrice(int fromFlowerId, int toFlowerId, BigDecimal val) throws SQLException {
-        // TODO transaction
-        java.sql.Connection connection = null;
+    public boolean transferPartOfPrice(Flower from, Flower to, BigDecimal amount) {
+        try (Connection connection = connectionPool.getConnection()) {
+            if (from.getPrice().compareTo(amount) < 0)
+                return false;
 
-        connection.setAutoCommit(false);
+            int connectionTransactionIsolation;
 
-        // try 123
-        connection.commit();
-        // catch ex
-        connection.rollback();
+            try {
+                connection.setAutoCommit(false);
+                connectionTransactionIsolation = connection.getTransactionIsolation();
+                DatabaseMetaData databaseMetaData = connection.getMetaData();
+                if (databaseMetaData.supportsTransactionIsolationLevel(connection.TRANSACTION_SERIALIZABLE))
+                    connection.setTransactionIsolation(connection.TRANSACTION_SERIALIZABLE);
+                else if (databaseMetaData.supportsTransactionIsolationLevel(connection.TRANSACTION_REPEATABLE_READ))
+                    connection.setTransactionIsolation(connection.TRANSACTION_REPEATABLE_READ);
+                else
+                    throw new RuntimeException("Current settings don't allow work with money");
+            } catch (SQLException e) {
+                log.debug("{}", e);
+                return false;
+            }
 
-        connection.setAutoCommit(true);
+            boolean successfully = false;
+
+            try (PreparedStatement fromStatement = connection.prepareStatement(sql.get("FLOWER_TRANSFER_PART_OF_PRICE_FROM"));
+                 PreparedStatement toStatement = connection.prepareStatement(sql.get("FLOWER_TRANSFER_PART_OF_PRICE_TO"))) {
+                fromStatement.setBigDecimal(1, amount);
+                fromStatement.setInt(2, from.getId());
+                fromStatement.executeUpdate();
+
+                toStatement.setBigDecimal(1, amount);
+                toStatement.setInt(2, to.getId());
+                toStatement.executeUpdate();
+
+                connection.commit();
+                successfully = true;
+            } catch (SQLException e) {
+                log.error("{}", e);
+                try {
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    log.error("{}", e);
+                }
+            }
+
+            try {
+                connection.setAutoCommit(true);
+                connection.setTransactionIsolation(connectionTransactionIsolation);
+            } catch (SQLException e) {
+                log.warn("{}", e);
+            }
+            return successfully;
+        }
     }
 
     private List<Flower> convert(ResultSet resultSet) throws SQLException {
@@ -269,7 +305,8 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @CacheEvict(value = "flower", key = "#id")
-    public void cacheEvict(int id) {}
+    public void cacheEvict(int id) {
+    }
 
     @CachePut(value = "flower", key = "#flower.id")
     public Flower cachePut(Flower flower) {

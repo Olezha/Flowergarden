@@ -58,3 +58,13 @@ FLOWER_DELETE_ALL: >-
 FLOWER_DELETE_BOUQUET_FLOWERS: >-
   DELETE FROM flower
   WHERE bouquet_id=?
+
+FLOWER_TRANSFER_PART_OF_PRICE_FROM: >-
+  UPDATE flower
+  SET price = price - ?
+  WHERE id = ?
+
+FLOWER_TRANSFER_PART_OF_PRICE_TO: >-
+  UPDATE flower
+  SET price = price + ?
+  WHERE id = ?
