@@ -2,6 +2,7 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.sql.ConnectionPoolJdbcImpl;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 
-@EnableCaching
+//@EnableCaching
 @SpringBootApplication
 public class FlowergardenApplication implements CommandLineRunner {
 
@@ -52,8 +52,14 @@ public class FlowergardenApplication implements CommandLineRunner {
 
         System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
 
-        for (int i = 0; i < 50; i++)
-            getFlower(i % 5);
+//        for (int i = 0; i < 50; i++)
+//            getFlower(i % 5);
+        for (int i = 1; i < 7; i++)
+            try {
+                flowerRepository.findOne(i);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
     }
 
     private Flower getFlower(int id) {

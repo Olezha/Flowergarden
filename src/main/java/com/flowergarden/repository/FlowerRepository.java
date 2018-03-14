@@ -2,6 +2,7 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.Flower;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -17,4 +18,5 @@ public interface FlowerRepository {
     void delete(Flower flower) throws SQLException;
     void deleteAll() throws SQLException;
     void deleteBouquetFlowers(int bouquetId) throws SQLException;
+    void movePartOfPrice(int fromFlowerId, int toFlowerId, BigDecimal val) throws SQLException;
 }

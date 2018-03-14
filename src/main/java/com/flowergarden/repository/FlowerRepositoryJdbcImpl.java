@@ -5,10 +5,13 @@ import com.flowergarden.model.properties.FreshnessInteger;
 import com.flowergarden.sql.Connection;
 import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +21,8 @@ import java.util.List;
 public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     private ConnectionPool connectionPool;
-
     private SqlStatements sql;
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public FlowerRepositoryJdbcImpl(
@@ -101,16 +104,23 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
-    @Cacheable("flowers")
+//    @Cacheable("flowers")
     public Flower findOne(int id) throws SQLException {
-        // TODO: remove
-        simulateSlowService();
+//        // TODO: remove
+//        simulateSlowService();
 
         List<Flower> flowers;
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
             statement.setInt(1, id);
-            flowers = convert(statement.executeQuery());
+            ResultSet resultSet = statement.executeQuery();
+            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+            log.warn("flower id {}, col 5 name {}; col 5 type {}; total cols {}",
+                    id,
+                    resultSetMetaData.getColumnName(5),
+                    resultSetMetaData.getColumnType(5),
+                    resultSetMetaData.getColumnCount());
+            flowers = convert(resultSet);
         }
 
         if (flowers.isEmpty())
@@ -180,6 +190,21 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
             statement.setInt(1, bouquetId);
             statement.executeUpdate();
         }
+    }
+
+    @Override
+    public void movePartOfPrice(int fromFlowerId, int toFlowerId, BigDecimal val) throws SQLException {
+        // TODO transaction
+        java.sql.Connection connection = null;
+
+        connection.setAutoCommit(false);
+
+        // try 123
+        connection.commit();
+        // catch ex
+        connection.rollback();
+
+        connection.setAutoCommit(true);
     }
 
     private List<Flower> convert(ResultSet resultSet) throws SQLException {
