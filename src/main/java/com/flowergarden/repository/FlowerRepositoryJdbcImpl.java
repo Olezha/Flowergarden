@@ -210,10 +210,10 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
             @CacheEvict(value = "flower", key = "#to.id")
     })
     public boolean transferPartOfPrice(Flower from, Flower to, BigDecimal amount) {
-        try (Connection connection = connectionPool.getConnection()) {
-            if (from.getPrice().compareTo(amount) < 0 || amount.compareTo(BigDecimal.ZERO) < 0)
-                return false;
+        if (from.getPrice().compareTo(amount) < 0 || amount.compareTo(BigDecimal.ZERO) < 0)
+            return false;
 
+        try (Connection connection = connectionPool.getConnection()) {
             int connectionTransactionIsolation;
 
             try {
