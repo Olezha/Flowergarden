@@ -14,9 +14,9 @@ import java.util.List;
 @Component
 public class ConnectionPoolJdbcImpl implements ConnectionPool {
 
-    private List<Connection> connectionsPool = new ArrayList<>();
-    private List<Connection> inUseConnections = new ArrayList<>();
-    private String datasourceUrl;
+    private final List<Connection> connectionsPool = new ArrayList<>();
+    private final List<Connection> inUseConnections = new ArrayList<>();
+    private final String datasourceUrl;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

@@ -9,8 +9,8 @@ public class Connection implements AutoCloseable {
 
     public static final int TRANSACTION_SERIALIZABLE = java.sql.Connection.TRANSACTION_SERIALIZABLE;
     public static final int TRANSACTION_REPEATABLE_READ = java.sql.Connection.TRANSACTION_REPEATABLE_READ;
-    private java.sql.Connection connection;
-    private ConnectionPoolJdbcImpl pool;
+    private final java.sql.Connection connection;
+    private final ConnectionPoolJdbcImpl pool;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     Connection(java.sql.Connection connection, ConnectionPoolJdbcImpl pool) {

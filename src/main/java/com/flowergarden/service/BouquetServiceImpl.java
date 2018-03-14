@@ -12,7 +12,7 @@ import java.sql.SQLException;
 @Service
 public class BouquetServiceImpl implements BouquetService {
 
-    private BouquetRepository bouquetRepository;
+    private final BouquetRepository bouquetRepository;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired

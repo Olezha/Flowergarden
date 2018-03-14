@@ -20,11 +20,9 @@ import java.util.List;
 @Repository
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
-    private ConnectionPool connectionPool;
-
-    private FlowerRepository flowerRepository;
-
-    private SqlStatements sql;
+    private final ConnectionPool connectionPool;
+    private final FlowerRepository flowerRepository;
+    private final SqlStatements sql;
 
     @Autowired
     public BouquetRepositoryJdbcImpl(

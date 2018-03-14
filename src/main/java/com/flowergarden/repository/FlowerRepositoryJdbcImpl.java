@@ -23,8 +23,8 @@ import java.util.List;
 @Repository
 public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
-    private ConnectionPool connectionPool;
-    private SqlStatements sql;
+    private final ConnectionPool connectionPool;
+    private final SqlStatements sql;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
