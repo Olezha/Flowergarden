@@ -43,8 +43,7 @@ public class FlowerRepositoryTest {
             statement.executeUpdate("restore from test-base.db");
         }
 
-        cacheManager.getCacheNames().stream()
-                .map(cacheManager::getCache).forEach(Cache::clear);
+        clearCache();
     }
 
     @Test
@@ -85,22 +84,20 @@ public class FlowerRepositoryTest {
         assertEquals(totalPrice, flower1v2.getPrice().add(flower2v2.getPrice()));
     }
 
-//    @Ignore // travis fail
     @Test
-    public void cachingMakesSenseTest() throws SQLException {
-        System.gc();
-        long firstTime = 0, secondTime = 0;
-        for (int i = 1; i < 6; i++) {
-            long iFirstTime = System.nanoTime();
-            flowerRepository.findOne(i);
-            iFirstTime = System.nanoTime() - iFirstTime;
-            firstTime += iFirstTime;
+    public void shouldReturnCachedFlowerTest() throws SQLException {
+        assertSame(flowerRepository.findOne(1), flowerRepository.findOne(1));
+    }
 
-            long iSecondTime = System.nanoTime();
-            flowerRepository.findOne(i);
-            iSecondTime = System.nanoTime() - iSecondTime;
-            secondTime += iSecondTime;
-        }
-        assertTrue(firstTime > secondTime * 2);
+    @Test
+    public void shouldReturnNewFlowerAfterClearingCacheTest() throws SQLException {
+        Flower flower = flowerRepository.findOne(1);
+        clearCache();
+        assertNotSame(flower, flowerRepository.findOne(1));
+    }
+
+    private void clearCache() {
+        cacheManager.getCacheNames().stream()
+                .map(cacheManager::getCache).forEach(Cache::clear);
     }
 }
