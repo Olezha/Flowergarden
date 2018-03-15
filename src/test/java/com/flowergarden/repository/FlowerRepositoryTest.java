@@ -2,9 +2,8 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.sql.ConnectionPoolJdbcImpl;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.flywaydb.core.Flyway;
+import org.junit.*;
 import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +31,22 @@ public class FlowerRepositoryTest {
     @Autowired
     private ConnectionPoolJdbcImpl jdbcConnectionPool;
 
-    @Rule
-    public ExternalResource resource = new ExternalResource() {
-        @Override
-        protected void before() throws Throwable {
-            try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
-                statement.executeUpdate("restore from flowergarden.db");
-            }
+    @BeforeClass
+    public static void beforeClass() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
+        flyway.migrate();
+    }
 
-            cacheManager.getCacheNames().stream()
-                    .map(cacheManager::getCache).forEach(Cache::clear);
+    @Before
+    public void before() throws Throwable {
+        try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
+            statement.executeUpdate("restore from test-base.db");
         }
-    };
+
+        cacheManager.getCacheNames().stream()
+                .map(cacheManager::getCache).forEach(Cache::clear);
+    }
 
     @Test
     public void findOneFlowerTest() throws SQLException {
@@ -83,7 +86,7 @@ public class FlowerRepositoryTest {
         assertEquals(totalPrice, flower1v2.getPrice().add(flower2v2.getPrice()));
     }
 
-    @Ignore // travis fail
+//    @Ignore // travis fail
     @Test
     public void cachingMakesSenseTest() throws SQLException {
         System.gc();

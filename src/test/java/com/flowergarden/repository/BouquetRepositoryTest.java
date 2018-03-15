@@ -2,6 +2,9 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.sql.ConnectionPoolJdbcImpl;
+import org.flywaydb.core.Flyway;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
@@ -25,15 +28,19 @@ public class BouquetRepositoryTest {
     @Autowired
     private ConnectionPoolJdbcImpl jdbcConnectionPool;
 
-    @Rule
-    public ExternalResource resource= new ExternalResource() {
-        @Override
-        protected void before() throws Throwable {
-            try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
-                statement.executeUpdate("restore from flowergarden.db");
-            }
+    @BeforeClass
+    public static void beforeClass() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
+        flyway.migrate();
+    }
+
+    @Before
+    public void before() throws Throwable {
+        try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
+            statement.executeUpdate("restore from test-base.db");
         }
-    };
+    }
 
     @Test
     public void bouquetPriceTest() throws SQLException {

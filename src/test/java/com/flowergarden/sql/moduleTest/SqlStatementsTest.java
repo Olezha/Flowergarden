@@ -1,8 +1,8 @@
 package com.flowergarden.sql.moduleTest;
 
 import com.flowergarden.sql.*;
-import org.junit.Rule;
-import org.junit.Test;
+import org.flywaydb.core.Flyway;
+import org.junit.*;
 import org.junit.rules.ExternalResource;
 
 import java.math.BigDecimal;
@@ -17,25 +17,29 @@ public class SqlStatementsTest {
 
     private SqlStatementsImpl sql = new SqlStatementsImpl();
 
-    @Rule
-    public ExternalResource resource = new ExternalResource() {
-        @Override
-        protected void before() throws Throwable {
-            connection = DriverManager.getConnection("jdbc:sqlite:");
-            try (Statement statement = connection.createStatement()) {
-                statement.executeUpdate("restore from flowergarden.db");
-            }
-        }
+    @BeforeClass
+    public static void beforeClass() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
+        flyway.migrate();
+    }
 
-        @Override
-        protected void after() {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    @Before
+    public void before() throws Throwable {
+        connection = DriverManager.getConnection("jdbc:sqlite:");
+        try (Statement statement = connection.createStatement()) {
+            statement.executeUpdate("restore from test-base.db");
         }
-    };
+    }
+
+    @After
+    public void after() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void bouquetSaveTest() throws SQLException {
