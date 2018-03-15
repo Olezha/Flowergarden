@@ -116,14 +116,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-            log.warn("flower id {}, col 5 name {}; col 5 type {}; total cols {}",
-                    id,
-                    resultSetMetaData.getColumnName(5),
-                    resultSetMetaData.getColumnType(5),
-                    resultSetMetaData.getColumnCount());
-            flowers = convert(resultSet);
+            flowers = convert(statement.executeQuery());
         }
 
         if (flowers.isEmpty())
@@ -209,29 +202,22 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
             @CacheEvict(value = "flower", key = "#from.id"),
             @CacheEvict(value = "flower", key = "#to.id")
     })
-    public boolean transferPartOfPrice(Flower from, Flower to, BigDecimal amount) {
-        if (from.getPrice().compareTo(amount) < 0 || amount.compareTo(BigDecimal.ZERO) < 0)
-            return false;
+    public void transferPartOfPrice(Flower from, Flower to, BigDecimal amount) throws SQLException {
+        if (amount.compareTo(BigDecimal.ZERO) < 0 || from.getPrice().compareTo(amount) < 0)
+            throw new IllegalArgumentException();
 
         try (Connection connection = connectionPool.getConnection()) {
             int connectionTransactionIsolation;
 
-            try {
-                connection.setAutoCommit(false);
-                connectionTransactionIsolation = connection.getTransactionIsolation();
-                DatabaseMetaData databaseMetaData = connection.getMetaData();
-                if (databaseMetaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE))
-                    connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
-                else if (databaseMetaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_REPEATABLE_READ))
-                    connection.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
-                else
-                    throw new RuntimeException("Current settings don't allow work with money");
-            } catch (SQLException e) {
-                log.debug("{}", e);
-                return false;
-            }
-
-            boolean successfully = false;
+            connection.setAutoCommit(false);
+            connectionTransactionIsolation = connection.getTransactionIsolation();
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            if (databaseMetaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_SERIALIZABLE))
+                connection.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+            else if (databaseMetaData.supportsTransactionIsolationLevel(Connection.TRANSACTION_REPEATABLE_READ))
+                connection.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+            else
+                throw new RuntimeException("Current settings do not allow work with money");
 
             try (PreparedStatement fromStatement = connection.prepareStatement(sql.get("FLOWER_TRANSFER_PART_OF_PRICE_FROM"));
                  PreparedStatement toStatement = connection.prepareStatement(sql.get("FLOWER_TRANSFER_PART_OF_PRICE_TO"))) {
@@ -244,23 +230,14 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
                 toStatement.executeUpdate();
 
                 connection.commit();
-                successfully = true;
             } catch (SQLException e) {
-                log.error("{}", e);
-                try {
-                    connection.rollback();
-                } catch (SQLException e1) {
-                    log.error("{}", e);
-                }
+                log.debug("{}", e);
+                connection.rollback();
+                throw e;
             }
 
-            try {
-                connection.setAutoCommit(true);
-                connection.setTransactionIsolation(connectionTransactionIsolation);
-            } catch (SQLException e) {
-                log.warn("{}", e);
-            }
-            return successfully;
+            connection.setAutoCommit(true);
+            connection.setTransactionIsolation(connectionTransactionIsolation);
         }
     }
 
@@ -303,10 +280,6 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         }
         return flowers;
     }
-
-//    @CacheEvict(value = "flower", key = "#id")
-//    public void cacheEvict(int id) {
-//    }
 
     @CachePut(value = "flower", key = "#flower.id")
     public Flower cachePut(Flower flower) {

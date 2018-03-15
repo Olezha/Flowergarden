@@ -32,7 +32,7 @@ public class FlowerRepositoryTest {
     private ConnectionPoolJdbcImpl jdbcConnectionPool;
 
     @Rule
-    public ExternalResource resource= new ExternalResource() {
+    public ExternalResource resource = new ExternalResource() {
         @Override
         protected void before() throws Throwable {
             try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
@@ -79,6 +79,24 @@ public class FlowerRepositoryTest {
         Flower flower1v2 = flowerRepository.findOne(1);
         Flower flower2v2 = flowerRepository.findOne(2);
 
-        assertTrue(totalPrice.equals(flower1v2.getPrice().add(flower2v2.getPrice())));
+        assertEquals(totalPrice, flower1v2.getPrice().add(flower2v2.getPrice()));
+    }
+
+    @Test
+    public void cachingMakesSenseTest() throws SQLException {
+        System.gc();
+        long firstTime = 0, secondTime = 0;
+        for (int i = 1; i < 6; i++) {
+            long iFirstTime = System.nanoTime();
+            flowerRepository.findOne(i);
+            iFirstTime = System.nanoTime() - iFirstTime;
+            firstTime += iFirstTime;
+
+            long iSecondTime = System.nanoTime();
+            flowerRepository.findOne(i);
+            iSecondTime = System.nanoTime() - iSecondTime;
+            secondTime += iSecondTime;
+        }
+        assertTrue(firstTime > secondTime * 2);
     }
 }
