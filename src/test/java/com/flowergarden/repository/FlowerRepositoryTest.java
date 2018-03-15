@@ -4,7 +4,6 @@ import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.sql.ConnectionPoolJdbcImpl;
 import org.flywaydb.core.Flyway;
 import org.junit.*;
-import org.junit.rules.ExternalResource;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

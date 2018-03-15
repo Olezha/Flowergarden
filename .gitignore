@@ -1,4 +1,4 @@
-flowergarden.iml
-test.db
+*.iml
+*.db
 .idea/
 target/

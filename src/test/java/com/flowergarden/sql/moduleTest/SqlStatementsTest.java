@@ -3,7 +3,6 @@ package com.flowergarden.sql.moduleTest;
 import com.flowergarden.sql.*;
 import org.flywaydb.core.Flyway;
 import org.junit.*;
-import org.junit.rules.ExternalResource;
 
 import java.math.BigDecimal;
 import java.sql.*;
