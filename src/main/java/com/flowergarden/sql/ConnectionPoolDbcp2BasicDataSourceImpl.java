@@ -24,5 +24,6 @@ public class ConnectionPoolDbcp2BasicDataSourceImpl implements ConnectionPool {
 
     @Override
     public void close() throws Exception {
+        basicDataSource.close();
     }
 }
