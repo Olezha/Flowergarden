@@ -1,6 +1,7 @@
 package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
+import com.flowergarden.repository.bouquet.BouquetRepository;
 import com.flowergarden.sql.ConnectionPoolJdbcImpl;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
