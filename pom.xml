@@ -50,11 +50,11 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.20</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.flywaydb</groupId>-->
-            <!--<artifactId>flyway-core</artifactId>-->
-            <!--<version>5.0.7</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>5.0.7</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

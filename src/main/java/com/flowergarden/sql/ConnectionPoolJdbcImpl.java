@@ -37,7 +37,7 @@ public class ConnectionPoolJdbcImpl implements ConnectionPool {
         }
 
         inUseConnections.add(connection);
-        return (java.sql.Connection) connection;
+        return connection;
     }
 
     void returnConnectionInPool(Connection connection) {

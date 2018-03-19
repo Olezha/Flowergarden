@@ -1,8 +1,8 @@
 package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.sql.ConnectionPoolJdbcImpl;
-//import org.flywaydb.core.Flyway;
+import com.flowergarden.sql.ConnectionPool;
+import org.flywaydb.core.Flyway;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,24 +27,24 @@ public class FlowerRepositoryTest {
     @Autowired
     CacheManager cacheManager;
 
-//    @Autowired
-//    private ConnectionPoolJdbcImpl jdbcConnectionPool;
-//
-//    @BeforeClass
-//    public static void beforeClass() {
-//        Flyway flyway = new Flyway();
-//        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
-//        flyway.migrate();
-//    }
+    @Autowired
+    private ConnectionPool connectionPool;
 
-//    @Before
-//    public void before() throws Throwable {
-//        try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
-//            statement.executeUpdate("restore from test-base.db");
-//        }
-//
-//        clearCache();
-//    }
+    @BeforeClass
+    public static void beforeClass() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
+        flyway.migrate();
+    }
+
+    @Before
+    public void before() throws Throwable {
+        try (Statement statement = connectionPool.getConnection().createStatement()) {
+            statement.executeUpdate("restore from test-base.db");
+        }
+
+        clearCache();
+    }
 
     @Test
     public void findOneFlowerTest() throws SQLException {
