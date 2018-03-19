@@ -1,8 +1,11 @@
 package com.flowergarden.model.properties;
 
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@ToString
 @XmlRootElement
 public class FreshnessInteger implements Freshness<Integer> {
 

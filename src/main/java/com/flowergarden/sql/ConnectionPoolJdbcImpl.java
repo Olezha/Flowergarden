@@ -2,16 +2,14 @@ package com.flowergarden.sql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
+import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class ConnectionPoolJdbcImpl implements ConnectionPool {
 
     private final List<Connection> connectionsPool = new ArrayList<>();
@@ -19,26 +17,15 @@ public class ConnectionPoolJdbcImpl implements ConnectionPool {
     private final String datasourceUrl;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    public ConnectionPoolJdbcImpl(Environment environment) {
-        this.datasourceUrl = environment.getRequiredProperty("datasource.url");
-
-        int poolSize = 10;
-        String poolSizePropertyString = environment.getProperty("connection.pool.size");
-        if (poolSizePropertyString != null) {
-            try {
-                poolSize = Integer.parseUnsignedInt(poolSizePropertyString);
-            } catch (NumberFormatException e) {
-                log.warn("Wrong property \"connection.pool.size\"");
-            }
-        }
+    public ConnectionPoolJdbcImpl(String datasourceUrl, int poolSize) {
+        this.datasourceUrl = datasourceUrl;
 
         for (int i = 0; i < poolSize; i++)
             connectionsPool.add(newConnection());
     }
 
     @Override
-    public Connection getConnection() {
+    public java.sql.Connection getConnection() {
         Connection connection = null;
         while (!connectionsPool.isEmpty()) {
             connection = connectionsPool.remove(0);
@@ -76,5 +63,49 @@ public class ConnectionPoolJdbcImpl implements ConnectionPool {
         for (Connection connection : inUseConnections) {
             connection.closeConnection();
         }
+    }
+
+    /*
+     * and more other wrapper methods for Connection
+     */
+
+    @Override
+    public java.sql.Connection getConnection(String username, String password) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public PrintWriter getLogWriter() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setLogWriter(PrintWriter out) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setLoginTimeout(int seconds) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int getLoginTimeout() throws SQLException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        throw new UnsupportedOperationException();
     }
 }

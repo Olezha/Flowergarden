@@ -1,11 +1,10 @@
 package com.flowergarden.sql.mockTest;
 
 import com.flowergarden.sql.Connection;
+import com.flowergarden.sql.ConnectionPoolJdbcImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -13,18 +12,13 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectionPoolJdbcImplWhiteMockTest {
 
-    @Mock
-    private Environment environment;
-
     @Test
     public void poolGetAndReturnConnectionsWhiteTest() throws Exception {
-        when(environment.getRequiredProperty("datasource.url")).thenReturn("jdbc:sqlite:");
-        com.flowergarden.sql.ConnectionPoolJdbcImpl jdbcConnectionPool = new com.flowergarden.sql.ConnectionPoolJdbcImpl(environment);
+        ConnectionPoolJdbcImpl jdbcConnectionPool = new ConnectionPoolJdbcImpl("jdbc:sqlite:", 10);
 
         Field connectionsPoolField = jdbcConnectionPool.getClass().getDeclaredField("connectionsPool");
         connectionsPoolField.setAccessible(true);

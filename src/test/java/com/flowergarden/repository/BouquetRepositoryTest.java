@@ -2,7 +2,6 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.repository.bouquet.BouquetRepository;
-import com.flowergarden.sql.ConnectionPoolJdbcImpl;
 import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -25,7 +25,7 @@ public class BouquetRepositoryTest {
     private BouquetRepository bouquetRepository;
 
     @Autowired
-    private ConnectionPoolJdbcImpl jdbcConnectionPool;
+    private DataSource dataSource;
 
     @BeforeClass
     public static void beforeClass() {
@@ -36,7 +36,7 @@ public class BouquetRepositoryTest {
 
     @Before
     public void before() throws Throwable {
-        try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
+        try (Statement statement = dataSource.getConnection().createStatement()) {
             statement.executeUpdate("restore from test-base.db");
         }
     }

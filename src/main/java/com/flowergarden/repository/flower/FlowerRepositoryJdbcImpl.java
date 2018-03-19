@@ -3,8 +3,6 @@ package com.flowergarden.repository.flower;
 import com.flowergarden.model.flowers.*;
 import com.flowergarden.model.properties.FreshnessInteger;
 import com.flowergarden.repository.DataAccessException;
-import com.flowergarden.sql.Connection;
-import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -24,15 +23,15 @@ import java.util.List;
 @Repository
 public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
-    private final ConnectionPool connectionPool;
+    private final DataSource dataSource;
     private final SqlStatements sql;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public FlowerRepositoryJdbcImpl(
-            ConnectionPool connectionPool,
+            DataSource dataSource,
             SqlStatements sql) {
-        this.connectionPool = connectionPool;
+        this.dataSource = dataSource;
         this.sql = sql;
     }
 
@@ -55,7 +54,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         if (flower == null)
             throw new IllegalArgumentException("Null entity");
 
-        try (Connection connection = connectionPool.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             if (flower.getId() == null) {
                 try (PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_SAVE"))) {
                     statement.setString(1, flower.getClass().getSimpleName().toLowerCase());
@@ -120,7 +119,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         List<Flower> flowers;
 
         try {
-            try (Connection connection = connectionPool.getConnection();
+            try (Connection connection = dataSource.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
                 statement.setInt(1, id);
                 flowers = convert(statement.executeQuery());
@@ -140,7 +139,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Override
     public Iterable<Flower> findAll() {
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             Iterable<Flower> flowers = convert(statement.executeQuery(sql.get("FLOWER_FIND_ALL")));
             for (Flower flower : flowers)
@@ -153,7 +152,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Override
     public Iterable<Flower> findBouquetFlowers(int bouquetId) throws SQLException {
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_BOUQUET_FLOWERS"))) {
             statement.setInt(1, bouquetId);
             ResultSet resultSet = statement.executeQuery();
@@ -175,7 +174,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     @Override
     @CacheEvict(value = "flower")
     public void delete(Integer id) {
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_DELETE"))) {
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -195,7 +194,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     @Override
     @CacheEvict(value = "flower", allEntries = true)
     public void deleteAll() {
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql.get("FLOWER_DELETE_ALL"));
         } catch (SQLException e) {
@@ -216,7 +215,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     @Override
     @CacheEvict(value = "flower", allEntries = true)
     public void deleteBouquetFlowers(int bouquetId) throws SQLException {
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_DELETE_BOUQUET_FLOWERS"))) {
             statement.setInt(1, bouquetId);
             statement.executeUpdate();
@@ -232,7 +231,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
         if (amount.compareTo(BigDecimal.ZERO) < 0 || from.getPrice().compareTo(amount) < 0)
             throw new IllegalArgumentException();
 
-        try (Connection connection = connectionPool.getConnection()) {
+        try (Connection connection = dataSource.getConnection()) {
             int connectionTransactionIsolation;
 
             connection.setAutoCommit(false);

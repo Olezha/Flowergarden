@@ -5,20 +5,26 @@ import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
-
-import java.io.IOException;
-import java.util.Properties;
+import org.springframework.context.annotation.ImportResource;
 
 @EnableCaching
 @SpringBootApplication
+@ImportResource("classpath:application-context.xml")
+@EnableAutoConfiguration(exclude = {FlywayAutoConfiguration.class})
 public class FlowergardenApplication implements CommandLineRunner {
 
     private BouquetService bouquetService;
     private static final Logger log = LoggerFactory.getLogger(FlowergardenApplication.class);
+
+    @Value("${datasource.url}")
+    private String datasourceUrl;
 
     @Autowired
     public FlowergardenApplication(BouquetService bouquetService) {
@@ -31,17 +37,9 @@ public class FlowergardenApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-        try {
-            Properties properties = new Properties();
-            properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-
-            Flyway flyway = new Flyway();
-            flyway.setDataSource(properties.getProperty("datasource.url"), null, null);
-            flyway.migrate();
-        } catch (IOException | NullPointerException e) {
-            log.debug("{}", e);
-            log.warn("Unable to migrate db");
-        }
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(datasourceUrl, null, null);
+        flyway.migrate();
 
         System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
     }
