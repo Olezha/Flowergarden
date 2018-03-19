@@ -1,7 +1,8 @@
-package com.flowergarden.repository;
+package com.flowergarden.repository.flower;
 
 import com.flowergarden.model.flowers.*;
 import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.repository.DataAccessException;
 import com.flowergarden.sql.Connection;
 import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
@@ -37,11 +38,15 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Override
     @CachePut(value = "flower", key = "#flower.id")
-    public Flower saveOrUpdate(Flower flower) throws SQLException {
+    public Flower saveOrUpdate(Flower flower) {
         if (flower == null)
             throw new IllegalArgumentException("Null entity");
 
-        return saveOrUpdate(flower, null);
+        try {
+            return saveOrUpdate(flower, null);
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
+        }
     }
 
     @Override
@@ -111,31 +116,38 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Override
     @Cacheable("flower")
-    public Flower findOne(int id) throws SQLException {
+    public Flower findOne(Integer id) {
         List<Flower> flowers;
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
-            statement.setInt(1, id);
-            flowers = convert(statement.executeQuery());
+
+        try {
+            try (Connection connection = connectionPool.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_FIND_ONE"))) {
+                statement.setInt(1, id);
+                flowers = convert(statement.executeQuery());
+            }
+
+            if (flowers.isEmpty())
+                return null;
+
+            if (flowers.size() > 1)
+                throw new SQLIntegrityConstraintViolationException("Unique id");
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
-
-        if (flowers.isEmpty())
-            return null;
-
-        if (flowers.size() > 1)
-            throw new SQLIntegrityConstraintViolationException("Unique id");
 
         return flowers.get(0);
     }
 
     @Override
-    public Iterable<Flower> findAll() throws SQLException {
+    public Iterable<Flower> findAll() {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
             Iterable<Flower> flowers = convert(statement.executeQuery(sql.get("FLOWER_FIND_ALL")));
             for (Flower flower : flowers)
                 cachePut(flower);
             return flowers;
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
     }
 
@@ -162,17 +174,19 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Override
     @CacheEvict(value = "flower")
-    public void delete(int id) throws SQLException {
+    public void delete(Integer id) {
         try (Connection connection = connectionPool.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("FLOWER_DELETE"))) {
             statement.setInt(1, id);
             statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
     }
 
     @Override
     @CacheEvict(value = "flower", key = "#flower.id")
-    public void delete(Flower flower) throws SQLException {
+    public void delete(Flower flower) {
         if (flower == null || flower.getId() == null)
             throw new IllegalArgumentException("Not persisted entity");
         delete(flower.getId());
@@ -180,11 +194,23 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Override
     @CacheEvict(value = "flower", allEntries = true)
-    public void deleteAll() throws SQLException {
+    public void deleteAll() {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql.get("FLOWER_DELETE_ALL"));
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
+    }
+
+    @Override
+    public boolean exists(Integer integer) {
+        throw new UnsupportedOperationException("Not implemented, yet");
+    }
+
+    @Override
+    public int count() {
+        throw new UnsupportedOperationException("Not implemented, yet");
     }
 
     @Override
