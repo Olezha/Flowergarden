@@ -5,13 +5,14 @@ import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.repository.DataAccessException;
 import com.flowergarden.repository.flower.FlowerRepository;
-import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,16 +22,16 @@ import java.util.List;
 @Repository
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
-    private final ConnectionPool connectionPool;
+    private final DataSource dataSource;
     private final FlowerRepository flowerRepository;
     private final SqlStatements sql;
 
     @Autowired
     public BouquetRepositoryJdbcImpl(
-            ConnectionPool connectionPool,
+            @Qualifier("commonsDbcp2") DataSource dataSource,
             FlowerRepository flowerRepository,
             SqlStatements sql) {
-        this.connectionPool = connectionPool;
+        this.dataSource = dataSource;
         this.flowerRepository = flowerRepository;
         this.sql = sql;
     }
@@ -41,7 +42,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
             throw new IllegalArgumentException("Not persisted entity");
 
         try {
-            try (Connection connection = connectionPool.getConnection()) {
+            try (Connection connection = dataSource.getConnection()) {
                 if (bouquet.getId() == null) {
                     try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
                         // We'll cross when we come
@@ -71,7 +72,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
         List<Bouquet<Flower>> bouquets;
 
         try {
-            try (Connection connection = connectionPool.getConnection();
+            try (Connection connection = dataSource.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_FIND_ONE"))) {
                 statement.setInt(1, id);
                 bouquets = convert(statement.executeQuery());
@@ -91,7 +92,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Iterable<Bouquet<Flower>> findAll() {
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             return convert(statement.executeQuery(sql.get("BOUQUET_FIND_ALL")));
         } catch (SQLException e) {
@@ -103,7 +104,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     public void delete(Integer id) {
         try {
             flowerRepository.deleteBouquetFlowers(id);
-            try (Connection connection = connectionPool.getConnection();
+            try (Connection connection = dataSource.getConnection();
                  PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_DELETE"))) {
                 statement.setInt(1, id);
                 statement.executeUpdate();
@@ -123,7 +124,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     @Override
     public void deleteAll() {
         flowerRepository.deleteAll();
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql.get("BOUQUET_DELETE_ALL"));
         } catch (SQLException e) {
@@ -144,7 +145,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     @Override
     public BigDecimal getBouquetPrice(int bouquetId) throws SQLException {
         // TODO: change money columns to INTEGER
-        try (Connection connection = connectionPool.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_PRICE"))) {
             statement.setInt(1, bouquetId);
             return statement.executeQuery().getBigDecimal(1);

@@ -1,6 +1,6 @@
 package com.flowergarden.sql;
 
-public interface ConnectionPool extends AutoCloseable {
+import javax.sql.DataSource;
 
-    java.sql.Connection getConnection();
+public interface ConnectionPool extends DataSource, AutoCloseable {
 }

@@ -8,14 +8,10 @@
         <property name="locations" value="classpath:jdbc.properties"/>
     </bean>
 
-    <bean class="com.flowergarden.sql.ConnectionPoolDbcp2BasicDataSourceImpl">
-        <constructor-arg>
-            <bean class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-                <property name="url" value="${datasource.url}"/>
-                <property name="initialSize" value="${connection.pool.size.init}"/>
-                <property name="maxTotal" value="${connection.pool.size.max}"/>
-            </bean>
-        </constructor-arg>
+    <bean name="commonsDbcp2" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="url" value="${datasource.url}"/>
+        <property name="initialSize" value="${connection.pool.size.init}"/>
+        <property name="maxTotal" value="${connection.pool.size.max}"/>
     </bean>
 
 </beans>

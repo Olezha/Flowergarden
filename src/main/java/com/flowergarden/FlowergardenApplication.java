@@ -20,8 +20,8 @@ public class FlowergardenApplication implements CommandLineRunner {
     private BouquetService bouquetService;
     private static final Logger log = LoggerFactory.getLogger(FlowergardenApplication.class);
 
-    @Value("${datasource.url}")
-    private String datasourceUrl;
+//    @Value("${datasource.url}")
+//    private String datasourceUrl;
 
     @Autowired
     public FlowergardenApplication(BouquetService bouquetService) {
@@ -34,9 +34,9 @@ public class FlowergardenApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(datasourceUrl, null, null);
-        flyway.migrate();
+//        Flyway flyway = new Flyway();
+//        flyway.setDataSource(datasourceUrl, null, null);
+//        flyway.migrate();
 
         System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
     }
