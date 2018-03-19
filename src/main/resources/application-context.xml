@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="price" class="java.math.BigDecimal">
+        <constructor-arg type="java.lang.String" value="55.25" />
+    </bean>
+
+    <bean id="freshness" class="com.flowergarden.model.properties.FreshnessInteger">
+        <constructor-arg value="1" />
+    </bean>
+
+    <bean id="rose" class="com.flowergarden.model.flowers.Rose">
+        <constructor-arg value="true" />
+        <constructor-arg value="35" />
+        <constructor-arg ref="price" />
+        <constructor-arg ref="freshness" />
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:jdbc.properties" />
+    </bean>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+          destroy-method="close">
+        <property name="url" value="${datasource.url}" />
+    </bean>
+
+</beans>

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//@Component
 public class ConnectionPoolJdbcImpl implements ConnectionPool {
 
     private final List<Connection> connectionsPool = new ArrayList<>();

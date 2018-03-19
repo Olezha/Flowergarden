@@ -3,9 +3,11 @@ package com.flowergarden.model.flowers;
 import javax.xml.bind.annotation.XmlElement;
 
 import com.flowergarden.model.properties.FreshnessInteger;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
+@ToString
 public abstract class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower> {
 
     private Integer id;

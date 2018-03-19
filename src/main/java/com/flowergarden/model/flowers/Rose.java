@@ -3,9 +3,11 @@ package com.flowergarden.model.flowers;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.flowergarden.model.properties.FreshnessInteger;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
+@ToString(callSuper = true)
 @XmlRootElement
 public class Rose extends GeneralFlower {
 
