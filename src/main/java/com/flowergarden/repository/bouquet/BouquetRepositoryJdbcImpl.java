@@ -9,7 +9,6 @@ import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -28,7 +27,7 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Autowired
     public BouquetRepositoryJdbcImpl(
-            @Qualifier("commonsDbcp2") DataSource dataSource,
+            DataSource dataSource,
             FlowerRepository flowerRepository,
             SqlStatements sql) {
         this.dataSource = dataSource;

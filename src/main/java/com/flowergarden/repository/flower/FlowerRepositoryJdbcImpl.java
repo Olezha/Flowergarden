@@ -7,7 +7,6 @@ import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,7 +29,7 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
     @Autowired
     public FlowerRepositoryJdbcImpl(
-            @Qualifier("commonsDbcp2") DataSource dataSource,
+            DataSource dataSource,
             SqlStatements sql) {
         this.dataSource = dataSource;
         this.sql = sql;

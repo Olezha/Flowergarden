@@ -1,7 +1,6 @@
 package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.repository.flower.FlowerRepository;
 import org.flywaydb.core.Flyway;
 import org.junit.*;
@@ -12,6 +11,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,7 +29,7 @@ public class FlowerRepositoryTest {
     CacheManager cacheManager;
 
     @Autowired
-    private ConnectionPool connectionPool;
+    private DataSource dataSource;
 
     @BeforeClass
     public static void beforeClass() {
@@ -40,7 +40,7 @@ public class FlowerRepositoryTest {
 
     @Before
     public void before() throws Throwable {
-        try (Statement statement = connectionPool.getConnection().createStatement()) {
+        try (Statement statement = dataSource.getConnection().createStatement()) {
             statement.executeUpdate("restore from test-base.db");
         }
 
