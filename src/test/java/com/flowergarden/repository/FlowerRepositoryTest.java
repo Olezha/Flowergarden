@@ -2,6 +2,7 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.sql.ConnectionPool;
+import com.flowergarden.repository.flower.FlowerRepository;
 import org.flywaydb.core.Flyway;
 import org.junit.*;
 import org.junit.runner.RunWith;

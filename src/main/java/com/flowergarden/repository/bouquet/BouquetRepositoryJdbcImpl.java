@@ -1,8 +1,10 @@
-package com.flowergarden.repository;
+package com.flowergarden.repository.bouquet;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Flower;
+import com.flowergarden.repository.DataAccessException;
+import com.flowergarden.repository.flower.FlowerRepository;
 import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;
@@ -34,82 +36,109 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
-    public Bouquet saveOrUpdate(Bouquet bouquet) throws SQLException {
+    public Bouquet saveOrUpdate(Bouquet bouquet) {
         if (bouquet == null)
             throw new IllegalArgumentException("Not persisted entity");
 
-        try (Connection connection = connectionPool.getConnection()) {
-            if (bouquet.getId() == null) {
-                try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
-                    // We'll cross when we come
-                    statement.setString(1, "married");
-                    statement.setBigDecimal(2, bouquet.getAssemblePrice());
-                    statement.executeUpdate();
-                    bouquet.setId(statement.getGeneratedKeys().getInt(1));
+        try {
+            try (Connection connection = connectionPool.getConnection()) {
+                if (bouquet.getId() == null) {
+                    try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_SAVE"))) {
+                        // We'll cross when we come
+                        statement.setString(1, "married");
+                        statement.setBigDecimal(2, bouquet.getAssemblePrice());
+                        statement.executeUpdate();
+                        bouquet.setId(statement.getGeneratedKeys().getInt(1));
+                    }
+                } else {
+                    try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_UPDATE"))) {
+                        statement.setBigDecimal(1, bouquet.getAssemblePrice());
+                        statement.setInt(2, bouquet.getId());
+                        statement.executeUpdate();
+                    }
                 }
             }
-            else {
-                try (PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_UPDATE"))) {
-                    statement.setBigDecimal(1, bouquet.getAssemblePrice());
-                    statement.setInt(2, bouquet.getId());
-                    statement.executeUpdate();
-                }
-            }
+            flowerRepository.saveOrUpdateBouquetFlowers(bouquet.getFlowers(), bouquet.getId());
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
-        flowerRepository.saveOrUpdateBouquetFlowers(bouquet.getFlowers(), bouquet.getId());
+
         return bouquet;
     }
 
     @Override
-    public Bouquet<Flower> findOne(int id) throws SQLException {
+    public Bouquet<Flower> findOne(Integer id) {
         List<Bouquet<Flower>> bouquets;
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_FIND_ONE"))) {
-            statement.setInt(1, id);
-            bouquets = convert(statement.executeQuery());
+
+        try {
+            try (Connection connection = connectionPool.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_FIND_ONE"))) {
+                statement.setInt(1, id);
+                bouquets = convert(statement.executeQuery());
+            }
+
+            if (bouquets.isEmpty())
+                return null;
+
+            if (bouquets.size() > 1)
+                throw new SQLIntegrityConstraintViolationException("Unique id");
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
-
-        if (bouquets.isEmpty())
-            return null;
-
-        if (bouquets.size() > 1)
-            throw new SQLIntegrityConstraintViolationException("Unique id");
 
         return new LazyBouquet(flowerRepository, bouquets.get(0));
     }
 
     @Override
-    public Iterable<Bouquet<Flower>> findAll() throws SQLException {
+    public Iterable<Bouquet<Flower>> findAll() {
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
             return convert(statement.executeQuery(sql.get("BOUQUET_FIND_ALL")));
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
     }
 
     @Override
-    public void delete(int id) throws SQLException {
-        flowerRepository.deleteBouquetFlowers(id);
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_DELETE"))) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
+    public void delete(Integer id) {
+        try {
+            flowerRepository.deleteBouquetFlowers(id);
+            try (Connection connection = connectionPool.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(sql.get("BOUQUET_DELETE"))) {
+                statement.setInt(1, id);
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
     }
 
     @Override
-    public void delete(Bouquet bouquet) throws SQLException {
+    public void delete(Bouquet bouquet) {
         if (bouquet == null || bouquet.getId() == null)
             throw new IllegalArgumentException("Not persisted entity");
         delete(bouquet.getId());
     }
 
     @Override
-    public void deleteAll() throws SQLException {
+    public void deleteAll() {
         flowerRepository.deleteAll();
         try (Connection connection = connectionPool.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql.get("BOUQUET_DELETE_ALL"));
+        } catch (SQLException e) {
+            throw new DataAccessException(e);
         }
+    }
+
+    @Override
+    public boolean exists(Integer integer) {
+        throw new UnsupportedOperationException("Not implemented, yet");
+    }
+
+    @Override
+    public int count() {
+        throw new UnsupportedOperationException("Not implemented, yet");
     }
 
     @Override
