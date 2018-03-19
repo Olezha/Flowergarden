@@ -3,6 +3,7 @@ package com.flowergarden.sql.moduleTest;
 import com.flowergarden.sql.*;
 import org.flywaydb.core.Flyway;
 import org.junit.*;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -14,7 +15,10 @@ public class SqlStatementsTest {
 
     private Connection connection;
 
-    private SqlStatementsImpl sql = new SqlStatementsImpl();
+    private SqlStatements sql = new SqlStatementsImpl();
+
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
     @BeforeClass
     public static void beforeClass() {
@@ -216,5 +220,11 @@ public class SqlStatementsTest {
             statement.setInt(1, 1);
             assertSame(6, statement.executeUpdate());
         }
+    }
+
+    @Test
+    public void sqlStatementsImplWrongResourceNameTest() {
+        exit.expectSystemExitWithStatus(512);
+        SqlStatements sql = new SqlStatementsImpl("abc-test");
     }
 }

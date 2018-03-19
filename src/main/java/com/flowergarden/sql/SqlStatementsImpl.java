@@ -17,11 +17,13 @@ public class SqlStatementsImpl implements SqlStatements {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public SqlStatementsImpl() {
-        try {
-            try (InputStream inputStream = getClass().getClassLoader()
-                    .getResourceAsStream("db/statements.sql.yml")) {
-                sqlStatements = new Yaml().load(inputStream);
-            }
+        this("db/statements.sql.yml");
+    }
+
+    public SqlStatementsImpl(String sqlYmlResourceName) {
+        try (InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream(sqlYmlResourceName)) {
+            sqlStatements = new Yaml().load(inputStream);
         } catch (IOException | YAMLException e) {
             log.debug("{}", e);
             log.error("Unable to start program (code 512)");
