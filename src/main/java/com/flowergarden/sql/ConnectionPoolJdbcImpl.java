@@ -2,16 +2,12 @@ package com.flowergarden.sql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Component
 public class ConnectionPoolJdbcImpl implements ConnectionPool {
 
     private final List<Connection> connectionsPool = new ArrayList<>();
@@ -19,26 +15,15 @@ public class ConnectionPoolJdbcImpl implements ConnectionPool {
     private final String datasourceUrl;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    public ConnectionPoolJdbcImpl(Environment environment) {
-        this.datasourceUrl = environment.getRequiredProperty("datasource.url");
-
-        int poolSize = 10;
-        String poolSizePropertyString = environment.getProperty("connection.pool.size");
-        if (poolSizePropertyString != null) {
-            try {
-                poolSize = Integer.parseUnsignedInt(poolSizePropertyString);
-            } catch (NumberFormatException e) {
-                log.warn("Wrong property \"connection.pool.size\"");
-            }
-        }
+    public ConnectionPoolJdbcImpl(String datasourceUrl, int poolSize) {
+        this.datasourceUrl = datasourceUrl;
 
         for (int i = 0; i < poolSize; i++)
             connectionsPool.add(newConnection());
     }
 
     @Override
-    public Connection getConnection() {
+    public java.sql.Connection getConnection() {
         Connection connection = null;
         while (!connectionsPool.isEmpty()) {
             connection = connectionsPool.remove(0);
@@ -52,7 +37,7 @@ public class ConnectionPoolJdbcImpl implements ConnectionPool {
         }
 
         inUseConnections.add(connection);
-        return connection;
+        return (java.sql.Connection) connection;
     }
 
     void returnConnectionInPool(Connection connection) {

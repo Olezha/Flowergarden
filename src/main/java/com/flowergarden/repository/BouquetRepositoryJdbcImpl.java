@@ -3,7 +3,6 @@ package com.flowergarden.repository;
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.sql.Connection;
 import com.flowergarden.sql.ConnectionPool;
 import com.flowergarden.sql.SqlStatements;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
 package com.flowergarden.sql.moduleTest;
 
 import com.flowergarden.sql.*;
-import org.flywaydb.core.Flyway;
+//import org.flywaydb.core.Flyway;
 import org.junit.*;
 
 import java.math.BigDecimal;
@@ -16,12 +16,12 @@ public class SqlStatementsTest {
 
     private SqlStatementsImpl sql = new SqlStatementsImpl();
 
-    @BeforeClass
-    public static void beforeClass() {
-        Flyway flyway = new Flyway();
-        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
-        flyway.migrate();
-    }
+//    @BeforeClass
+//    public static void beforeClass() {
+//        Flyway flyway = new Flyway();
+//        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
+//        flyway.migrate();
+//    }
 
     @Before
     public void before() throws Throwable {

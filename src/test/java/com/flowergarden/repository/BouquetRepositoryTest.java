@@ -2,7 +2,7 @@ package com.flowergarden.repository;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.sql.ConnectionPoolJdbcImpl;
-import org.flywaydb.core.Flyway;
+//import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,22 +23,22 @@ public class BouquetRepositoryTest {
     @Autowired
     private BouquetRepository bouquetRepository;
 
-    @Autowired
-    private ConnectionPoolJdbcImpl jdbcConnectionPool;
+//    @Autowired
+//    private ConnectionPoolJdbcImpl jdbcConnectionPool;
+//
+//    @BeforeClass
+//    public static void beforeClass() {
+//        Flyway flyway = new Flyway();
+//        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
+//        flyway.migrate();
+//    }
 
-    @BeforeClass
-    public static void beforeClass() {
-        Flyway flyway = new Flyway();
-        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
-        flyway.migrate();
-    }
-
-    @Before
-    public void before() throws Throwable {
-        try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
-            statement.executeUpdate("restore from test-base.db");
-        }
-    }
+//    @Before
+//    public void before() throws Throwable {
+//        try (Statement statement = jdbcConnectionPool.getConnection().createStatement()) {
+//            statement.executeUpdate("restore from test-base.db");
+//        }
+//    }
 
     @Test
     public void bouquetPriceTest() throws SQLException {

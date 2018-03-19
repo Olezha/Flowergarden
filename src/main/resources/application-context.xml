@@ -4,28 +4,22 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="price" class="java.math.BigDecimal">
-        <constructor-arg type="java.lang.String" value="55.25" />
-    </bean>
-
-    <bean id="freshness" class="com.flowergarden.model.properties.FreshnessInteger">
-        <constructor-arg value="1" />
-    </bean>
-
-    <bean id="rose" class="com.flowergarden.model.flowers.Rose">
-        <constructor-arg value="true" />
-        <constructor-arg value="35" />
-        <constructor-arg ref="price" />
-        <constructor-arg ref="freshness" />
-    </bean>
-
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations" value="classpath:jdbc.properties" />
     </bean>
 
+    <!--<bean class="com.flowergarden.sql.ConnectionPoolJdbcImpl">-->
+        <!--<constructor-arg value="${datasource.url}" />-->
+        <!--<constructor-arg value="${connection.pool.size}" />-->
+    <!--</bean>-->
+
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
-          destroy-method="close">
+          destroy-method="">
         <property name="url" value="${datasource.url}" />
+    </bean>
+
+    <bean class="com.flowergarden.sql.ConnectionPoolDbcp2BasicDataSourceImpl">
+        <constructor-arg ref="dataSource" />
     </bean>
 
 </beans>

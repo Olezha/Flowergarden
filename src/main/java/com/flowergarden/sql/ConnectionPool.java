@@ -2,5 +2,5 @@ package com.flowergarden.sql;
 
 public interface ConnectionPool extends AutoCloseable {
 
-    Connection getConnection();
+    java.sql.Connection getConnection();
 }
