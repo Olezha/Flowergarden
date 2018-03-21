@@ -27,9 +27,6 @@ public class FlowergardenApplication implements CommandLineRunner {
 
     private BouquetService bouquetService;
 
-    @Value("${datasource.url}")
-    private String datasourceUrl;
-
     @Autowired
     public FlowergardenApplication(BouquetService bouquetService) {
         this.bouquetService = bouquetService;
@@ -41,11 +38,17 @@ public class FlowergardenApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) {
+        System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
+    }
+}
+
+@Configuration
+class FlywayConfiguration {
+
+    public FlywayConfiguration(@Value("${datasource.url}") String datasourceUrl) {
         Flyway flyway = new Flyway();
         flyway.setDataSource(datasourceUrl, null, null);
         flyway.migrate();
-
-        System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
     }
 }
 
