@@ -17,7 +17,7 @@ import org.springframework.context.annotation.ImportResource;
 @EnableCaching
 @SpringBootApplication
 @ImportResource("classpath:application-context.xml")
-@EnableAutoConfiguration(exclude = {FlywayAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = FlywayAutoConfiguration.class)
 public class FlowergardenApplication implements CommandLineRunner {
 
     private BouquetService bouquetService;
