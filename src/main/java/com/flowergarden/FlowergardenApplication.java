@@ -1,6 +1,7 @@
 package com.flowergarden;
 
 import com.flowergarden.service.BouquetService;
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @EnableCaching
@@ -24,7 +26,6 @@ import org.springframework.stereotype.Component;
 public class FlowergardenApplication implements CommandLineRunner {
 
     private BouquetService bouquetService;
-    private static final Logger log = LoggerFactory.getLogger(FlowergardenApplication.class);
 
     @Value("${datasource.url}")
     private String datasourceUrl;
@@ -48,17 +49,22 @@ public class FlowergardenApplication implements CommandLineRunner {
     }
 }
 
+@Slf4j
 @Component
-class BeanPostProcessorInterceptor implements BeanPostProcessor {
+@Profile("default")
+class BeanPostProcessorImpl implements BeanPostProcessor {
     @Override
-    public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {
-        Class<?> clazz = o.getClass();
-        System.out.println(String.format("----- [%s]", clazz.getSimpleName()));
-        return o;
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        Class<?> clazz = bean.getClass();
+        log.info("-- {} {}", clazz.getSimpleName(), beanName);
+        // TODO: additional BeanPostProcessor Proxy
+        // Object proxy = Proxy.newProxyInstance() ...
+        // return proxy;
+        return bean;
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object o, String s) throws BeansException {
-        return o;
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
     }
 }
