@@ -2,9 +2,8 @@ package com.flowergarden;
 
 import com.flowergarden.service.BouquetService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.flywaydb.core.Flyway;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,13 +14,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.ImportResource;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 
 @EnableCaching
 @SpringBootApplication
-@ImportResource("classpath:application-context.xml")
 @EnableAutoConfiguration(exclude = FlywayAutoConfiguration.class)
 public class FlowergardenApplication implements CommandLineRunner {
 
@@ -49,14 +49,35 @@ public class FlowergardenApplication implements CommandLineRunner {
     }
 }
 
+@Configuration
+class ContextConfiguration {
+
+    @Value("${datasource.url}")
+    private String datasourceUrl;
+
+    @Value("${connection.pool.size.init}")
+    private int connectionPoolInitialSize;
+
+    @Value("${connection.pool.size.max}")
+    private int connectionPoolMaxTotal;
+
+    @Bean(destroyMethod = "")
+    DataSource dataSource() {
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(datasourceUrl);
+        basicDataSource.setInitialSize(connectionPoolInitialSize);
+        basicDataSource.setMaxTotal(connectionPoolMaxTotal);
+        return basicDataSource;
+    }
+}
+
 @Slf4j
 @Component
-@Profile("default")
 class BeanPostProcessorImpl implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         Class<?> clazz = bean.getClass();
-        log.info("-- {} {}", clazz.getSimpleName(), beanName);
+        log.debug("-- {} {}", clazz.getSimpleName(), beanName);
         // TODO: additional BeanPostProcessor Proxy
         // Object proxy = Proxy.newProxyInstance() ...
         // return proxy;
