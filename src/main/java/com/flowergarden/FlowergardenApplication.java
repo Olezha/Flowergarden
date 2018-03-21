@@ -4,8 +4,10 @@ import com.flowergarden.service.BouquetService;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -13,6 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.stereotype.Component;
 
 @EnableCaching
 @SpringBootApplication
@@ -42,5 +45,20 @@ public class FlowergardenApplication implements CommandLineRunner {
         flyway.migrate();
 
         System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
+    }
+}
+
+@Component
+class BeanPostProcessorInterceptor implements BeanPostProcessor {
+    @Override
+    public Object postProcessBeforeInitialization(Object o, String s) throws BeansException {
+        Class<?> clazz = o.getClass();
+        System.out.println(String.format("----- [%s]", clazz.getSimpleName()));
+        return o;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object o, String s) throws BeansException {
+        return o;
     }
 }
