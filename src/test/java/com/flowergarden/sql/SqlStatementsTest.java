@@ -1,4 +1,4 @@
-package com.flowergarden.sql.moduleTest;
+package com.flowergarden.sql;
 
 import com.flowergarden.sql.*;
 import org.flywaydb.core.Flyway;
