@@ -2,6 +2,8 @@ package com.flowergarden.sql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.PrintWriter;
 import java.sql.DriverManager;
@@ -10,6 +12,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ConnectionPoolJdbcImpl implements ConnectionPool {
 
     private final List<Connection> connectionsPool = new ArrayList<>();
@@ -17,7 +20,9 @@ public class ConnectionPoolJdbcImpl implements ConnectionPool {
     private final String datasourceUrl;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public ConnectionPoolJdbcImpl(String datasourceUrl, int poolSize) {
+    public ConnectionPoolJdbcImpl(
+            @Value("${datasource.url}") String datasourceUrl,
+            @Value("${connection.pool.size.init}") int poolSize) {
         this.datasourceUrl = datasourceUrl;
 
         for (int i = 0; i < poolSize; i++)
