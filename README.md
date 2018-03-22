@@ -4,5 +4,5 @@ for launching: `mvn clean package && java -jar target/flowergarden-0.0.6.jar`
 
 #### Changelog:
 - lesson 6 HW
-    - Remove custom DB Connection Pull.
-    Last stage is placed in a separate branch [jdbcp](https://github.com/Olezha/Flowergarden/tree/jdbcp).
+    - Remove custom DB Connection Pull & refactor repository impl for work through JdbcTemplate.
+    Old stage is placed in a separate branch [jdbcp](https://github.com/Olezha/Flowergarden/tree/jdbcp).
