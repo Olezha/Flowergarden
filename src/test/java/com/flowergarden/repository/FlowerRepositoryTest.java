@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -54,10 +55,10 @@ public class FlowerRepositoryTest {
         assertNotNull(flowerRepository.findOne(1));
     }
 
-    @Test
+    @Test(expected = EmptyResultDataAccessException.class)
     public void deleteFlowerTest() throws SQLException {
         flowerRepository.delete(flowerRepository.findOne(1));
-        assertNull(flowerRepository.findOne(1));
+        flowerRepository.findOne(1);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -67,24 +68,10 @@ public class FlowerRepositoryTest {
         flowerRepository.delete(flower);
     }
 
-    @Test
+    @Test(expected = EmptyResultDataAccessException.class)
     public void deleteAllTest() throws SQLException {
         flowerRepository.deleteAll();
-        assertNull(flowerRepository.findOne(1));
-    }
-
-    @Test
-    public void transferPartOfPriceTest() throws SQLException {
-        Flower flower1 = flowerRepository.findOne(1);
-        Flower flower2 = flowerRepository.findOne(2);
-        BigDecimal totalPrice = flower1.getPrice().add(flower2.getPrice());
-
-        flowerRepository.transferPartOfPrice(flower1, flower2, BigDecimal.ONE);
-
-        Flower flower1v2 = flowerRepository.findOne(1);
-        Flower flower2v2 = flowerRepository.findOne(2);
-
-        assertEquals(totalPrice, flower1v2.getPrice().add(flower2v2.getPrice()));
+        flowerRepository.findOne(1);
     }
 
     @Test
