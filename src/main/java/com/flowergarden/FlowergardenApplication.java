@@ -35,18 +35,10 @@ public class FlowergardenApplication implements CommandLineRunner {
 @Slf4j
 @Component
 class BeanPostProcessorImpl implements BeanPostProcessor {
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        Class<?> clazz = bean.getClass();
-        log.debug("-- {} {}", clazz.getSimpleName(), beanName);
-        // TODO: additional BeanPostProcessor Proxy
-        // Object proxy = Proxy.newProxyInstance() ...
-        // return proxy;
-        return bean;
-    }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        log.debug(bean.getClass().getSimpleName());
         return bean;
     }
 }
