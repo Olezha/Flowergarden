@@ -1,6 +1,5 @@
 package com.flowergarden.sql;
 
-import com.flowergarden.sql.*;
 import org.flywaydb.core.Flyway;
 import org.junit.*;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
@@ -222,7 +221,7 @@ public class SqlStatementsTest {
         }
     }
 
-    @Test
+    @Test()
     public void sqlStatementsImplWrongResourceNameTest() {
         exit.expectSystemExitWithStatus(512);
         SqlStatements sql = new SqlStatementsImpl("abc-test");

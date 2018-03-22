@@ -11,7 +11,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public class BouquetRepositoryJdbcImpl implements BouquetRepository {
@@ -37,11 +41,15 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
         if (bouquet.getId() == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(sql.get("BOUQUET_SAVE"),
-                    "married" /* We'll cross when we come */,
-                    bouquet.getAssemblePrice(),
-                    keyHolder);
-            bouquet.setId((Integer) keyHolder.getKey());
+            jdbcTemplate.update(connection -> {
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        sql.get("BOUQUET_SAVE"),
+                        Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, bouquet.getName());
+                preparedStatement.setBigDecimal(2, bouquet.getAssemblePrice());
+                return preparedStatement;
+            }, keyHolder);
+            bouquet.setId(keyHolder.getKey().intValue());
         } else {
             jdbcTemplate.update(sql.get("BOUQUET_UPDATE"),
                     bouquet.getAssemblePrice(),
@@ -60,7 +68,11 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Iterable<Bouquet> findAll() {
-        return jdbcTemplate.query(sql.get("BOUQUET_FIND_ALL"), new BouquetMapper());
+        List<Bouquet> bouquets = jdbcTemplate.query(sql.get("BOUQUET_FIND_ALL"), new BouquetMapper());
+        List<Bouquet> lazyBouquets = new ArrayList<>();
+        for (Bouquet bouquet : bouquets)
+            lazyBouquets.add(new LazyBouquet(flowerRepository, bouquet));
+        return lazyBouquets;
     }
 
     @Override

@@ -12,6 +12,9 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.Collection;
 import java.util.List;
 
@@ -49,21 +52,36 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
 
         if (flower.getId() == null) {
             KeyHolder keyHolder = new GeneratedKeyHolder();
-            jdbcTemplate.update(sql.get("FLOWER_SAVE"),
-                    flower.getClass().getSimpleName().toLowerCase(),
-                    flower.getLength(),
-                    flower instanceof GeneralFlower ?
-                            ((GeneralFlower) flower).getFreshness().getFreshness() : null,
-                    flower.getPrice(),
-                    flower instanceof Chamomile ? ((Chamomile) flower).getPetals() : null,
-                    flower instanceof Rose ? ((Rose) flower).getSpike() : null,
-                    bouquetId,
-                    keyHolder);
+            jdbcTemplate.update(connection -> {
+                PreparedStatement preparedStatement = connection.prepareStatement(
+                        sql.get("FLOWER_SAVE"),
+                        Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, flower.getClass().getSimpleName().toLowerCase());
+                preparedStatement.setInt(2, flower.getLength());
+                if (flower instanceof GeneralFlower && ((GeneralFlower) flower).getFreshness() != null)
+                    preparedStatement.setInt(3, ((GeneralFlower) flower).getFreshness().getFreshness());
+                else
+                    preparedStatement.setNull(3, Types.INTEGER);
+                preparedStatement.setBigDecimal(4, flower.getPrice());
+                if (flower instanceof Chamomile)
+                    preparedStatement.setInt(5, ((Chamomile) flower).getPetals());
+                else
+                    preparedStatement.setNull(5, Types.INTEGER);
+                if (flower instanceof Rose)
+                    preparedStatement.setBoolean(6, ((Rose) flower).getSpike());
+                else
+                    preparedStatement.setNull(6, Types.BOOLEAN);
+                if (bouquetId != null)
+                    preparedStatement.setInt(7, bouquetId);
+                else
+                    preparedStatement.setNull(7, Types.INTEGER);
+                return preparedStatement;
+            }, keyHolder);
             flower.setId((Integer) keyHolder.getKey());
         } else
             jdbcTemplate.update(sql.get("FLOWER_UPDATE"),
                     flower.getLength(),
-                    flower instanceof GeneralFlower ?
+                    flower instanceof GeneralFlower && ((GeneralFlower) flower).getFreshness() != null ?
                             ((GeneralFlower) flower).getFreshness().getFreshness() : null,
                     flower.getPrice(),
                     flower instanceof Chamomile ? ((Chamomile) flower).getPetals() : null,
