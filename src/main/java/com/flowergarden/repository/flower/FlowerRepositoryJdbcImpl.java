@@ -42,9 +42,6 @@ public class FlowerRepositoryJdbcImpl implements FlowerRepository {
     }
 
     @Override
-    @Caching(
-            evict = @CacheEvict(value = "flower", key = "#flower.id"),
-            put = @CachePut(value = "flower", key = "#flower.id"))
     @CachePut(value = "flower", key = "#flower.id")
     public Flower saveOrUpdate(Flower flower, Integer bouquetId) {
         if (flower == null)
