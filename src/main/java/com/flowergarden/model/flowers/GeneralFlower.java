@@ -1,6 +1,9 @@
 package com.flowergarden.model.flowers;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import com.flowergarden.model.properties.FreshnessInteger;
 import lombok.ToString;
@@ -8,8 +11,11 @@ import lombok.ToString;
 import java.math.BigDecimal;
 
 @ToString
+@XmlRootElement(name = "Flower")
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower> {
 
+    @XmlElement
     private Integer id;
 
     FreshnessInteger freshness;
@@ -17,7 +23,6 @@ public abstract class GeneralFlower implements Flower<Integer>, Comparable<Gener
     @XmlElement
     BigDecimal price;
 
-    @XmlElement
     int length;
 
     public void setFreshness(FreshnessInteger fr) {
