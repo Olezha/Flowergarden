@@ -1,8 +1,6 @@
 package com.flowergarden;
 
-import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.model.flowers.GeneralFlower;
-import com.flowergarden.repository.flower.FlowerRepository;
+import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.service.BouquetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -14,24 +12,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Component;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-
 @Slf4j
 @EnableCaching
 @SpringBootApplication
 public class FlowergardenApplication implements CommandLineRunner {
 
     private BouquetService bouquetService;
-    private FlowerRepository flowerRepository;
 
     @Autowired
     public FlowergardenApplication(
-            BouquetService bouquetService,
-            FlowerRepository flowerRepository) {
+            BouquetService bouquetService) {
         this.bouquetService = bouquetService;
-        this.flowerRepository = flowerRepository;
     }
 
     public static void main(String[] args) {
@@ -39,18 +30,15 @@ public class FlowergardenApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... strings) throws JAXBException {
+    public void run(String... strings) {
         System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
 
-        JAXBContext jaxbContext = JAXBContext.newInstance(GeneralFlower.class);
-        Marshaller marshaller = jaxbContext.createMarshaller();
-
-        Iterable<Flower> flowers = flowerRepository.findAll();
-
-        for (Flower flower : flowers) {
-            System.out.print(System.lineSeparator() + flower.getId() + " ");
-            marshaller.marshal((GeneralFlower) flower, System.out);
-        }
+        Bouquet bouquet = bouquetService.getBouquet(1);
+        System.out.println("     " + bouquet);
+        bouquetService.saveToJsonFile(bouquet);
+        Bouquet bouquetFromJson = bouquetService.readFromJsonFile();
+        System.out.println("json " + bouquetFromJson);
+        System.out.println("Bouquet id1 from json price is " + bouquetFromJson.getPrice());
     }
 }
 

@@ -1,11 +1,13 @@
 package com.flowergarden.repository.bouquet;
 
 import com.flowergarden.model.bouquet.Bouquet;
+import com.flowergarden.model.flowers.Flower;
 import com.flowergarden.repository.CrudRepository;
 
 import java.math.BigDecimal;
 
 public interface BouquetRepository extends CrudRepository<Bouquet, Integer> {
 
+    Bouquet<Flower> findOne(Integer id, boolean eager);
     BigDecimal getBouquetPrice(int id);
 }

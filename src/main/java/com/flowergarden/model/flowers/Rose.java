@@ -1,11 +1,17 @@
 package com.flowergarden.model.flowers;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.flowergarden.model.properties.FreshnessInteger;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 
 @ToString(callSuper = true)
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Rose extends GeneralFlower {
 
     private boolean spike;

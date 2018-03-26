@@ -1,18 +1,27 @@
 package com.flowergarden.model.bouquet;
 
 import com.flowergarden.model.flowers.Flower;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.*;
 
+@EqualsAndHashCode
+@ToString(exclude = "price")
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class MarriedBouquet implements Bouquet<Flower> {
 
     private Integer id;
 
     private BigDecimal assemblePrice = new BigDecimal(120);
 
+    @XmlAnyElement(lax = true)
     private List<Flower> flowerList = new ArrayList<>();
 
+    @XmlTransient
     private BigDecimal price;
 
     public MarriedBouquet() {
@@ -53,9 +62,8 @@ public class MarriedBouquet implements Bouquet<Flower> {
     public Collection<Flower> searchFlowersByLength(int start, int end) {
         List<Flower> searchResult = new ArrayList<>();
         for (Flower flower : flowerList) {
-            if (flower.getLength() >= start && flower.getLength() <= end) {
+            if (flower.getLength() >= start && flower.getLength() <= end)
                 searchResult.add(flower);
-            }
         }
         return searchResult;
     }

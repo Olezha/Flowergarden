@@ -1,26 +1,24 @@
 package com.flowergarden.model.flowers;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 
 import com.flowergarden.model.properties.FreshnessInteger;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.math.BigDecimal;
 
+@EqualsAndHashCode
 @ToString
-@XmlRootElement(name = "Flower")
-@XmlAccessorType(XmlAccessType.NONE)
+@XmlRootElement
+@XmlSeeAlso({Chamomile.class, Rose.class, Tulip.class})
+@XmlAccessorType(XmlAccessType.FIELD)
 public abstract class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower> {
 
-    @XmlElement
     private Integer id;
 
     FreshnessInteger freshness;
 
-    @XmlElement
     BigDecimal price;
 
     int length;

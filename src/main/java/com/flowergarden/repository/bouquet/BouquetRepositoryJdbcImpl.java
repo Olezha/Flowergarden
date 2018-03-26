@@ -67,6 +67,16 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
     }
 
     @Override
+    public Bouquet<Flower> findOne(Integer id, boolean eager) {
+        LazyBouquet lazyBouquet = (LazyBouquet) findOne(id);
+        if (!eager)
+            return lazyBouquet;
+
+        lazyBouquet.getFlowers();
+        return lazyBouquet.bouquet;
+    }
+
+    @Override
     public Iterable<Bouquet> findAll() {
         List<Bouquet> bouquets = jdbcTemplate.query(sql.get("BOUQUET_FIND_ALL"), new BouquetMapper());
         List<Bouquet> lazyBouquets = new ArrayList<>();
@@ -116,7 +126,7 @@ class LazyBouquet implements Bouquet<Flower> {
 
     private FlowerRepository flowerRepository;
 
-    private Bouquet<Flower> bouquet;
+    Bouquet<Flower> bouquet;
 
     LazyBouquet(FlowerRepository flowerRepository, Bouquet<Flower> bouquet) {
         this.flowerRepository = flowerRepository;
