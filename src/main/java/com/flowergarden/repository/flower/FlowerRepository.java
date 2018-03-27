@@ -1,6 +1,6 @@
 package com.flowergarden.repository.flower;
 
-import com.flowergarden.model.flowers.Flower;
+import com.flowergarden.model.flower.Flower;
 import com.flowergarden.repository.CrudRepository;
 
 import java.util.Collection;

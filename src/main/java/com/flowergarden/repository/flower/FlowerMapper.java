@@ -1,10 +1,10 @@
 package com.flowergarden.repository.flower;
 
-import com.flowergarden.model.flowers.Chamomile;
-import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.model.flowers.Rose;
-import com.flowergarden.model.flowers.Tulip;
-import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.model.flower.Chamomile;
+import com.flowergarden.model.flower.Flower;
+import com.flowergarden.model.flower.Rose;
+import com.flowergarden.model.flower.Tulip;
+import com.flowergarden.model.property.FreshnessInteger;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

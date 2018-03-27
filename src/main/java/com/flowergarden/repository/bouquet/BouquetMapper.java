@@ -2,7 +2,7 @@ package com.flowergarden.repository.bouquet;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
-import com.flowergarden.model.flowers.Flower;
+import com.flowergarden.model.flower.Flower;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

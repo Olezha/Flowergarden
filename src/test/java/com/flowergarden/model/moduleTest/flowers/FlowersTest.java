@@ -1,8 +1,8 @@
 package com.flowergarden.model.moduleTest.flowers;
 
-import com.flowergarden.model.flowers.Chamomile;
-import com.flowergarden.model.flowers.Rose;
-import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.model.flower.Chamomile;
+import com.flowergarden.model.flower.Rose;
+import com.flowergarden.model.property.FreshnessInteger;
 import org.junit.Test;
 
 import java.math.BigDecimal;

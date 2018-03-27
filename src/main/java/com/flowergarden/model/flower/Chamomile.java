@@ -1,7 +1,7 @@
-package com.flowergarden.model.flowers;
+package com.flowergarden.model.flower;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.model.property.FreshnessInteger;
 import lombok.ToString;
 
 import javax.xml.bind.annotation.XmlAccessType;

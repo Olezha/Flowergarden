@@ -1,10 +1,10 @@
-package com.flowergarden.model.flowers;
+package com.flowergarden.model.flower;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.model.property.FreshnessInteger;
 import lombok.ToString;
 
 import java.math.BigDecimal;

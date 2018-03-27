@@ -1,7 +1,7 @@
-package com.flowergarden.model.flowers;
+package com.flowergarden.model.flower;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.flowergarden.model.properties.Freshness;
+import com.flowergarden.model.property.Freshness;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlTransient;

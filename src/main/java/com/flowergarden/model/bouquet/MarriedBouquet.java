@@ -1,7 +1,7 @@
 package com.flowergarden.model.bouquet;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.flowergarden.model.flowers.Flower;
+import com.flowergarden.model.flower.Flower;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

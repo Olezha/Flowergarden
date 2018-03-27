@@ -1,7 +1,7 @@
 package com.flowergarden.repository;
 
-import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.model.flowers.Tulip;
+import com.flowergarden.model.flower.Flower;
+import com.flowergarden.model.flower.Tulip;
 import com.flowergarden.repository.flower.FlowerRepository;
 import org.flywaydb.core.Flyway;
 import org.junit.*;

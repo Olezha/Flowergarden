@@ -2,10 +2,10 @@ package com.flowergarden.model.moduleTest.bouquet;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
-import com.flowergarden.model.flowers.Chamomile;
-import com.flowergarden.model.flowers.Flower;
-import com.flowergarden.model.flowers.Rose;
-import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.model.flower.Chamomile;
+import com.flowergarden.model.flower.Flower;
+import com.flowergarden.model.flower.Rose;
+import com.flowergarden.model.property.FreshnessInteger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

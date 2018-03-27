@@ -1,4 +1,4 @@
-package com.flowergarden.model.properties;
+package com.flowergarden.model.property;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

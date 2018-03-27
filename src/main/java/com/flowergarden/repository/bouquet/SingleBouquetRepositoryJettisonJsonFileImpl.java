@@ -2,9 +2,9 @@ package com.flowergarden.repository.bouquet;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.bouquet.MarriedBouquet;
-import com.flowergarden.model.flowers.Chamomile;
-import com.flowergarden.model.flowers.Rose;
-import com.flowergarden.model.flowers.Tulip;
+import com.flowergarden.model.flower.Chamomile;
+import com.flowergarden.model.flower.Rose;
+import com.flowergarden.model.flower.Tulip;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.codehaus.jettison.mapped.Configuration;

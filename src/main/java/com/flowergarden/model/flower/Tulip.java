@@ -1,4 +1,4 @@
-package com.flowergarden.model.flowers;
+package com.flowergarden.model.flower;
 
 import lombok.ToString;
 

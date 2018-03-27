@@ -1,4 +1,4 @@
-package com.flowergarden.model.properties;
+package com.flowergarden.model.property;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

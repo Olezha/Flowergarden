@@ -1,8 +1,8 @@
 package com.flowergarden.model.mockTest.bouquet;
 
 import com.flowergarden.model.bouquet.MarriedBouquet;
-import com.flowergarden.model.flowers.*;
-import com.flowergarden.model.properties.FreshnessInteger;
+import com.flowergarden.model.flower.*;
+import com.flowergarden.model.property.FreshnessInteger;
 
 import org.junit.Before;
 import org.junit.Test;

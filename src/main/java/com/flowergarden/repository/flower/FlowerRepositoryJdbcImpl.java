@@ -1,12 +1,11 @@
 package com.flowergarden.repository.flower;
 
-import com.flowergarden.model.flowers.*;
+import com.flowergarden.model.flower.*;
 import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

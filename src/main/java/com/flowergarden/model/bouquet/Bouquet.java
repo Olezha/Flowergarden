@@ -1,7 +1,7 @@
 package com.flowergarden.model.bouquet;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.flowergarden.model.flowers.Flower;
+import com.flowergarden.model.flower.Flower;
 
 import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;

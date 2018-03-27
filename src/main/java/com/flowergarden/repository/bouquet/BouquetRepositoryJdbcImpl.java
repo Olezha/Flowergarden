@@ -1,7 +1,7 @@
 package com.flowergarden.repository.bouquet;
 
 import com.flowergarden.model.bouquet.Bouquet;
-import com.flowergarden.model.flowers.Flower;
+import com.flowergarden.model.flower.Flower;
 import com.flowergarden.repository.flower.FlowerRepository;
 import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
