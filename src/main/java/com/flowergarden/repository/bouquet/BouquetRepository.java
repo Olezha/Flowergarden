@@ -8,6 +8,6 @@ import java.math.BigDecimal;
 
 public interface BouquetRepository extends CrudRepository<Bouquet, Integer> {
 
-    Bouquet<Flower> findOne(Integer id, boolean eager);
+    Bouquet<Flower> findOneEager(Integer id);
     BigDecimal getBouquetPrice(int id);
 }

@@ -25,6 +25,10 @@ public class SingleBouquetRepositoryTest {
     private SingleBouquetRepository jacksonSingleBouquetRepository;
 
     @Autowired
+    @Qualifier("SingleBouquetRepositoryJettisonJsonFile")
+    private SingleBouquetRepository jettisonSingleBouquetRepository;
+
+    @Autowired
     private BouquetService bouquetService;
 
     @BeforeClass
@@ -36,19 +40,18 @@ public class SingleBouquetRepositoryTest {
 
     @Test
     public void singleBouquetRepositoryJettisonTest() {
-        Bouquet bouquet = bouquetService.getBouquet(1);
-        bouquetService.saveToJsonFile(bouquet);
-        Bouquet bouquetFromJson = bouquetService.readFromJsonFile();
-
-        assertEquals(bouquet, bouquetFromJson);
-        assertEquals(bouquet.getPrice(), bouquetFromJson.getPrice());
+        singleBouquetRepositoryTest(jettisonSingleBouquetRepository);
     }
 
     @Test
     public void singleBouquetRepositoryJacksonTest() {
+        singleBouquetRepositoryTest(jacksonSingleBouquetRepository);
+    }
+
+    private void singleBouquetRepositoryTest(SingleBouquetRepository singleBouquetRepository) {
         Bouquet bouquet = bouquetService.getBouquet(1);
-        jacksonSingleBouquetRepository.save(bouquet);
-        Bouquet bouquetFromJson = jacksonSingleBouquetRepository.read();
+        singleBouquetRepository.save(bouquet);
+        Bouquet bouquetFromJson = singleBouquetRepository.read();
 
         assertEquals(bouquet, bouquetFromJson);
         assertEquals(bouquet.getPrice(), bouquetFromJson.getPrice());

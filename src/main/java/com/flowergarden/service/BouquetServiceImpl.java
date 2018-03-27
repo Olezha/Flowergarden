@@ -26,7 +26,7 @@ public class BouquetServiceImpl implements BouquetService {
 
     @Override
     public Bouquet getBouquet(Integer id) {
-        return bouquetRepository.findOne(id, true);
+        return bouquetRepository.findOneEager(id);
     }
 
     @Override
