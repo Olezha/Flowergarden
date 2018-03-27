@@ -1,0 +1,10 @@
+{"marriedBouquet":{"id":1,"assemblePrice":12.7,
+  "chamomile":{"id":1,"freshness":{"freshness":1},"price":12.5,"length":10,"petals":6},
+  "rose":[
+    {"id":2,"freshness":{"freshness":1},"price":15.6,"length":12,"spike":true},
+    {"id":3,"freshness":{"freshness":2},"price":15.2,"length":11,"spike":true},
+    {"id":4,"freshness":{"freshness":1},"price":13,"length":15,"spike":true},
+    {"id":5,"freshness":{"freshness":1},"price":13,"length":15,"spike":true},
+    {"id":6,"freshness":{"freshness":1},"price":13,"length":15,"spike":true}
+  ]
+}}
