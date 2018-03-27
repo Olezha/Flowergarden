@@ -1,7 +1,6 @@
 package com.flowergarden.model.bouquet;
 
 import com.flowergarden.model.flowers.Flower;
-import lombok.Data;
 
 import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;

@@ -65,8 +65,7 @@ public class SingleBouquetRepositoryJsonFileImpl implements SingleBouquetReposit
             byte[] encoded = Files.readAllBytes(Paths.get(fileName));
             JSONObject jsonObject = new JSONObject(new String(encoded, Charset.defaultCharset()));
             XMLStreamReader xmlStreamReader = new MappedXMLStreamReader(jsonObject, mappedNamespaceConvention);
-            Bouquet bouquet = (MarriedBouquet) unmarshaller.unmarshal(xmlStreamReader);
-            return bouquet;
+            return (MarriedBouquet) unmarshaller.unmarshal(xmlStreamReader);
         } catch (IOException | JSONException | XMLStreamException | JAXBException e) {
             throw new RuntimeException(e);
         }

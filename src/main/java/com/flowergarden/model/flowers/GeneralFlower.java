@@ -10,7 +10,6 @@ import java.math.BigDecimal;
 
 @EqualsAndHashCode
 @ToString
-@XmlRootElement
 @XmlSeeAlso({Chamomile.class, Rose.class, Tulip.class})
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class GeneralFlower implements Flower<Integer>, Comparable<GeneralFlower> {
