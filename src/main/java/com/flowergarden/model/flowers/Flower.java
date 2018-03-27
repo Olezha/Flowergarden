@@ -1,5 +1,6 @@
 package com.flowergarden.model.flowers;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.flowergarden.model.properties.Freshness;
 
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 
 @XmlTransient
 @XmlSeeAlso(GeneralFlower.class)
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public interface Flower<T> {
 
     Integer getId();

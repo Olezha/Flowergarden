@@ -1,5 +1,6 @@
 package com.flowergarden.model.bouquet;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.flowergarden.model.flowers.Flower;
 
 import javax.xml.bind.annotation.*;
@@ -8,6 +9,7 @@ import java.util.Collection;
 
 @XmlTransient
 @XmlSeeAlso(MarriedBouquet.class)
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public interface Bouquet<T> {
 
     BigDecimal getPrice();

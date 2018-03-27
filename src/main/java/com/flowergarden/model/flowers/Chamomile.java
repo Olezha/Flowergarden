@@ -1,5 +1,6 @@
 package com.flowergarden.model.flowers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flowergarden.model.properties.FreshnessInteger;
 import lombok.ToString;
 
@@ -24,6 +25,7 @@ public class Chamomile extends GeneralFlower {
         this.freshness = fresh;
     }
 
+    @JsonIgnore
     public boolean getPetal() {
         if (petals <= 0) return false;
         petals = -1;

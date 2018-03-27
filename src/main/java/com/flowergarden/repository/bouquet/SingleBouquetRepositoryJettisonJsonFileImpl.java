@@ -26,15 +26,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Repository
-public class SingleBouquetRepositoryJsonFileImpl implements SingleBouquetRepository {
+@Repository("SingleBouquetRepositoryJettisonJsonFile")
+public class SingleBouquetRepositoryJettisonJsonFileImpl implements SingleBouquetRepository {
 
     private final String fileName;
     private final MappedNamespaceConvention mappedNamespaceConvention;
     private final Marshaller marshaller;
     private final Unmarshaller unmarshaller;
 
-    public SingleBouquetRepositoryJsonFileImpl(
+    public SingleBouquetRepositoryJettisonJsonFileImpl(
             @Value("${single-bouquet-repository.json.file.name}") String fileName)
             throws JAXBException {
         this.fileName = fileName;

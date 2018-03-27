@@ -1,5 +1,6 @@
 package com.flowergarden.model.bouquet;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.flowergarden.model.flowers.Flower;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,6 +18,7 @@ public class MarriedBouquet implements Bouquet<Flower> {
     private Integer id;
 
     private BigDecimal assemblePrice = new BigDecimal(120);
+
 
     @XmlAnyElement(lax = true)
     private List<Flower> flowerList = new ArrayList<>();
@@ -44,6 +46,7 @@ public class MarriedBouquet implements Bouquet<Flower> {
     }
 
     @Override
+    @JsonIgnore
     public String getName() {
         return "married";
     }

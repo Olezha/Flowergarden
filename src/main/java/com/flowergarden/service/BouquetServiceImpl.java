@@ -4,6 +4,7 @@ import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.repository.bouquet.BouquetRepository;
 import com.flowergarden.repository.bouquet.SingleBouquetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ public class BouquetServiceImpl implements BouquetService {
     @Autowired
     public BouquetServiceImpl(
             BouquetRepository bouquetRepository,
-            SingleBouquetRepository singleBouquetRepository) {
+            @Qualifier("SingleBouquetRepositoryJettisonJsonFile") SingleBouquetRepository singleBouquetRepository) {
         this.bouquetRepository = bouquetRepository;
         this.singleBouquetRepository = singleBouquetRepository;
     }

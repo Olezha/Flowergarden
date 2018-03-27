@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,7 +21,8 @@ import static org.junit.Assert.*;
 public class SingleBouquetRepositoryTest {
 
     @Autowired
-    private SingleBouquetRepository singleBouquetRepository;
+    @Qualifier("SingleBouquetRepositoryJacksonJsonFile")
+    private SingleBouquetRepository jacksonSingleBouquetRepository;
 
     @Autowired
     private BouquetService bouquetService;
@@ -33,10 +35,20 @@ public class SingleBouquetRepositoryTest {
     }
 
     @Test
-    public void singleBouquetRepositoryTest() {
+    public void singleBouquetRepositoryJettisonTest() {
         Bouquet bouquet = bouquetService.getBouquet(1);
         bouquetService.saveToJsonFile(bouquet);
         Bouquet bouquetFromJson = bouquetService.readFromJsonFile();
+
+        assertEquals(bouquet, bouquetFromJson);
+        assertEquals(bouquet.getPrice(), bouquetFromJson.getPrice());
+    }
+
+    @Test
+    public void singleBouquetRepositoryJacksonTest() {
+        Bouquet bouquet = bouquetService.getBouquet(1);
+        jacksonSingleBouquetRepository.save(bouquet);
+        Bouquet bouquetFromJson = jacksonSingleBouquetRepository.read();
 
         assertEquals(bouquet, bouquetFromJson);
         assertEquals(bouquet.getPrice(), bouquetFromJson.getPrice());
