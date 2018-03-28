@@ -2,6 +2,7 @@ package com.flowergarden;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.service.BouquetService;
+import com.flowergarden.web.FooServlet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,11 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @EnableCaching
 @SpringBootApplication
 public class FlowergardenApplication implements CommandLineRunner {
@@ -39,6 +41,11 @@ public class FlowergardenApplication implements CommandLineRunner {
         Bouquet bouquetFromJson = bouquetService.readFromJsonFile();
         System.out.println("json " + bouquetFromJson);
         System.out.println("Bouquet id1 from json price is " + bouquetFromJson.getPrice());
+    }
+
+    @Bean
+    public ServletRegistrationBean servletRegistrationBean(){
+        return new ServletRegistrationBean<>(new FooServlet(bouquetService),"/*");
     }
 }
 

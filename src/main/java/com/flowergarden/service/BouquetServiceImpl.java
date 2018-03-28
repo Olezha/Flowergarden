@@ -1,5 +1,7 @@
 package com.flowergarden.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.repository.bouquet.BouquetRepository;
 import com.flowergarden.repository.bouquet.SingleBouquetRepository;
@@ -27,6 +29,15 @@ public class BouquetServiceImpl implements BouquetService {
     @Override
     public Bouquet getBouquet(Integer id) {
         return bouquetRepository.findOneEager(id);
+    }
+
+    @Override
+    public String getBouquetJson(Integer id) {
+        try {
+            return new ObjectMapper().writeValueAsString(bouquetRepository.findOne(id));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
