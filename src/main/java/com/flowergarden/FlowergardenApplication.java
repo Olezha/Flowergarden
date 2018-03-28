@@ -2,7 +2,7 @@ package com.flowergarden;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.service.BouquetService;
-import com.flowergarden.web.FooServlet;
+import com.flowergarden.web.BouquetServlet;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ public class FlowergardenApplication implements CommandLineRunner {
 
     @Bean
     public ServletRegistrationBean servletRegistrationBean(){
-        return new ServletRegistrationBean<>(new FooServlet(bouquetService),"/*");
+        return new ServletRegistrationBean<>(new BouquetServlet(bouquetService),"/bouquet/*");
     }
 }
 

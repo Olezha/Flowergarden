@@ -7,8 +7,10 @@ import java.math.BigDecimal;
 public interface BouquetService {
 
     Bouquet getBouquet(Integer id);
-    String getBouquetJson(Integer id);
+    Iterable<Bouquet> findAll();
     BigDecimal getBouquetPrice(Integer bouquetId);
-    void saveToJsonFile(Bouquet bouquet);
+    String getBouquetJson(Integer id);
     Bouquet readFromJsonFile();
+    void saveToJsonFile(Bouquet bouquet);
+    boolean exists(Integer id);
 }

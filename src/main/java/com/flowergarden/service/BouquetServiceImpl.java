@@ -32,6 +32,11 @@ public class BouquetServiceImpl implements BouquetService {
     }
 
     @Override
+    public Iterable<Bouquet> findAll() {
+        return bouquetRepository.findAll();
+    }
+
+    @Override
     public String getBouquetJson(Integer id) {
         try {
             return new ObjectMapper().writeValueAsString(bouquetRepository.findOne(id));
@@ -53,5 +58,10 @@ public class BouquetServiceImpl implements BouquetService {
     @Override
     public Bouquet readFromJsonFile() {
         return singleBouquetRepository.read();
+    }
+
+    @Override
+    public boolean exists(Integer id) {
+        return bouquetRepository.exists(id);
     }
 }
