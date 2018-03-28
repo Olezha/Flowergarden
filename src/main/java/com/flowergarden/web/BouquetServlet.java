@@ -2,7 +2,6 @@ package com.flowergarden.web;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.service.BouquetService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@Slf4j
 public class BouquetServlet extends HttpServlet {
 
     private final BouquetService bouquetService;
@@ -22,32 +20,32 @@ public class BouquetServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter out = resp.getWriter();
+        try (PrintWriter out = resp.getWriter()) {
+            String stringId = req.getParameter("id");
+            if (stringId != null) {
+                resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
 
-        String stringId = req.getParameter("id");
-        if (stringId != null) {
-            resp.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                int id;
+                try {
+                    id = Integer.parseInt(stringId);
+                } catch (NumberFormatException e) {
+                    resp.setStatus(404);
+                    return;
+                }
 
-            int id;
-            try {
-                id = Integer.parseInt(stringId);
-            } catch (NumberFormatException e) {
-                resp.setStatus(404);
-                return;
-            }
+                if (!bouquetService.exists(id)) {
+                    resp.setStatus(404);
+                    return;
+                }
 
-            if (!bouquetService.exists(id)) {
-                resp.setStatus(404);
-                return;
-            }
+                out.print(bouquetService.getBouquetJson(id));
+            } else {
+                resp.setContentType(MediaType.TEXT_HTML_VALUE);
 
-            out.print(bouquetService.getBouquetJson(id));
-        } else {
-            resp.setContentType(MediaType.TEXT_HTML_VALUE);
-
-            Iterable<Bouquet> bouquets = bouquetService.findAll();
-            for (Bouquet bouquet : bouquets) {
-                out.print("<a href=\"/bouquet?id=" + bouquet.getId() + "\">Bouquet " + bouquet.getId() + "</a><br />");
+                Iterable<Bouquet> bouquets = bouquetService.findAll();
+                for (Bouquet bouquet : bouquets) {
+                    out.print("<a href=\"/bouquet?id=" + bouquet.getId() + "\">Bouquet " + bouquet.getId() + "</a><br />");
+                }
             }
         }
     }
