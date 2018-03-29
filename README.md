@@ -1,6 +1,6 @@
 # Flowergarden [:information_source:](https://github.com/Olezha/Flowergarden/wiki) [![Build Status](https://travis-ci.org/Olezha/Flowergarden.svg?branch=master)](https://travis-ci.org/Olezha/Flowergarden) [![codecov](https://codecov.io/gh/Olezha/Flowergarden/branch/master/graph/badge.svg)](https://codecov.io/gh/Olezha/Flowergarden)
 
-for launching: `mvn clean package spring-boot:run`  
+for launching: `mvn clean install spring-boot:run`  
 web application will be available at the following url: http://localhost:8080  
 for example `curl localhost:8080/bouquet?id=1`
 

@@ -1,23 +1,17 @@
 package com.flowergarden;
 
-import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.service.BouquetService;
 import com.flowergarden.web.BouquetServlet;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 @EnableCaching
 @SpringBootApplication
-public class FlowergardenApplication implements CommandLineRunner {
+public class FlowergardenApplication {
 
     private BouquetService bouquetService;
 
@@ -31,31 +25,8 @@ public class FlowergardenApplication implements CommandLineRunner {
         SpringApplication.run(FlowergardenApplication.class, args);
     }
 
-    @Override
-    public void run(String... strings) {
-        System.out.println("Bouquet id1 price is " + bouquetService.getBouquetPrice(1));
-
-        Bouquet bouquet = bouquetService.getBouquet(1);
-        System.out.println("     " + bouquet);
-        bouquetService.saveToJsonFile(bouquet);
-        Bouquet bouquetFromJson = bouquetService.readFromJsonFile();
-        System.out.println("json " + bouquetFromJson);
-        System.out.println("Bouquet id1 from json price is " + bouquetFromJson.getPrice());
-    }
-
     @Bean
     public ServletRegistrationBean servletRegistrationBean(){
         return new ServletRegistrationBean<>(new BouquetServlet(bouquetService),"/bouquet/*");
-    }
-}
-
-@Slf4j
-@Component
-class BeanPostProcessorImpl implements BeanPostProcessor {
-
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        log.debug(bean.getClass().getSimpleName());
-        return bean;
     }
 }
