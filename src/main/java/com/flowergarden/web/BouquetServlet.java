@@ -2,6 +2,7 @@ package com.flowergarden.web;
 
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.service.BouquetService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import javax.servlet.ServletException;
@@ -29,12 +30,17 @@ public class BouquetServlet extends HttpServlet {
                 try {
                     id = Integer.parseInt(stringId);
                 } catch (NumberFormatException e) {
-                    resp.setStatus(404);
+                    resp.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
+                    return;
+                }
+
+                if (id < 1) {
+                    resp.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
                     return;
                 }
 
                 if (!bouquetService.exists(id)) {
-                    resp.setStatus(404);
+                    resp.setStatus(HttpStatus.NOT_FOUND.value());
                     return;
                 }
 
@@ -47,6 +53,7 @@ public class BouquetServlet extends HttpServlet {
                     out.print("<a href=\"/bouquet?id=" + bouquet.getId() + "\">Bouquet " + bouquet.getId() + "</a><br />");
                 }
             }
+            out.print(System.lineSeparator());
         }
     }
 }

@@ -39,7 +39,7 @@ public class BouquetServiceImpl implements BouquetService {
     @Override
     public String getBouquetJson(Integer id) {
         try {
-            return new ObjectMapper().writeValueAsString(bouquetRepository.findOne(id));
+            return new ObjectMapper().writeValueAsString(bouquetRepository.findOneEager(id));
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
