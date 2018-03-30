@@ -2,8 +2,6 @@ package com.flowergarden.model.bouquet;
 
 import com.flowergarden.model.flower.Flower;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
@@ -12,10 +10,13 @@ import java.util.*;
 
 @Data
 @Entity
+@Table(name = "bouquet")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class MarriedBouquet implements Bouquet<Flower> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
+    @Column(unique = true, nullable = false, updatable = false)
     private Integer id;
 
     private BigDecimal assemblePrice = BigDecimal.ZERO;
