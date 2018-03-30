@@ -2,7 +2,7 @@
 
 for launching: `mvn clean install && java -jar ./web/target/flowergarden-web-0.0.1-exec.jar`  
 web application will be available at the following url: http://localhost:8080  
-for example `curl localhost:8080/bouquet?id=1`
+for example run `curl localhost:8080/bouquet?id=1`
 
 #### Changelog:
 - lesson 6 HW
