@@ -44,7 +44,7 @@ public class BouquetServlet extends HttpServlet {
                     return;
                 }
 
-                out.print(bouquetService.getBouquetJson(id));
+                bouquetService.writeBouquetJson(id, out);
             } else {
                 resp.setContentType(MediaType.TEXT_HTML_VALUE);
 

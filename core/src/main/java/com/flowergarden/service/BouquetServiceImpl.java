@@ -3,12 +3,22 @@ package com.flowergarden.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowergarden.model.bouquet.Bouquet;
+import com.flowergarden.model.flower.Chamomile;
+import com.flowergarden.model.flower.Rose;
+import com.flowergarden.model.flower.Tulip;
 import com.flowergarden.repository.bouquet.BouquetRepository;
 import com.flowergarden.repository.bouquet.SingleBouquetRepository;
+import org.codehaus.jettison.mapped.Configuration;
+import org.codehaus.jettison.mapped.MappedNamespaceConvention;
+import org.codehaus.jettison.mapped.MappedXMLStreamWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 
 @Service
@@ -41,6 +51,19 @@ public class BouquetServiceImpl implements BouquetService {
         try {
             return new ObjectMapper().writeValueAsString(bouquetRepository.findOneEager(id));
         } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void writeBouquetJson(Integer id, Writer writer) {
+        try {
+            JAXBContext
+                    .newInstance(Bouquet.class, Chamomile.class, Rose.class, Tulip.class)
+                    .createMarshaller()
+                    .marshal(bouquetRepository.findOneEager(id),
+                            new MappedXMLStreamWriter(new MappedNamespaceConvention(new Configuration()), writer));
+        } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
     }
