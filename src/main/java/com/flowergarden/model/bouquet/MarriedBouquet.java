@@ -1,8 +1,8 @@
 package com.flowergarden.model.bouquet;
 
 import com.flowergarden.model.flower.Flower;
+import com.flowergarden.model.flower.GeneralFlower;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -12,7 +12,9 @@ import java.util.*;
 @Entity
 @Table(name = "bouquet")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class MarriedBouquet implements Bouquet<Flower> {
+@DiscriminatorColumn(name = "name")
+@DiscriminatorValue(value = "married")
+public class MarriedBouquet implements Bouquet<GeneralFlower> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -24,8 +26,8 @@ public class MarriedBouquet implements Bouquet<Flower> {
     @Transient
     private BigDecimal price;
 
-    @OneToMany
-    private List<Flower> flowers = new ArrayList<>();
+    @OneToMany(mappedBy = "bouquet")
+    private List<GeneralFlower> flowers = new ArrayList<>();
 
     @Override
     public BigDecimal getPrice() {
@@ -44,14 +46,14 @@ public class MarriedBouquet implements Bouquet<Flower> {
     }
 
     @Override
-    public void addFlower(Flower flower) {
+    public void addFlower(GeneralFlower flower) {
         flowers.add(flower);
     }
 
     @Override
-    public Collection<Flower> searchFlowersByLength(int start, int end) {
-        List<Flower> searchResult = new ArrayList<>();
-        for (Flower flower : flowers) {
+    public Collection<GeneralFlower> searchFlowersByLength(int start, int end) {
+        List<GeneralFlower> searchResult = new ArrayList<>();
+        for (GeneralFlower flower : flowers) {
             if (flower.getLength() >= start && flower.getLength() <= end)
                 searchResult.add(flower);
         }

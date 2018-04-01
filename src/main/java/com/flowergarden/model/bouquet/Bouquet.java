@@ -1,7 +1,5 @@
 package com.flowergarden.model.bouquet;
 
-import com.flowergarden.model.flower.Flower;
-
 import java.math.BigDecimal;
 import java.util.Collection;
 
@@ -11,8 +9,8 @@ public interface Bouquet<T> {
     Integer getId();
     String getName();
     void addFlower(T flower);
-    Collection<Flower> getFlowers();
-    Collection<Flower> searchFlowersByLength(int start, int end);
+    Collection<T> getFlowers();
+    Collection<T> searchFlowersByLength(int start, int end);
     void sortByFreshness();
     void setAssemblePrice(BigDecimal assemblePrice);
     BigDecimal getPrice();
