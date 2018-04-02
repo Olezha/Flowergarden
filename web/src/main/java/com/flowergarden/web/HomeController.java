@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping
     public String home() {
-        return "<a href=\"/bouquet\">Bouquets</a>";
+        return "<a href=\"/rest/bouquet\">Bouquets</a>";
     }
 }

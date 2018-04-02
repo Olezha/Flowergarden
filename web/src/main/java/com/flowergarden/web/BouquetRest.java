@@ -1,25 +1,23 @@
 package com.flowergarden.web;
 
 import com.flowergarden.model.flower.Flower;
+import com.flowergarden.repository.flower.FlowerRepository;
 import com.flowergarden.service.BouquetService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.Data;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Collection;
 
+@Data
 @Path("/bouquet")
 public class BouquetRest {
 
-    private final BouquetService bouquetService;
-
-    @Autowired
-    public BouquetRest(BouquetService bouquetService) {
-        this.bouquetService = bouquetService;
-    }
+    private BouquetService bouquetService;
+    private FlowerRepository flowerRepository;
 
     @GET
     @Path("/{id}/price")
@@ -36,12 +34,12 @@ public class BouquetRest {
     @GET
     @Path("/flower/{id}")
     public Flower getFlower(int flowerId) {
-        return null;
+        return flowerRepository.findOne(flowerId);
     }
 
     @GET
     @Path("/{id}")
-    public List<Flower> getFlowers(int bouquetId) {
-        return null;
+    public Collection<Flower> getFlowers(int bouquetId) {
+        return bouquetService.getBouquet(bouquetId).getFlowers();
     }
 }
