@@ -29,7 +29,7 @@ public class BouquetRest {
 
     @PUT
     @Path("/{id}")
-    public void downFreshness(int bouquetId) {
+    public void reduceFreshness(int bouquetId) {
         // if freshness 0 return 5xx
     }
 
