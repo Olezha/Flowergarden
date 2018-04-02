@@ -28,6 +28,14 @@ public class FreshnessInteger implements Freshness<Integer> {
     }
 
     @Override
+    public void reduce() {
+        if (freshness > 0)
+            freshness -= 1;
+        else
+            throw new UnsupportedOperationException("Сan not reduce the freshness 0");
+    }
+
+    @Override
     public int compareTo(Freshness o) {
         if (!(o instanceof FreshnessInteger))
             throw new UnsupportedOperationException();

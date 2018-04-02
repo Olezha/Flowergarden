@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowergarden.model.bouquet.Bouquet;
 import com.flowergarden.model.flower.Chamomile;
+import com.flowergarden.model.flower.Flower;
 import com.flowergarden.model.flower.Rose;
 import com.flowergarden.model.flower.Tulip;
 import com.flowergarden.repository.bouquet.BouquetRepository;
@@ -52,6 +53,11 @@ public class BouquetServiceImpl implements BouquetService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void save(Bouquet<Flower> bouquet) {
+        bouquetRepository.saveOrUpdate(bouquet);
     }
 
     @Override

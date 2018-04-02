@@ -16,6 +16,10 @@ public class FreshnessTest {
             }
 
             @Override
+            public void reduce() throws UnsupportedOperationException {
+            }
+
+            @Override
             public int compareTo(Object o) {
                 return 0;
             }

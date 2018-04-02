@@ -6,4 +6,5 @@ import javax.xml.bind.annotation.XmlRootElement;
 public interface Freshness<E> extends Comparable<Freshness> {
 
     E getFreshness();
+    void reduce() throws UnsupportedOperationException;
 }
