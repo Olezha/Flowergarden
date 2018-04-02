@@ -25,8 +25,8 @@ public class FlowergardenApplication {
         SpringApplication.run(FlowergardenApplication.class, args);
     }
 
-    @Bean
-    public ServletRegistrationBean servletRegistrationBean(){
-        return new ServletRegistrationBean<>(new BouquetServlet(bouquetService),"/bouquet/*");
-    }
+//    @Bean
+//    public ServletRegistrationBean servletRegistrationBean(){
+//        return new ServletRegistrationBean<>(new BouquetServlet(bouquetService),"/bouquet/*");
+//    }
 }
