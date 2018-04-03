@@ -21,7 +21,7 @@ public class RestApplication extends Application {
     @Autowired
     private FlowerRepository flowerRepository;
 
-    private static Set<Object> singletons = new HashSet<>();
+    private static final Set<Object> singletons = new HashSet<>();
 
     public RestApplication() {
     }

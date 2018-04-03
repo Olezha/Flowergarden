@@ -5,6 +5,7 @@ import com.flowergarden.model.flower.Flower;
 import com.flowergarden.repository.flower.FlowerRepository;
 import com.flowergarden.sql.SqlStatements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -62,13 +63,22 @@ public class BouquetRepositoryJdbcImpl implements BouquetRepository {
 
     @Override
     public Bouquet<Flower> findOne(Integer id) {
-        Bouquet<Flower> bouquet = jdbcTemplate.queryForObject(sql.get("BOUQUET_FIND_ONE"), new BouquetMapper(), id);
+        Bouquet<Flower> bouquet;
+        try {
+            bouquet = jdbcTemplate.queryForObject(sql.get("BOUQUET_FIND_ONE"), new BouquetMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
         return new LazyBouquet(flowerRepository, bouquet);
     }
 
     @Override
     public Bouquet<Flower> findOneEager(Integer id) {
         LazyBouquet lazyBouquet = (LazyBouquet) findOne(id);
+
+        if (lazyBouquet == null)
+            return null;
+
         lazyBouquet.getFlowers();
         return lazyBouquet.bouquet;
     }

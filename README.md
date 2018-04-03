@@ -1,8 +1,8 @@
 # Flowergarden [:information_source:](https://github.com/Olezha/Flowergarden/wiki) [![Build Status](https://travis-ci.org/Olezha/Flowergarden.svg?branch=master)](https://travis-ci.org/Olezha/Flowergarden) [![codecov](https://codecov.io/gh/Olezha/Flowergarden/branch/master/graph/badge.svg)](https://codecov.io/gh/Olezha/Flowergarden)
 
-for launching: `mvn clean install && java -jar ./web/target/flowergarden-web-0.0.1-exec.jar`  
+for launching: `mvn clean install && java -jar ./web/target/flowergarden-web-0.0.2-exec.jar`  
 web application will be available at the following url: http://localhost:8080  
-for example run `curl localhost:8080/bouquet?id=1`
+for example run `curl localhost:8080/rest/bouquet/1/flowers`
 
 #### Changelog:
 - lesson 6 HW

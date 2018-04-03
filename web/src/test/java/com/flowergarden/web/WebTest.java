@@ -1,15 +1,9 @@
 package com.flowergarden.web;
 
-import com.flowergarden.model.bouquet.Bouquet;
-import com.flowergarden.model.flower.Chamomile;
-import com.flowergarden.model.flower.Rose;
-import com.flowergarden.model.flower.Tulip;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-import org.codehaus.jettison.mapped.Configuration;
-import org.codehaus.jettison.mapped.MappedNamespaceConvention;
-import org.codehaus.jettison.mapped.MappedXMLStreamReader;
-import org.junit.Ignore;
+import com.flowergarden.repository.bouquet.BouquetRepository;
+import org.flywaydb.core.Flyway;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +11,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.PostConstruct;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
 
 import static org.assertj.core.api.BDDAssertions.then;
-import static org.junit.Assert.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
@@ -38,6 +31,24 @@ public class WebTest {
 
     @Autowired
     RestTemplateBuilder restTemplateBuilder;
+
+    @Autowired
+    private BouquetRepository bouquetRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeClass
+    public static void beforeClass() {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource("jdbc:sqlite:test-base.db", null, null);
+        flyway.migrate();
+    }
+
+    @Before
+    public void before() {
+        jdbcTemplate.update("restore from test-base.db");
+    }
 
     private TestRestTemplate testRestTemplate;
 
@@ -53,48 +64,15 @@ public class WebTest {
         then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Ignore
     @Test
-    public void shouldReturn200_WhenSendingRequestToBouquetServlet() throws Exception {
-        ResponseEntity<String> entity = testRestTemplate.getForEntity("/bouquet", String.class);
-
+    public void shouldReturn200_WhenSendingRequestToBouquetRest_Id1Price() throws Exception {
+        ResponseEntity<String> entity = testRestTemplate.getForEntity("/rest/bouquet/1/price", String.class);
         then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Ignore
     @Test
-    public void shouldReturn200_WhenSendingRequestToBouquetServletWithGetParameterId1() throws Exception {
-        ResponseEntity<String> entity = testRestTemplate.getForEntity("/bouquet?id=1", String.class);
-
-        then(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
-
-    @Ignore
-    @Test
-    public void retrieveBouquetId1Test() throws JAXBException, JSONException, XMLStreamException {
-        ResponseEntity<String> entity = testRestTemplate.getForEntity("/bouquet?id=1", String.class);
-        Bouquet bouquet = (Bouquet) JAXBContext
-                .newInstance(Bouquet.class, Chamomile.class, Rose.class, Tulip.class)
-                .createUnmarshaller()
-                .unmarshal(new MappedXMLStreamReader(
-                        new JSONObject(entity.getBody()),
-                        new MappedNamespaceConvention(new Configuration())));
-        assertSame(1, bouquet.getId());
-    }
-
-    @Ignore
-    @Test
-    public void shouldReturn422_WhenSendingRequestToBouquetServletWithBsdGetParameterId() throws Exception {
-        ResponseEntity<Bouquet> entity = testRestTemplate.getForEntity("/bouquet?id=0", Bouquet.class);
-        then(entity.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-
-        entity = this.testRestTemplate.getForEntity("/bouquet?id=-1", Bouquet.class);
-        then(entity.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-
-        entity = this.testRestTemplate.getForEntity("/bouquet?id=1a", Bouquet.class);
-        then(entity.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
-
-        entity = this.testRestTemplate.getForEntity("/bouquet?id=abc", Bouquet.class);
-        then(entity.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
+    public void shouldReturn204_WhenSendingRequestToBouquetRest_Id0Price() throws Exception {
+        ResponseEntity<String> entity = testRestTemplate.getForEntity("/rest/bouquet/0/price", String.class);
+        then(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }
