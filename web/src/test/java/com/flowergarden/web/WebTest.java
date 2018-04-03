@@ -46,7 +46,6 @@ public class WebTest {
         testRestTemplate = new TestRestTemplate(restTemplateBuilder.rootUri("http://localhost:"+port));
     }
 
-    @Ignore
     @Test
     public void shouldReturn200_WhenSendingRequestToHomeController() throws Exception {
         ResponseEntity<String> entity = testRestTemplate.getForEntity("/", String.class);

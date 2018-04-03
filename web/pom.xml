@@ -30,5 +30,10 @@
             <artifactId>resteasy-jaxrs</artifactId>
             <version>3.5.0.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jettison-provider</artifactId>
+            <version>3.5.0.Final</version>
+        </dependency>
     </dependencies>
 </project>
