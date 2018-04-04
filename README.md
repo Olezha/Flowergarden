@@ -4,8 +4,9 @@ for launching: `mvn clean package spring-boot:run`
 web application will be available at the following url: http://localhost:8080
 
 #### Changelog:
-- after lesson 8 HW
-    - try new style
+- lesson 10 HW
+    - Refactoring core module to Spring Data stack; return to single module structure; work in a Spring Boot style; change db (for training).  
+    Old stage is placed in a separate branch [lesson/9](https://github.com/Olezha/Flowergarden/tree/lesson/9).
 - lesson 6 HW
     - Remove custom DB Connection Pull & refactor repository impl for work through JdbcTemplate.  
     Old stage is placed in a separate branch [jdbcp](https://github.com/Olezha/Flowergarden/tree/jdbcp).
