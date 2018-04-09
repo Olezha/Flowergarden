@@ -17,6 +17,14 @@ public class FreshnessInteger implements Freshness<Integer>, UserType {
     private Integer freshness;
 
     @Override
+    public void reduce() throws UnsupportedOperationException {
+        if (freshness > 0)
+            freshness -= 1;
+        else
+            throw new UnsupportedOperationException("Сan not reduce the freshness 0");
+    }
+
+    @Override
     public int compareTo(Freshness o) {
         if (!(o instanceof FreshnessInteger))
             throw new UnsupportedOperationException();
@@ -39,7 +47,9 @@ public class FreshnessInteger implements Freshness<Integer>, UserType {
 
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        return !(x == null || y == null) && x.equals(y);
+//        return !(x == null || y == null) && x.equals(y);
+        // TODO
+        return false;
     }
 
     @Override
@@ -58,7 +68,7 @@ public class FreshnessInteger implements Freshness<Integer>, UserType {
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws HibernateException, SQLException {
-        st.setInt(index, (Integer) value);
+        st.setInt(index, ((FreshnessInteger) value).freshness);
     }
 
     @Override

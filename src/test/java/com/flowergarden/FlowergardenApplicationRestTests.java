@@ -15,14 +15,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.PostConstruct;
 
-import java.math.BigDecimal;
-
 import static org.assertj.core.api.BDDAssertions.then;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class FlowergardenApplicationTests {
+public class FlowergardenApplicationRestTests {
 
     @LocalServerPort
     private int port;
@@ -35,7 +33,7 @@ public class FlowergardenApplicationTests {
     @PostConstruct
     public void initialize() {
         testRestTemplate = new TestRestTemplate(
-                restTemplateBuilder.rootUri("http://localhost:" + port));
+                restTemplateBuilder.rootUri("http://localhost:" + port + "/rest"));
     }
 
     @Test

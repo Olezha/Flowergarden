@@ -3,11 +3,13 @@ package com.flowergarden.model.flower;
 import com.flowergarden.model.bouquet.MarriedBouquet;
 import com.flowergarden.model.property.FreshnessInteger;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
+@ToString(exclude = "bouquet")
 @Entity
 @Table(name = "flower")
 @DiscriminatorColumn(name = "name")
