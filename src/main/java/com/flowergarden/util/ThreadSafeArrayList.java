@@ -1,37 +1,25 @@
 package com.flowergarden.util;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
-public class ThreadSafeArrayList<E> extends ArrayList<E> {
+public class ThreadSafeArrayList<E> implements List<E>, RandomAccess, Cloneable, Serializable {
 
     private ArrayList<E> arrayList = null;
 
     public ThreadSafeArrayList() {
-        super();
         arrayList = new ArrayList<>();
     }
 
     public ThreadSafeArrayList(int initialCapacity) {
-        super();
         arrayList = new ArrayList<>(initialCapacity);
     }
 
     public ThreadSafeArrayList(Collection<? extends E> c) {
-        super();
         arrayList = new ArrayList<>(c);
-    }
-
-    @Override
-    public void trimToSize() {
-        arrayList.trimToSize();
-    }
-
-    @Override
-    public void ensureCapacity(int minCapacity) {
-        arrayList.ensureCapacity(minCapacity);
     }
 
     @Override
@@ -61,7 +49,7 @@ public class ThreadSafeArrayList<E> extends ArrayList<E> {
 
     @Override
     public Object clone() {
-        return super.clone();
+        return null;
     }
 
     @Override
@@ -102,6 +90,11 @@ public class ThreadSafeArrayList<E> extends ArrayList<E> {
     @Override
     public boolean remove(Object o) {
         return arrayList.remove(o);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> collection) {
+        return false;
     }
 
     @Override
