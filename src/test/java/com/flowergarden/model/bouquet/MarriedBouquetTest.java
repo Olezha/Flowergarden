@@ -12,8 +12,6 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 @RunWith(MockitoJUnitRunner.class)
