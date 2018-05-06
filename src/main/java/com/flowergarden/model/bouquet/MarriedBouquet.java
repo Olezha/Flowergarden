@@ -14,7 +14,7 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "name")
 @DiscriminatorValue(value = "married")
-public class MarriedBouquet implements Bouquet<GeneralFlower> {
+public class MarriedBouquet implements Bouquet<GeneralFlower>, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -71,5 +71,9 @@ public class MarriedBouquet implements Bouquet<GeneralFlower> {
             if (flower.getPrice() != null)
                 price = price.add(flower.getPrice());
         return price;
+    }
+
+    public MarriedBouquet clone() throws CloneNotSupportedException {
+        return (MarriedBouquet) super.clone();
     }
 }
