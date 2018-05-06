@@ -14,7 +14,7 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "name")
 @DiscriminatorValue(value = "married")
-public class MarriedBouquet implements Bouquet<GeneralFlower>, Cloneable {
+public class MarriedBouquet implements Bouquet<GeneralFlower>, Cloneable, Iterable<GeneralFlower> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -75,5 +75,27 @@ public class MarriedBouquet implements Bouquet<GeneralFlower>, Cloneable {
 
     public MarriedBouquet clone() throws CloneNotSupportedException {
         return (MarriedBouquet) super.clone();
+    }
+
+    @Override
+    public Iterator<GeneralFlower> iterator() {
+        return new GeneralFlowerIterator();
+    }
+
+    private class GeneralFlowerIterator implements Iterator<GeneralFlower> {
+
+        int index;
+
+        @Override
+        public boolean hasNext() {
+            return index < flowers.size();
+        }
+
+        @Override
+        public GeneralFlower next() {
+            if (this.hasNext())
+                return flowers.get(index++);
+            return null;
+        }
     }
 }
