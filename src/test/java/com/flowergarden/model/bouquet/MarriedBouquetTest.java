@@ -12,6 +12,10 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+
 @RunWith(MockitoJUnitRunner.class)
 public class MarriedBouquetTest {
 
@@ -43,9 +47,19 @@ public class MarriedBouquetTest {
 
     @Test
     public void iterableTest() {
-        for (GeneralFlower flower : marriedBouquet) {
+        for (GeneralFlower flower : marriedBouquet)
             flower.getPrice();
-        }
+
+        Mockito.verify(rose).getPrice();
+        Mockito.verify(chamomile).getPrice();
+        Mockito.verify(tulip).getPrice();
+    }
+
+    @Test
+    public void reverseIterableTest() {
+        ListIterator<GeneralFlower> iterator = marriedBouquet.iterator(marriedBouquet.getFlowers().size());
+        while (iterator.hasPrevious())
+            iterator.previous().getPrice();
 
         Mockito.verify(rose).getPrice();
         Mockito.verify(chamomile).getPrice();
