@@ -1,4 +1,4 @@
-package com.flowergarden.util.factorymethod;
+package com.flowergarden.util.flower.factorymethod;
 
 import com.flowergarden.model.flower.Flower;
 import org.junit.Assert;

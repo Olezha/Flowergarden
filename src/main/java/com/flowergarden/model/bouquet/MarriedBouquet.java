@@ -14,7 +14,7 @@ import java.util.*;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "name")
 @DiscriminatorValue(value = "married")
-public class MarriedBouquet implements Bouquet<GeneralFlower> {
+public class MarriedBouquet implements Bouquet<GeneralFlower>, Cloneable, Iterable<GeneralFlower> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
@@ -71,5 +71,78 @@ public class MarriedBouquet implements Bouquet<GeneralFlower> {
             if (flower.getPrice() != null)
                 price = price.add(flower.getPrice());
         return price;
+    }
+
+    public MarriedBouquet clone() throws CloneNotSupportedException {
+        return (MarriedBouquet) super.clone();
+    }
+
+    @Override
+    public Iterator<GeneralFlower> iterator() {
+        return new GeneralFlowerIterator();
+    }
+
+    public ListIterator<GeneralFlower> iterator(int index) {
+        if (index >= 0 && index <= flowers.size()) {
+            GeneralFlowerIterator iterator = new GeneralFlowerIterator();
+            iterator.index = index;
+            return iterator;
+        } else {
+            throw new IndexOutOfBoundsException("Index: " + index);
+        }
+    }
+
+    private class GeneralFlowerIterator implements ListIterator<GeneralFlower> {
+
+        int index;
+
+        @Override
+        public boolean hasNext() {
+            return index < flowers.size();
+        }
+
+        @Override
+        public GeneralFlower next() {
+            if (this.hasNext())
+                return flowers.get(index++);
+            return null;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return index > 0;
+        }
+
+        @Override
+        public GeneralFlower previous() {
+            if (this.hasPrevious())
+                return flowers.get(--index);
+            return null;
+        }
+
+        @Override
+        public int nextIndex() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public int previousIndex() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(GeneralFlower generalFlower) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void add(GeneralFlower generalFlower) {
+            throw new UnsupportedOperationException();
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.flowergarden.util.abstractfactory;
+package com.flowergarden.util.flower.abstractfactory;
 
 import com.flowergarden.model.flower.Flower;
 import com.flowergarden.model.flower.Rose;
