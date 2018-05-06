@@ -1,5 +1,6 @@
 package com.flowergarden.model.flower;
 
+import com.flowergarden.util.flower.builder.RoseBuilder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -15,4 +16,8 @@ import javax.persistence.Entity;
 public class Rose extends GeneralFlower {
 
     private boolean spike;
+
+    public static RoseBuilder builder() {
+        return new RoseBuilder();
+    }
 }

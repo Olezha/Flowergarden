@@ -1,5 +1,6 @@
 package com.flowergarden.model.flower;
 
+import com.flowergarden.util.flower.builder.ChamomileBuilder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -20,5 +21,9 @@ public class Chamomile extends GeneralFlower {
         if (petals <= 0) return false;
         petals -= 1;
         return true;
+    }
+
+    public static ChamomileBuilder builder() {
+        return new ChamomileBuilder();
     }
 }

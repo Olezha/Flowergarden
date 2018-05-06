@@ -1,4 +1,4 @@
-package com.flowergarden.util.abstractfactory;
+package com.flowergarden.util.flower.abstractfactory;
 
 import org.junit.Assert;
 import org.junit.Test;
