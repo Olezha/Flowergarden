@@ -34,6 +34,7 @@ public abstract class GeneralFlower implements Flower<Integer>, Comparable<Gener
     @ManyToOne
     private MarriedBouquet bouquet;
 
+    @Transient
     private List<Observer> observers;
 
     @Override
@@ -61,6 +62,8 @@ public abstract class GeneralFlower implements Flower<Integer>, Comparable<Gener
 
     @Override
     public void notifyObserver() {
+        if (observers == null)
+            return;
         for (Observer observer : observers)
             observer.handleEvent(this);
     }

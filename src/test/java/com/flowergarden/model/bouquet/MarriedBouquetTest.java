@@ -38,6 +38,7 @@ public class MarriedBouquetTest {
 
     @Test
     public void cloneableTest() throws CloneNotSupportedException {
+        MarriedBouquet marriedBouquet = new MarriedBouquet();
         MarriedBouquet clone = marriedBouquet.clone();
         Assert.assertNotSame(marriedBouquet, clone);
         Assert.assertEquals(marriedBouquet, clone);
