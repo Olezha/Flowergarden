@@ -4,6 +4,7 @@ for launching: `mvn clean package spring-boot:run`
 web-rest application will be available at the following url: http://localhost:8080/rest
 
 #### Changelog:
+- Concurrent HW 75122c1d1932d241a6a35d89de36c17f16899b13
 - lesson 10 HW
     - Refactoring all functionality to Spring (Data) stack; change db (for training).  
     Old stage is placed in a separate branch [lesson/9](https://github.com/Olezha/Flowergarden/tree/lesson/9).
